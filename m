@@ -1,26 +1,23 @@
-From: Michael Schierl <schierlm@gmx.de>
-Subject: Re: [PATCH] [APM] Is this the correct way to fix suspend bug introduced 
+From: Axel Boldt <axelboldt@yahoo.com>
+Subject: Re: [PATCH] [APM] Is this the correct way to fix suspend bug introduced
  in 2.6.0-test4?
-Date: Thu, 29 Jan 2004 20:36:00 +0100
-Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <401960A0.55EC26AE@gmx.de>
-References: <13zy7qdcyz1q7$.50e5l3rpbsyx$.dlg@40tude.net> <20040128174655.GE1200@elf.ucw.cz> <40195A95.C675952C@gmx.de>
+Date: Fri, 30 Jan 2004 00:00:09 +0100
+Sender: linux-kernel-owner@vger.kernel.org
+Message-ID: <40199079.5030908@yahoo.com>
+References: <13zy7qdcyz1q7$.50e5l3rpbsyx$.dlg@40tude.net>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-laptop-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner+linux-kernel=40quimby.gnus.org@vger.kernel.org>
+In-Reply-To: <13zy7qdcyz1q7$.50e5l3rpbsyx$.dlg@40tude.net>
 List-Id: <linux-laptop.vger.kernel.org>
-Content-Type: text/plain; charset="us-ascii"
-To: Pavel Machek <pavel@suse.cz>, linux-laptop@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-kernel@vger.kernel.org
+Cc: linux-laptop@vger.kernel.org
 
-I wrote:
+Michael Schierl wrote:
 
-> Thanks. BTW: I did not get any response from Stephen Rothwell (the guy
-> who is listed as maintainer for APM in the MAINTAINERS file). How long
-> should I wait for a response? Or should I simply submit the patch to
-> Andrew?
+> the patch below (against 2.6.1-mm5) fixes my APM problems 
 
-JFTR: Now this address bounced:
+And mine as well (Dell Inspiron 5000 laptop).
 
-550_5.1.1_<fr@canb.auug.org.au>..._User_unknown/Giving_up_on_203.10.76.34./
-
-Michael
+Axel
