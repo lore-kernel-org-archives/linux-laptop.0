@@ -1,76 +1,26 @@
-From: Pavel Machek <pavel@suse.cz>
-Subject: Re: [PATCH] [APM] Is this the correct way to fix suspend bug introduced in 2.6.0-test4?
-Date: Thu, 29 Jan 2004 20:55:34 +0100
+From: Michael Schierl <schierlm@gmx.de>
+Subject: Re: [PATCH] [APM] Is this the correct way to fix suspend bug introduced 
+ in 2.6.0-test4?
+Date: Thu, 29 Jan 2004 20:36:00 +0100
 Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <20040129195534.GH480@elf.ucw.cz>
+Message-ID: <401960A0.55EC26AE@gmx.de>
 References: <13zy7qdcyz1q7$.50e5l3rpbsyx$.dlg@40tude.net> <20040128174655.GE1200@elf.ucw.cz> <40195A95.C675952C@gmx.de>
 Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-laptop-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <40195A95.C675952C@gmx.de>
 List-Id: <linux-laptop.vger.kernel.org>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Michael Schierl <schierlm@gmx.de>
-Cc: Stephen Rothwell <fr@canb.auug.org.au>, linux-laptop@vger.kernel.org, linux-kernel@vger.kernel.org, mochel@digitalimplant.org
+To: Pavel Machek <pavel@suse.cz>, linux-laptop@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hi!
+I wrote:
 
-> > > if you think that's okay like that, please submit that to the guy who is
-> > > responsible for 2.6 (is it Linus or Andrew? did not follow lkml
-> > > recently).
-> > 
-> > Andrew.
-> 
 > Thanks. BTW: I did not get any response from Stephen Rothwell (the guy
 > who is listed as maintainer for APM in the MAINTAINERS file). How long
 > should I wait for a response? Or should I simply submit the patch to
 > Andrew?
 
-I'd submit patch to andrew, Cc: stephen. -mm series should get enough
-testing, and this is not to big patch.
+JFTR: Now this address bounced:
 
-[The patch looks good to me, btw.]
-									Pavel
+550_5.1.1_<fr@canb.auug.org.au>..._User_unknown/Giving_up_on_203.10.76.34./
 
-
-> Michael
-> --- linux-2.6.2-rc2-mm1/arch/i386/kernel/apm.c.old	Thu Jan 29 16:22:03 2004
-> +++ linux-2.6.2-rc2-mm1/arch/i386/kernel/apm.c	Thu Jan 29 16:22:07 2004
-> @@ -1201,6 +1201,7 @@ static int suspend(int vetoable)
->  	}
->  
->  	device_suspend(3);
-> +	device_power_down(3);
->  
->  	/* serialize with the timer interrupt */
->  	write_seqlock_irq(&xtime_lock);
-> @@ -1234,6 +1235,7 @@ static int suspend(int vetoable)
->  	if (err != APM_SUCCESS)
->  		apm_error("suspend", err);
->  	err = (err == APM_SUCCESS) ? 0 : -EIO;
-> +	device_power_up();
->  	device_resume();
->  	pm_send_all(PM_RESUME, (void *)0);
->  	queue_event(APM_NORMAL_RESUME, NULL);
-> @@ -1252,6 +1254,7 @@ static void standby(void)
->  {
->  	int	err;
->  
-> +	device_power_down(3);
->  	/* serialize with the timer interrupt */
->  	write_seqlock_irq(&xtime_lock);
->  	/* If needed, notify drivers here */
-> @@ -1261,6 +1264,7 @@ static void standby(void)
->  	err = set_system_power_state(APM_STATE_STANDBY);
->  	if ((err != APM_SUCCESS) && (err != APM_NO_ERROR))
->  		apm_error("standby", err);
-> +	device_power_up();
->  }
->  
->  static apm_event_t get_event(void)
-
-
--- 
-When do you have a heart between your knees?
-[Johanka's followup: and *two* hearts?]
+Michael
