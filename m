@@ -1,35 +1,39 @@
-From: "Wilbur R. Johnson" <wrjohns@sandia.gov>
-Subject: Bad laptop video
-Date: Sat, 07 Sep 2002 13:21:26 -0600
+From: Felix Seeger <felix.seeger@gmx.de>
+Subject: Mouse wheel for X with Sony "S-Jog"
+Date: Sun, 8 Sep 2002 11:44:05 +0200
 Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <3D7A51B6.CB5B1D75@sandia.gov>
+Message-ID: <200209081144.08896.felix.seeger@gmx.de>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
 Return-path: <linux-laptop-owner@vger.kernel.org>
+Content-Description: clearsigned data
+Content-Disposition: inline
 List-Id: <linux-laptop.vger.kernel.org>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain; charset="us-ascii"
 To: linux-laptop@vger.kernel.org
 
-I have installed 7.3 redhat on my DELL C600. Everything works great for all my
-applications until I try using the alternate video port to send video to an infocus.
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-After that, everything screws up.
+Hi
 
-1. Have to use right and left mouse button to "grab" windows to move them.
-2, My perfectly functional Java (1.3.1) application blows up (no error other than
-abort).
-
-Guess I'm looking for someone who knows these things well.
-Anybody out there have experienced the same? Solved the
-problem?
-
-Thanks....
-
---
-Wilbur R. Johnson
-Distributed Decision Support Systems
-Sandia National Laboratories
+Two days ago I had that running, now it doesn't work. Already downgraded to 
+XFree 4.1 because I thought that is the problem. Doesn't help. I think I've 
+done some things wrong with the kernel.
 
 
+I have a Sony Vaio QR10 laptop, running 2.4.18 with a i810fb patch. Everything 
+works fine (fb for console, acpi (wow, it works), sonypi) except the wheel.
 
+
+thanks
+have fun
+Felix
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.7 (GNU/Linux)
+
+iD8DBQE9exvoS0DOrvdnsewRAqAmAJ9no0PYanwJV/kdEMP1M9dCXqhPAACfa8Ph
+c8FsN+Z1LxPZ4iKyhobtprQ=
+=GSG4
+-----END PGP SIGNATURE-----
 
