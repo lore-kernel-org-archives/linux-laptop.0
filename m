@@ -1,27 +1,51 @@
-From: Laszlo 'GCS' Boszormenyi <gcs@lsc.hu>
-Subject: reboot instead of halt
-Date: Sun, 17 Oct 2004 15:39:18 +0200
-Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <20041017133918.GA24594@pooh>
+From: Thomas Bettler <bettlert@student.ethz.ch>
+Subject: module uhci-hcd and pm
+Date: Fri, 10 Dec 2004 19:18:14 +0100
+Message-ID: <200412101918.24191.bettlert@student.ethz.ch>
+References: <200412091447.11996.bettlert@student.ethz.ch>
 Mime-Version: 1.0
-Return-path: <linux-laptop-owner@vger.kernel.org>
-Content-Disposition: inline
-List-Id: <linux-laptop.vger.kernel.org>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: multipart/signed;
+  boundary="nextPart1216614.ZKd03Oksu9";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
 Content-Transfer-Encoding: 7bit
-To: linux-laptop@vger.kernel.org
+Return-path: <linux-laptop-owner@vger.kernel.org>
+In-Reply-To: <200412091447.11996.bettlert@student.ethz.ch>
+Sender: linux-laptop-owner@vger.kernel.org
+List-Id: <linux-laptop.vger.kernel.org>
+To: linux-kernel@vger.kernel.org, linux-laptop@vger.kernel.org
 
-Hi,
+--nextPart1216614.ZKd03Oksu9
+Content-Type: text/plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 
- I have a Gericom 1st Supersonic notebook. I am using it since 2.4.14 or
-so. 2.6.8.1 runs fine, but 2.6.9-final and some older kernels I have
-tried (2.6.9-rc4, -rc3, -rc2) all have the following problem:
-when I type halt, the notebook shuts down, but restarts. I have read
-that there were problems with APIC, but I have already switched off all
-of that. What else should I look for?
-If relevant, I use Debian Sarge, with my own compiled kernel, which has
-the same config file the previous kernels had.
+Hello you all
 
-Thanks,
-Laszlo/GCS
+The uhci-hcd module causes the cpu to work at highest frequecy
+(according to x86info -mhz). If I unload it, cpu frequency dropps from full
+(1.8GHz) to ~2/3 (1.1GHz). In both cases top shows 97% or even 99% idle.
+modprobing it again speeds the cpu up again.
 
+So module uhci-hcd prehibits the cpu clock from saving power on notebooks. =
+(At=20
+least theese with P4-M cpus)
+
+What code forces the cpu to run at high speed? Can I tweak the module to=20
+permit slower cpu speed?
+
+Thomas Bettler
+
+--nextPart1216614.ZKd03Oksu9
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.6 (GNU/Linux)
+
+iD8DBQBBuehvePDD0plw9EYRAiNLAJ9oUnPfEkAfDRwkjZuUj3UPZq+JKQCgxyJk
+Jbv6WGlItHQpxSz9fs9+IT8=
+=0I7S
+-----END PGP SIGNATURE-----
+
+--nextPart1216614.ZKd03Oksu9--
