@@ -1,76 +1,53 @@
-From: Riccardo Vestrini <riccardov@sssup.it>
-Subject: Re: is it really better speedstep-ich vs. p4-clockmod cpufreq driver?
-Date: Fri, 23 Jul 2004 01:10:07 +0200
-Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <4100494F.1020803@sssup.it>
-References: <40FF88BE.2090507@sssup.it> <Pine.LNX.4.58.0407220902350.9845@simba.math.ucla.edu>
+From: "Max T. Woodbury" <max.teneyck.woodbury@verizon.net>
+Subject: Thinkpad 760ED configuration problems
+Date: Fri, 23 Jul 2004 15:56:10 +0100
+Sender: linux-ide-owner@vger.kernel.org
+Message-ID: <4100E0BA.1050562B@verizon.net>
 Mime-Version: 1.0
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-laptop-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.58.0407220902350.9845@simba.math.ucla.edu>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ide-owner@vger.kernel.org>
 List-Id: <linux-laptop.vger.kernel.org>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
-To: linux-laptop@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+To: linux-laptop@vger.kernel.org, linux-thinkpad@linux-thinkpad.org, linux-ide@vger.kernel.org
 
-Jim Carter wrote:
-> On Thu, 22 Jul 2004, Riccardo Vestrini wrote:
-  >>it seems that speedstep-ich and acpi cpufreq driver have only two=20
-usable clock
->>frequencies, while p4-clockmod has eight
->>my cpu is: Intel Mobile Intel(R) Pentium(R) 4   CPU 3.06GHz stepping =
-09
->=20
->=20
-> Definitely the voltage modulation is important to have.
-you right, but I do not know if it is better to have a 0.3 GHz clock=20
-most of the time, or a 1.5 GHz with half voltage
->=20
-> Also as for strategies, if you have dynamic speed modulation, general=
-ly if
-> the CPU is busy less than 73% of the time, then my machine should be =
-run at
-> the lowest speed, whereas if tasks are waiting to run then it should =
-be put
-> in the highest speed.  In a typical workload it's very rare for the n=
-eeded
-> throughput to be steadily between 73% and 100% so the intermediate sp=
-eeds
-> could be useful; this is true even if the available speed range is gr=
-eater. =20
-> Actually, hardly anyone uses the full capacity of their CPU, and I do=
-n't
-> even bother to run the dynamic modulation daemon, just leaving it at =
-low
-> speed all the time.  I switch manually if I have a big simulation to =
-do.
->=20
-it is the same for me, cpu is almost always set to the lowest frequency=
-,=20
-  but I often compile programs, so I need the full power
+I have a Thinkpad 760 ED. (Model 9546-U3A, BIOS HZET72WW 08/07/99)
 
-  I consider strange the fact that a more specific driver=20
-(speedstep-ich) is not able to put my laptop to half voltage + mininum=20
-clock (which is 0.3 GHz) while p4-clockmod is only able to adjust clock=
-=20
-and not voltage;
-probably these capabilities can be merged some way ...
-I will try to write the authors
+There is fairly strong evidence that the BIOS on this machine is not
+setting up the PCI configuration registers to the standard Linux 
+expects.  For example, a temporary patch suggested by Bartlomiej 
+Zolnierkiewicz on the linux-ide list ended up crashing the 2.6.7 
+kernel during init and there are messages about unassigned IRQs and
+DMA addresses in the log.
 
-thank you
+I suspect that the correct way to fix this problem is to have a
+routine redo the PCI configuration fairly early in the kernel setup 
+sequence, but I'm not sure exactly where/when to put it.  It should be 
+done after the CPU and memory are setup, but before PCI setup ends.  
+I suspect that it should be done at the beginning of the PCI setup 
+process.  There is a whole bunch of stuff in 'quirks' that seems to be
+similar but I've only skimmed that code so far.  Does this belong there?
+If so, which list has people who fiddle with PCI on it?
 
---=20
+I'm also not sure how to detect when this correction is needed. I
+suspect that the revision number of some BIOS component would be
+key to determining if this should be done, but I have no idea
+how to get that information.  It is probably covered by some
+standard specification, but I've been looking for a couple weeks
+and I don't think I've found the correct specification yet. (I
+did find a new load of specifications yesterday and haven't finished
+reading them, thus the 'think'.)  Suggestions on where this might
+be documented would be appreciated.
 
-                                Riccardo Vestrini
-                               <riccardov@sssup.it>
+Finally, the actual configuration information is stored someplace.
+I suspect that it is in the cmos memory.  The kernel-module-thinkpad
+project has a module in it that provides access to this information,
+but I suspect a NIH problem and that there are other standard ways to
+get at the information.  Aside from that, there is the question of
+which cmos bytes control which part of the configuration process.
+Again, I suspect that I can dig this out of other peoples projects,
+particularly the tpctl project, but a more original source might be
+more appropriate.  Again, advice on where to look would be appreciated.
 
-"Io ho una deformazione professionale, sono Ingegnere, e il problema in
-quello che lei dice =E8 l'essere umano, perch=E9 una macchina pu=F2 sba=
-gliare
-ma l'essere umano ha sicuramente molti pi=F9 difetti" --
-sconosciuto ad un congresso, mentre un manager parlava di risorse umane
+If nothing else, I can RE the BIOS, but I'd really like to avoid that.
 
--
-To unsubscribe from this list: send the line "unsubscribe linux-laptop"=
- in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+max@mtew.isa-geek.net
