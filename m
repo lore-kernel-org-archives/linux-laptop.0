@@ -1,54 +1,33 @@
-From: FaRaOhh <faraohh@ih.com.br>
-Subject: Re: Problem kernel 2.6 with Toshiba
-Date: 21 Aug 2003 10:44:13 -0300
+From: "Brown, Len" <len.brown@intel.com>
+Subject: Toshiba Tecra vs ACPI
+Date: Thu, 21 Aug 2003 20:30:23 -0400
 Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <1061473007.578.24.camel@toshibao>
-References: <BF1FE1855350A0479097B3A0D2A80EE009FC65@hdsmsx402.hd.intel.com>
-	 <1061070314.553.13.camel@toshibao>  <rvq65ksy7ly.fsf@alkofen.muc.sdm.de>
+Message-ID: <BF1FE1855350A0479097B3A0D2A80EE009FCAD@hdsmsx402.hd.intel.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-laptop-owner@vger.kernel.org>
-In-Reply-To: <rvq65ksy7ly.fsf@alkofen.muc.sdm.de>
+content-class: urn:content-classes:message
 List-Id: <linux-laptop.vger.kernel.org>
-Content-Type: text/plain; charset="iso-8859-1"
-To: "Perkens-Golomb, Burkhard" <burkhard.perkens-golomb@sdm.de>
-Cc: linux-laptop@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+To: linux-laptop@vger.kernel.org, acpi-devel@lists.sourceforge.net
 
-Em Qua, 2003-08-20 =E0s 06:57, Perkens-Golomb, Burkhard escreveu:
-> I'm not sure but did you set all necessary IDE parameters during
-> kernel configuration? Particulary:
->=20
-> ,----
-> | # CONFIG_BLK_DEV_HD_IDE is not set
-> | # CONFIG_BLK_DEV_HD is not set
-> | CONFIG_BLK_DEV_IDEDISK=3Dm
-> `----
->=20
-> I remember the error message when I forgot to include IDE support in
-> the kernel :-) .
->=20
->     Burkhard
->=20
-Change the error.
+Does anybody have a Toshiba Tecra that boots an ACPI-enabled kernel?
+If yes, can you send me the output from dmidecode so that I can identify
+the BIOS date?
+http://www.nongnu.org/dmidecode/  (I'd also be intersted in the output
+of acpidmp)
 
-devfs_mk_dir: Invalid argument <6>hda: hda1 hda2 hda3 hda4
-ACPI: (supports S0 S3 S4 S5)
-hda: bad access: block=3D 21462842, count=3D2
-end_request: I/O error, dev hda, sector 21462842
-EXT2-fs: unable to read superblock
-hda: bad access: block 21462904, count=3D2
-end_request: I/O error, dev hda, sector 21462904
-isofs_full_super: bread failed, dev=3Dhda3, iso_blknum=3D16, block=3D32
-kernel panic: VFS Unable to mount root fs on hda3
+I've found that the Tecra 8100 has AML bugs that we can't handle
+(missing return statements when they are required).  And we will not be
+able to handle them any time soon (w/o a DSDT over-ride).
 
-My /boot/grub/menu.lst is:
-root(hd0,2)
-kernel /boot/vmlinuz-2.6.0-test2 root=3D/dev/hda3
+So I'm thinking about black-listing the 8100 by default; and the 8000
+and 8200 may be right behind it.  Unfortunately, the DMI info for the
+8100 has an empty product name under system information, where one would
+expect to see "Tecra 8100".  So I'm thinking about disabling ACPI by
+default on all systems with DMI BIOS vendor "TOSHIBA", BIOS Release Date
+<= 10/07/2002 -- the date of the latest BIOS for the 8100; and Base
+Board product name "Portable PC".
 
-Now do you think that is? help me again...
-
--
-To unsubscribe from this list: send the line "unsubscribe linux-laptop"=
- in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+-Len
