@@ -1,26 +1,28 @@
-From: Richard Spencer <rspr@sunflower.com>
-Subject: Re: NetGear FA410TX
-Date: Sat, 1 Feb 2003 10:19:23 -0500
+From: Werner Heuser <Werner.Heuser@web.de>
+Subject: Linux on Laptops Updated
+Date: Sun, 9 Feb 2003 18:28:55 -0100
 Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <20030201101923.A772@jetty>
-References: <20030201101357.B719@jetty>
+Message-ID: <20030209192855.GG4566@mobilix.org>
 Mime-Version: 1.0
 Return-path: <linux-laptop-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20030201101357.B719@jetty>; from rspr@sunflower.com on Sat, Feb 01, 2003 at 10:13:57AM -0500
 List-Id: <linux-laptop.vger.kernel.org>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-laptop@vger.kernel.org
+To: "linux-laptop@vger.kernel.org" <linux-laptop@vger.kernel.org>
 
-* Richard Spencer <rspr@sunflower.com> [030201 10:14]:
-> I was wondering if someone could look at my start-up messages and tell me 
+The well known site Linux on Laptops (http://www.linux-on-laptops.com)
+has got a major update today. Kenneth E. Harker is back
+in the drivers seat. His site was unmaintained almost
+one year. Kenneth maintains the database, which contains
+information about Linux on almost any laptop since 1996.
 
-by the way, the error messages are new. They refer to the last line in my /etc/pcmcia/config, which reads:
+	Werner
 
-source ./config.opts
 
-and I can't understand why the error messages occur (/etc/pcmcia/config.opts 
-exists.)
-
---- cut here ---
+-- 
+|=| Werner Heuser = Keplerstr. 11A = D-10589 Berlin = Germany
+|=| <wehe_AT_mobilix.org>      T. 0049 - (0)30 - 349 53 86
+|=| http://MobiliX.org         UniX on Mobile Systems: HOWTOs,Software
+|=| http://Xtops.DE            Laptops+PDAs pre-installed with UniX
+|*| This is no time for phony rhetoric -- Lou Reed
