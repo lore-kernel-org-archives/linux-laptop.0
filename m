@@ -1,29 +1,40 @@
-From: Michael Lachner <michael.lachner@landshut.org>
+From: davidsen@tmr.com (bill davidsen)
 Subject: Re: Acer laptops review?
-Date: Thu, 11 Sep 2003 14:36:03 +0200
+Date: 6 Oct 2003 12:02:26 GMT
 Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <200309111436.03870.michael.lachner@landshut.org>
-References: <3F6068AD.5000008@gmx.met>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Message-ID: <blrlki$gbd$1@gatekeeper.tmr.com>
+References: <3F6068AD.5000008@gmx.met> <200309111432.51826.arzie@dds.nl>
 Return-path: <linux-laptop-owner@vger.kernel.org>
-In-Reply-To: <3F6068AD.5000008@gmx.met>
-Content-Disposition: inline
 List-Id: <linux-laptop.vger.kernel.org>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-laptop@vger.kernel.org
 
-Hello, 
+In article <200309111432.51826.arzie@dds.nl>,
+Robert Zwerus  <arzie@dds.nl> wrote:
+| On Thursday 11 September 2003 14:21, Adrian Cioclu wrote:
+| > Are them of any good? Do they work properly in Linux?
+| 
+| http://www.linux-on-laptops.com/acer.html
+| http://www.linux.org/hardware/laptop.html
+| http://tuxmobil.org/acer.html
 
-> Does anybody have experience with Acer laptops?
-> Are them of any good? Do they work properly in Linux?
+I just wish the information at l-o-l was organized for a search on
+something other than brand, since brand is sometimes that target rather
+than the key, in very general terms.
 
-I have an Acer Aspire 1203VX, and it runs perfectly under SuSE Linux 8.2.
+I was looking for a laptop which had Centrino/pentium-M for battery life
+and which worked with 2.6 kernels. Spent a lot of time and either there
+isn't one or someone with more time than I will have to find it.
 
-The Hardware:
-Intel Celeron 1300MHz, 256MB RAM, 20GB HDD, 8xDVD-ROM, 3,5"-FDD, Via PM133 
-Twister Chipset with S3 Savage4 graphics controller integrated
+Given the state of 2.6 power management, I have no trouble finding units
+which won't boot, or suspend, or have disfunctional parts, but I haven't
+identified the one which actually works :-(
 
-regards,
-
-mike
+I'll go look at the other links, but I think they are optimized for
+search by brand as well.
+-- 
+bill davidsen <davidsen@tmr.com>
+  CTO, TMR Associates, Inc
+Doing interesting things with little computers since 1979.
