@@ -1,54 +1,75 @@
-From: Werner Heuser <Werner.Heuser@web.de>
-Subject: ANN: lanoche - laptop or notebook report generator for HTML 0.7
-Date: Mon, 24 Mar 2003 13:25:29 -0100
+From: Josh Brooks <user@mail.econolodgetulsa.com>
+Subject: patching X for zoomed video support
+Date: Mon, 24 Mar 2003 10:33:43 -0800 (PST)
 Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <20030324142529.GC13220@tuxmobil.org>
+Message-ID: <20030324101652.C93691-100000@mail.econolodgetulsa.com>
 Mime-Version: 1.0
 Return-path: <linux-laptop-owner@vger.kernel.org>
-Content-Disposition: inline
 List-Id: <linux-laptop.vger.kernel.org>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "linux-laptop@vger.kernel.org" <linux-laptop@vger.kernel.org>
+To: linux-laptop@vger.kernel.org
 
-Hi,
 
-issue 0.7 of 
+Hello,
 
-	lanoche - laptop or notebook hardware report in HTML
+I have two questions regarding patching the neomagic driver in XFree86 to
+support zoomed video on-screen in X.  First, some background:
 
-is available at http://tuxmobil.org/software.html
+Hardware: Toshiba Libretto 100ct
+Kernel:	2.4.20 with pcmcia in-kernel, using pcmcia-cs 3.1.26
+XFree86: 4.1.0
+Slackware 8.0 (very default install)
 
-'lanoche' makes writing reports about Linux on different laptops a little
-easier. It generates a hardware report about laptop specific features in
-HTML. It is a small shell script, using programs like: `SuperProbe',
-`free', `apm' and others to get hardware information.
+I have a patch that will allow using my margi "dvd to go" zoomed video
+cardbus card and display the video on-screen.  The README for this patch
+tells me:
 
-Currently no hardware libraries are used, but you may find a short survey
-of libraries and other hardware detection tools below.
+3. How to apply this patch
 
-The name LaNoChe is an acronym of "LAptop or NOtebook CHEck".
+  cd xc/program/Xserver/hw/xfree86/drivers/neomagic
+  patch -p1 -s < neomagic.diff
+  make
+  make install
 
-The program is not much sophisticated yet, but I hope it will
-be a start in the right direction. A Debian/GNU Linux package
-is also available at the download site an soon on the testing release.
+When I do this, I get no errors from patch - so the patch seems to work -
+it should, since the patch was written for XFree96-4.1.0, and I am using
+it on the 4.1.0 source tree - so all is well, I suppose.
 
-Please note these URLs have moved from mobilix.org to tuxmobil.org because
-of severe trademark trouble with Asterix and Obelix. A documentation of the
-trademark case is at http://tuxmobil.org/mobilix_asterix.html
+However, there is no Makefile, only an Imakefile - so the next step is to
+run xmkmf, which succeeds and outputs:
 
-Werner
+imake -DUseInstalled -I/usr/X11R6/lib/X11/config
 
-Changes:
+so now I have a Makefile - and I continue following the instructions and
+run `make`.  But make bombs out with:
 
-o improved programm description
-o removed the usage of SuperProbe use xviddetect instead
-o use mktemp to generate temporary files
-o config file moved to /etc/lanoche/, minor cleanups
-o changed download URL from mobilix.org to tuxmobil.org,
-  because of trademark troubles
--- 
-|=| Werner Heuser = Keplerstr. 11A = D-10589 Berlin = Germany
-|=| <wehe at tuxmobil.org>     T. 0049 - (0)30 - 349 53 86
-|=| http://TuxMobil.org        UniX on Mobile Systems: HOWTOs,Software
-|*| This is no time for phony rhetoric -- Lou Reed
+neo_driver.c:40: xf86.h: No such file or directory
+neo_driver.c:41: xf86_OSproc.h: No such file or directory
+neo_driver.c:42: xf86_ansic.h: No such file or directory
+neo_driver.c:45: compiler.h: No such file or directory
+neo_driver.c:47: xf86Resources.h: No such file or directory
+neo_driver.c:50: xf86PciInfo.h: No such file or directory
+neo_driver.c:53: xf86Pci.h: No such file or directory
+
+... and so on ... presumably bombing for every .h specified in
+neo_driver.c and every file included from it.
+
+----------
+
+So here are the two questions:
+
+1. Why is the make failing ?  I don't think it is a problem with X or the
+patch or anything, I think it is a general "I have very little experience
+compiling things" error and I think I am just missing a path or
+something...
+
+2. Is this scheme a sound one ?  Note that I am not reinstalling or even
+recompiling X, I am just patching the neomagic driver and then running
+`make ; make install` (I checked, the Makefile does have an install rule)
+... do I then just start X and I will be using a patched neomagic driver ?
+
+Any additional comments appreciated.
+
+Thanks!
+
