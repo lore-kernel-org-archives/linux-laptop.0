@@ -1,55 +1,45 @@
-From: Werner Heuser <Werner.Heuser@web.de>
-Subject: Trademark Trouble: MobiliX wins Against Obelix
-Date: Thu, 13 Jun 2002 13:11:27 +0200
+From: "Mr. James W. Laferriere" <babydr@baby-dragons.com>
+Subject: fyi: Procedure to gain physical access Toshiba 1605cds Harddisk
+Date: Sun, 16 Jun 2002 21:43:38 -0400 (EDT)
 Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <3D087DDF.C63E5E33@web.de>
-Reply-To: Werner Heuser <wehe@mobilix.org>
+Message-ID: <Pine.LNX.4.44.0206162140420.13122-100000@filesrv1.baby-dragons.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-laptop-owner@vger.kernel.org>
 List-Id: <linux-laptop.vger.kernel.org>
-Content-Type: text/plain; charset="iso-8859-1"
-To: "linux-laptop@vger.kernel.org" <linux-laptop@vger.kernel.org>
-
-In the hearing from June 12th the court=20
-has rejected the arguments of
-"L=E9s Editions Albert Ren=E9". The court says=20
-the words "MobiliX" and "Obelix" can
-hardly be mixed up with each other. Also the work of MobiliX=20
-is dedicated to another audience. This is a great
-success for the Free Software Community.
-
-MobiliX is a very wellknown site dedicated to
-Linux and BSD on mobile devices (like laptops, PDAs,
-cell phones and more). In November 2001 Werner Heuser, owner of=20
-the Open Source project MobiliX  - UniX on Mobile Computers=20
-(http://mobilix.org) was charged by "L=E9s Editions Albert Ren=E9",=20
-which is owner of the trademark "Obelix".=20
-In their opinion the names Obelix and MobiliX are
-very similar. The charge aimed on a deletion of the
-trademark "MobiliX" and a compensation fee.
-
-The charge has been discussed in many newsgroups
-and mailing lists. It seems to be a very important case
-for the Free Software Community, because there are
-many projects, which names are also ending on "iX".
-Some other projects have even silently withdrawn=20
-there names, because the financial risk of loosing a trademark
-case is high.
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-laptop@vger.kernel.org
 
 
-The documentation of the case is available online
-(http://mobilix.org/de/mobilix_asterix.html).
-It includes the letters from MobiliX lawerys=20
-Jaschinski Biere Brexl - JBB (http://www.jbb.de).
---=20
-|=3D| Werner Heuser =3D Keplerstr. 11A =3D D-10589 Berlin =3D Germany
-|=3D| <wehe(@)mobilix.org>       T. 0049 - (0)30 - 349 53 86
-|=3D| http://MobiliX.org         Linux and BSD on Mobile Computers
-|=3D| http://Xtops.DE            Laptops+PDAs pre-installed with UniX
-|*| This  is  no  time  for  phony  rhetoric  --  Lou Reed
--
-To unsubscribe from this list: send the line "unsubscribe linux-laptop"=
- in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Hello All ,  Mr. Eddie Sparks <streetdoc@ioa.com> sent along his
+	findings on how to break into the toshiba without breaking it ;-)
+	I have -one- correction to make to it .	 Hth ,  JimL
+
+Turn the laptop over and search for three holes marked with a 'K' and
+remove these three screws.
+Then ...
+
+---------- Forwarded message ----------
+Date: Thu, 15 Nov 2001 01:32:23 -0500
+From: Eddie Sparks <streetdoc@ioa.com>
+To: babydr@baby-dragons.com
+Subject: Procedure to gain physical access Toshiba 1605cds Harddisk ?
+
+Below the display, there is panel where all the little LED's are located
+indicating power on, Hard drive, etc.
+You must use a fine small screwdrive and detatch or remove this small
+panel which will reveal the hinges for the display.
+Once this is removed, you will see 4 screws holding the keyboard in
+place. Remove those screws and slide the keyboard toward the
+display and it will come up.  The hard drive is just below it. Two
+screws hold the hard drive bracket in place. Remove those screws
+ and the hard drive will lift up and un plug. I had the same problem
+trying to find mine and lucked up on it before I destroyed my case.
+
+
+       +------------------------------------------------------------------+
+       | James   W.   Laferriere | System    Techniques | Give me VMS     |
+       | Network        Engineer |     P.O. Box 854     |  Give me Linux  |
+       | babydr@baby-dragons.com | Coudersport PA 16915 |   only  on  AXP |
+       +------------------------------------------------------------------+
+
