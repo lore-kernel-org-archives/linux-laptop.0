@@ -1,93 +1,70 @@
-From: "Virgil" <yyz001@euroseek.com>
-Subject: Re: Kernel problems with HP ze4145
-Date: Sun, 27 Apr 2003 13:28:02 -0400
+From: Alex Riesen <alexander.riesen@synopsys.COM>
+Subject: 2.5.69+bk: oops in apmd after waking up from suspend mode
+Date: Wed, 14 May 2003 11:48:13 +0200
 Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <web-3337523@euroseek.com>
-References: <20030425111159.GB660@erdbeere.net>
+Message-ID: <20030514094813.GA14904@Synopsys.COM>
+Reply-To: alexander.riesen@synopsys.COM
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7BIT
 Return-path: <linux-laptop-owner@vger.kernel.org>
-In-Reply-To: <20030425111159.GB660@erdbeere.net>
+Content-Disposition: inline
 List-Id: <linux-laptop.vger.kernel.org>
-Content-Type: text/plain; charset="us-ascii"; 
-To: linux-laptop@vger.kernel.org
-Cc: Patrick Plattes <patrick@erdbeere.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: linux-laptop@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Patrick,
+Hi,
 
-> is there anything interessting in /var/log/* ?
-No, there's absolutely nothing interesting in both 
-kern.log and sys.log.
+I have an old Compaq Armada 1592DT. The thing goes automagically into
+suspend mode after being forgotten for a while. And there is this button
+to wake it up (the blue one, above the keyboard).
 
-I did ln -sf ../init.d/usb-init S45usb in /etc/rc.d/rc3.d 
-so that the modules would be loaded automatically at 
-startup.
+Last time i tried to wake it up it produced the attached oops.
+"Unknown key"s are probable the blue button.
+After printing out the oops, the system went back into suspend.
 
-My /etc/rc.d/init.d/usb-init script
-#!/bin/bash
-#Begin /etc/rc.d/init.d/usb-init
+-alex
 
-source /etc/sysconfig/rc
-source $rc_functions
+Suspending devices
+Suspending device c03219ac
+Unable to handle kernel NULL pointer dereference at virtual address 00000090
+ printing eip:
+c011459f
+*pde = 00000000
+Oops: 0000 [#1]
+CPU:    0
+EIP:    0060:[<c011459f>]    Not tainted
+EFLAGS: 00010202
+EIP is at fix_processor_context+0x5f/0x100
+eax: 0000007c   ebx: c5f0e000   ecx: 00000002   edx: 00000000
+esi: 00000060   edi: 00000000   ebp: c5f0ff5c   esp: c5f0ff54
+ds: 007b   es: 007b   ss: 0068
+Process kapmd (pid: 4, threadinfo=c5f0e000 task=c5fbc640)
+Stack: c5f0e000 00000060 c5f0ff64 c0114529 c5f0ff78 c01135c8 00000002 00000000 
+       00000002 c5f0ff8c c0113845 00000001 c5f0e000 c5f0ffb4 c5f0ffdc c0113aa4 
+       00000000 c5fbc640 c0117950 00000000 00000000 c0290000 c030f6b4 00000000 
+Call Trace:
+ [<c0114529>] restore_processor_state+0x69/0x80
+ [<c01135c8>] suspend+0x138/0x200
+ [<c0113845>] check_events+0xf5/0x230
+ [<c0113aa4>] apm_mainloop+0x94/0xb0
+ [<c0117950>] default_wake_function+0x0/0x20
+ [<c0117950>] default_wake_function+0x0/0x20
+ [<c01141a0>] apm+0x0/0x280
+ [<c0114262>] apm+0xc2/0x280
+ [<c0107255>] kernel_thread_helper+0x5/0x10
 
-case "$1" in
-       start)
-                echo "Initialising USB..."
-                modprobe usbcore
-                modprobe usb-ohci
-                evaluate_retval
-                ;;
-       stop)
-                echo "Unloading USB..."
-                rmmod usb-ohci
-                rmmod usbcore
-                evaluate_retval
-                ;;
-       restart)
-                $0 stop
-                sleep 1
-                $0 start
-                ;;
-       status)
-                lsmod | grep usb-ohci
-                evaluate_retval
-                ;;
-       *)
-                echo "Usage: $0 
-{start|stop|restart|status}"
-                exit 1
-                ;;
-esac
-# End /etc/rc.d/init.d/usb-init
+Code: 8b 48 14 8b 42 7c 85 c0 75 0a b9 00 10 29 c0 b8 05 00 00 00 
+ <6>note: kapmd[4] exited with preempt_count 2
+hda: dma_timer_expiry: dma status == 0x61
+atkbd.c: Unknown key (set 2, scancode 0xb6, on isa0060/serio0) pressed.
+atkbd.c: Unknown key (set 2, scancode 0x9d, on isa0060/serio0) pressed.
+atkbd.c: Unknown key (set 2, scancode 0x19d, on isa0060/serio0) pressed.
+atkbd.c: Unknown key (set 2, scancode 0xb8, on isa0060/serio0) pressed.
+hda: timeout waiting for DMA
+hda: timeout waiting for DMA
+hda: (__ide_dma_test_irq) called while not waiting
+atkbd.c: Unknown key (set 2, scancode 0x1b8, on isa0060/serio0) pressed.
 
----------- Excerpt from kern.log --------------
-usb.c: registered new driver usbdevfs
-usb.c: registered new driver hub
-usb-ohci.c: USB OHCI at membase 0xe08cb00, IRQ 9
-usb-ohci.c: usb-00:02.0, Acer Laboratories Inc. [ALi] USB 
-1.1 Controller
-usb.c: new USB bus registered, assigned bus number 1
-hub.c: USB hub found
-hub.c: 4 ports detected
-(At this point the keyboard does not work, so I pressed 
-the power button)
-Kernel logging (proc) stopped
-Kernel log daemon terminating
----------- end kern.log -----------------------
-
-Exactly the above messages appear if I manually do the 
-modprobe, except this time the keyboard no longer locks.
-
-So, at this point I'm really out of ideas. Does anyone 
-think posting my problem on linux-kernel would yield 
-anything?
-
-Virgil
--------------------------------------------------
-Search for pictures with Euroseek Image Search
-http://euroseek.com/image_search/
-
-Euroseek Translation
-http://www.euroseek.com/translator/
 
 
