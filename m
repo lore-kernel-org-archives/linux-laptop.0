@@ -1,34 +1,26 @@
-From: Toni Vicens Arasanz <toni_vicens@terra.es>
-Subject: video viewing problem with an Acer Travelmate
-Date: 28 Aug 2003 00:25:07 +0500
+From: davidsen@tmr.com (bill davidsen)
+Subject: Centrino laptop source?
+Date: 28 Aug 2003 03:43:03 GMT
 Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <1062012307.11036.152.camel@toni_portatil.localhost>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Message-ID: <bijto7$q7l$1@gatekeeper.tmr.com>
 Return-path: <linux-laptop-owner@vger.kernel.org>
 List-Id: <linux-laptop.vger.kernel.org>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-laptop@vger.kernel.org
 
-Hi to all,
+I'm looking to buy a laptop which is (a) Centrino base for the battery
+life, (b) Linux compatible (would I post here else?), (c) available from
+a vendor who is likely to be in business in a year, and (d) available
+without and o/s installed, for obvious reasons.
 
-I would like to know if someone has come through the following problem,
-and has been able to solve it. 
+The various supported lists seem to omit current machines and install
+o/s information.
 
-
-Whenever I try to play a dvd movie with xine or ogle I get a blue bar
-which divides the image. You can see some screenshots at
-http://www.terra.es/personal5/avicens/. The same happens when I try to
-play an mgeg or an avi with xine or mplayer from the cd or from the hard
-disk.
-
-
-I'm running RedHat 9 in an Acer Travelmate 612 laptop which has an Intel
-82815 graphics controller. The driver I'm using is i810.
-
-
-Any help will be greatly appreciated!
-
-Thanks a lot.
-
-
+i will be handing these to a client and I *don't* want to support them
+in the hardware sense!
+-- 
+bill davidsen <davidsen@tmr.com>
+  CTO, TMR Associates, Inc
+Doing interesting things with little computers since 1979.
