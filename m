@@ -1,9 +1,8 @@
 From: Beartooth <vze2r8s9@verizon.net>
-Subject: Re: Connect YDL on iBook to Airport Base Station? -- Found it!
-Date: Thu, 26 Sep 2002 17:20:45 -0400
+Subject: How to be fully MS-free on a laptop??
+Date: Thu, 03 Oct 2002 15:54:13 -0400
 Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <amvthr$gbr$1@main.gmane.org>
-References: <amns3i$3ig$1@main.gmane.org>
+Message-ID: <ani745$to2$1@main.gmane.org>
 Reply-To: karhunhammas@lserv.com
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -12,27 +11,28 @@ List-Id: <linux-laptop.vger.kernel.org>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-laptop@vger.kernel.org
 
-In article <amns3i$3ig$1@main.gmane.org>, "Beartooth"
-<vze2r8s9@verizon.net> quoth unto the electronic
-multitude, saying :
-	(snipperoo)
-> 	I have the Terrasoft YDL manual, and have tried
-> repeatedly to follow Appendix D on setting up the
-> connection between the YDL partition and the hub; I
-> *think* I have all the info out of the OSX connection
-> -- but that was such a dental-surgery operation that
-> I can't be sure.
-	(snipperee)
-	The How-to on Terrasoft's site for configuring the
-base station looks at first glance to be identical to
-the manual chapter that wasn't sufficing; but if you
-look close, it has been updated just enough to add the
-one item of info it needed. I can connect now.
+Not having heard of the Great Satan's buy-in when it
+happened, I got an ibook thinking it would save me
+having to scour odd evil bits of code that might
+infest obscure corners -- only to have it boot up with
+IE, big as life. 
+
+	First question: is that all, or are there other
+contaminating and corrupting electronic pollutants?
+
+	Second: how do I best get rid of it/them, and be sure
+to leave no traces? I've never had any experience with
+Apples before.
+
+	Third: what should I have done? I.e., how do you get
+a clean laptop to start with? Are there any? Or do you
+have to do a lot of bell book & candle work wherever
+you start??
 
 -- 
 Beartooth the Stubborn <karhunhammas (at) lserv.com>
-double retiree, linux hatchling RH 7.2, YDL 2.2, OSX 10.1.5
-Pine 4.43,Pan 0.11.2; Privoxy, Opera 6.03, Galeon 1.2.5
+double retiree & linux hatchling w/ RH 7.2, YDL 2.2, & OSX 10.1
+Pine 4.43, Opera 6.03, Pan 0.11.2, Galeon 1.2.5, Mozilla 1.0
 Delenda est MegaSleazo! http://www.linuxmall.com/refund/
 
 
