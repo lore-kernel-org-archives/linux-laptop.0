@@ -1,45 +1,49 @@
-From: "Mr. James W. Laferriere" <babydr@baby-dragons.com>
-Subject: fyi: Procedure to gain physical access Toshiba 1605cds Harddisk
-Date: Sun, 16 Jun 2002 21:43:38 -0400 (EDT)
+From: "E. Robert Bogusta" <rob23@tmr.com>
+Subject: Re: Make it fast
+Date: Fri, 21 Jun 2002 09:53:32 -0400 (EDT)
 Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <Pine.LNX.4.44.0206162140420.13122-100000@filesrv1.baby-dragons.com>
+Message-ID: <Pine.LNX.3.96.1020621094117.11267E-100000@gatekeeper.tmr.com>
+References: <200206090855.23480.felix.seeger@gmx.de>
 Mime-Version: 1.0
 Return-path: <linux-laptop-owner@vger.kernel.org>
+In-Reply-To: <200206090855.23480.felix.seeger@gmx.de>
 List-Id: <linux-laptop.vger.kernel.org>
 Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-laptop@vger.kernel.org
+To: Felix Seeger <felix.seeger@gmx.de>
+Cc: linux-laptop@vger.kernel.org
 
+On Sun, 9 Jun 2002, Felix Seeger wrote:
 
-	Hello All ,  Mr. Eddie Sparks <streetdoc@ioa.com> sent along his
-	findings on how to break into the toshiba without breaking it ;-)
-	I have -one- correction to make to it .	 Hth ,  JimL
+> The problem is: I want a modern desktop.
+> 
+> At the moment I'm compiling kde 3 drom cvs head to be sure that I have the 
+> newest version with lesser mem leaks.
+> I tried to remove all eye-candy things but it is slow.
 
-Turn the laptop over and search for three holes marked with a 'K' and
-remove these three screws.
-Then ...
+I don't doubt that! You really seem to be out of memory, does `free' show
+a lot of swap used? I have 128 in one laptop and it's still marginal,
+while a 486-25 with 12MB is usable with a 2.0 kernel and fvwm95 (no, I'm
+not a Windows user, I like it better than plain fvwm).
 
----------- Forwarded message ----------
-Date: Thu, 15 Nov 2001 01:32:23 -0500
-From: Eddie Sparks <streetdoc@ioa.com>
-To: babydr@baby-dragons.com
-Subject: Procedure to gain physical access Toshiba 1605cds Harddisk ?
+> Now my desktop is tuned but I have to tune Linux.
+> I already remove daemons (e.g. webmin).
+> I can't tune more. There is only the Linux kernel which is a normal build so I 
+> thought there may be some things that I can set in the kernel config to make 
+> it a bit faster.
+> 
+> Maybe I should try 2.5 ?
 
-Below the display, there is panel where all the little LED's are located
-indicating power on, Hard drive, etc.
-You must use a fine small screwdrive and detatch or remove this small
-panel which will reveal the hinges for the display.
-Once this is removed, you will see 4 screws holding the keyboard in
-place. Remove those screws and slide the keyboard toward the
-display and it will come up.  The hard drive is just below it. Two
-screws hold the hard drive bracket in place. Remove those screws
- and the hard drive will lift up and un plug. I had the same problem
-trying to find mine and lucked up on it before I destroyed my case.
+Try 2.4.19-pre10-ac2 + preempt, or the new 2.4.19-pre10aa4. Turn off
+everything you don't absolutely need and then make everything you don't
+need all the time a module. That means serial, parallel, ppp, sound if you
+have it, all network and netfilter, nfs, samba, modularize it all. If you
+do much with playing CDs, grab the "CD audio via DMA" patch floating
+around and drop that in, it will save you some CPU.
 
+> This laptop has no critical mission.
 
-       +------------------------------------------------------------------+
-       | James   W.   Laferriere | System    Techniques | Give me VMS     |
-       | Network        Engineer |     P.O. Box 854     |  Give me Linux  |
-       | babydr@baby-dragons.com | Coudersport PA 16915 |   only  on  AXP |
-       +------------------------------------------------------------------+
+I somehow suspected that.
+
+		-- rob bogus
 
