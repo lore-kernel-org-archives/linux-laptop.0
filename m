@@ -1,38 +1,45 @@
-From: Chris <volthead@yahoo.com>
-Subject: Re: Make it fast
-Date: Sun, 09 Jun 2002 03:58:55 -0700
+From: Nicolas Salamin <salaminn@tcd.ie>
+Subject: fsck and shutdown
+Date: Sun, 9 Jun 2002 14:29:58 +0100 (IST)
 Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <3D0334EF.70107@yahoo.com>
-References: <200206090824.39195.felix.seeger@gmx.de> <20020609114420.A5635@Addy> <200206091155.37932.felix.seeger@gmx.de>
+Message-ID: <Pine.LNX.4.21.0206091419030.9105-100000@dnabank.bot.tcd.ie>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-laptop-owner@vger.kernel.org>
 List-Id: <linux-laptop.vger.kernel.org>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Felix Seeger <felix.seeger@gmx.de>
-Cc: linux-laptop@vger.kernel.org
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-laptop@vger.kernel.org
 
-Felix Seeger wrote:
+Hi,
 
-> 
-> The cpu is not the problem. It is a 650 Mhz Celeron.
-> I know there are some options for gcc, g++ but I don't know them.
-> Is there a website for this kind of gcc use or other information ?
-> 
-> Maybe I try to compile kde with gcc 3.1 and opti options, maybe that helps.
-> 
+I've got SuSE linux 7.3 installed on a Dell Inspiron 2500. I recently got
+a problem when shutting down (or restarting) the computer. At boot up, the
+message "/dev/hda4 (root partition) not cleanly unmouted" appears and
+fsck is run to check the filesystems. But that's when "shutdown -h (or
+-r) now" is used to shutdown the computer, and even when the "/dev/hda4 
+unmounted" appears in the message log during the shutdown.
+I tried to check /etc/fstab or /etc/inittab but nothing seems wrong. Any
+ideas??
 
-Just curious, have you tried blackbox at all as a desktop environment? 
- From what I've seen it's a pretty slick environment, while still being 
-quite light on the system resources and looking good.  If you're running 
-slackware you can get the slackware package (YES slackware has a package 
-manager...) from 
-ftp.slackware.com/pub/slackware/slackware-current/extra/blackbox-0.62.1/
+Thanks,
 
-The home page for blackbox is http://blackboxwm.sourceforge.net
+Nicolas
 
+-- 
 
-Good Luck
+===============================================
+Nicolas Salamin
+Department of Botany
+Trinity College
+Dublin 2 / Ireland
 
--Chris
+e-mail: salaminn@tcd.ie
+	 or n.salamin@rbgkew.org.uk
+
+tel: +353-1-608-1421
+fax: +353-1-608-1147
+
+web page:
+http://www.tcd.ie/Botany/Postgrad/NSalamin.html
+-----------------------------------------------
 
