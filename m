@@ -1,8 +1,8 @@
 From: Chuck Gelm <chuck@gelm.org>
 Subject: Re: Experiences with Kdrive/TinyX on laptops??
-Date: Thu, 16 Jan 2003 19:01:13 -0500
+Date: Thu, 16 Jan 2003 19:01:00 -0500
 Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <3E2747C9.E271E941@gelm.org>
+Message-ID: <3E2747BC.4F6C8105@gelm.org>
 References: <20030116123943.30db183b.Jan.Van_Belle@alcatel.be>
 Reply-To: chuck@gelm.org
 Mime-Version: 1.0
@@ -30,3 +30,8 @@ Jan Van Belle wrote:
 > Kind regards,
 > 
 > Jan
+> 
+> -
+> To unsubscribe from this list: send the line "unsubscribe linux-laptop" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
