@@ -1,52 +1,77 @@
-From: Maximilian Decker <burbon04@gmx.de>
-Subject: linux-wlan-ng and kernel 2.6.10-rc3
-Date: Thu, 16 Dec 2004 11:29:49 +0100
-Message-ID: <41C1639D.4040303@gmx.de>
+From: Nishanth Aravamudan <nacc@us.ibm.com>
+Subject: apm_mainloop() waitqueue usage
+Date: Thu, 16 Dec 2004 12:06:19 -0800
+Message-ID: <20041216200619.GD2565@us.ibm.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-laptop-owner@vger.kernel.org>
+Content-Disposition: inline
 Sender: linux-laptop-owner@vger.kernel.org
 List-Id: <linux-laptop.vger.kernel.org>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-laptop@vger.kernel.org, linux-wlan-user@lists.linux-wlan.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: sfr@canb.auug.org.au
+Cc: linux-laptop@vger.kernel.org
 
-Hi all,
+Hello,
 
-sorry for posting that again, but my recent mail seemed to get
-lost somewhere (at least it is not shown in the archives ....)
-... please apologize if some of you get it twice ...
+I am working on a Kernel Janitors TODO entry dealing with the use of
+schedule_timeout(). In the process, I came across
+arch/i386/kernel/apm.c::apm_mainloop(), which uses waitqueues &
+schedule_timeout() to check for events at a regular interval, depending on
+waitqueue events occurring.
 
-----------
+A few considerations:
 
-Like many others I also had problems with prism2 based pcmcia cards
-and the 2.6.10 kernels - the logs showed messages about unresolved
-symbols and the card just refused to work.
-It turned out that internal changes in the recent linux kernels
-simply broke compatibility to software like linux-wlan-ng.
-(well, maybe the next version of linux-wlan-ng will solve that issue,
-but I do not know when it will be released .....
-.... if someone knows, please let me know - thanks)
-
-If you want to use linux-wlan-ng-0.2.1pre23 with linux 2.6.10-rc3, you
-might want to try my patch that brings back the deprecated "dev_get"
-and again exports hotplug_path. I know it is kind of ugly to workaround
-like that, but I did not want to wait for the next linux-wlan-ng release
-;-) Well, it works for me...
-
-if you are interested, you can get it here:
-http://burbon04.gmxhome.de/linux/files/2.6.10_old_hotplug.diff.gz
-
-for more information see:
-http://burbon04.gmxhome.de/linux/2.6.10_hotplug.html
-
-(use it at your own risk ! absolutely no warranty ;-)
+Ideally, I would like to convert as many waitqueue users as possible to the
+wait_event* family of macros. For reference, here is the code in 2.6.10-rc3:
 
 
+static void apm_mainloop(void)
+{
+	DECLARE_WAITQUEUE(wait, current);
 
-Cheers,
+	add_wait_queue(&apm_waitqueue, &wait);
+	set_current_state(TASK_INTERRUPTIBLE);
+	for (;;) {
+		schedule_timeout(APM_CHECK_TIMEOUT);
+		if (exit_kapmd)
+			break;
+		/*
+		 * Ok, check all events, check for idle (and mark us sleeping
+		 * so as not to count towards the load average)..
+		 */
+		set_current_state(TASK_INTERRUPTIBLE);
+		apm_event_handler();
+	}
+	remove_wait_queue(&apm_waitqueue, &wait);
+}
 
-- Maximilian
+I have already easily changed the pre-loop initialization to:
 
+	DECLARE_WAITQUEUE(wait, current);
 
+	prepare_to_wait(&apm_waitqueue, &wait, TASK_UNINTERRUPTIBLE);
 
+First, I changed the state to TASK_UNINTERRUPTIBLE. The code as it is does not
+deal with signals in any way (that I see); I believe that is incorrect for
+TASK_INTERRUPTIBLE sleeps, as the code must deal with both potential waitqueue
+events & signals as being the cause for early wakeups. Please correct me if I
+misunderstood.
 
+Second, if the call to apm_event_handler() were not there, the change to
+wait_event_timeout() would be very straightforward, as the code would be
+identical... However, the call is there. So, I have a few questions:
+
+Do you think it would be possible to perhaps change the structuring of the
+function? I don't think it is, but it can't hurt to ask.
+
+Second, if I added another macro to the wait_event family which allows the
+invocation of a function at an interval (effectively exactly what you do in
+apm_mainloop), would you be willing to convert to this macro? -- presuming of
+course, the community agreed to merge the new macro to mainline.
+
+Third, if neither of these options appeals to you, I may just push a patch
+which does the prepare_to_wait() change.
+
+Thanks,
+Nish
