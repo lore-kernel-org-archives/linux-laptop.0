@@ -1,29 +1,19 @@
-From: "octavio" <first21suzuki@hotmail.com>
-Subject: Virility patch, will help you amaze girls!
-Date: Fri, 05 Mar 2004 06:32:49 GMT
+From: Victor Gregorio <victor@opsource.net>
+Subject: 2.6.4 kernel options for console?
+Date: Fri, 02 Apr 2004 14:23:25 -0800
 Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <1078468369-29680__31986.8319937543$1078468453@excite.com>
+Message-ID: <406DE7DD.2000402@opsource.net>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-laptop-owner@vger.kernel.org>
 List-Id: <linux-laptop.vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain;; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-laptop@vger.kernel.org
 
-Publications such as Maxim, GQ and Stuff have written about the all new Virility Patch RX which is the first high-tech patch designed to dramatically increase both penis size and male potency. No other male erectile growth formula works faster, is more effective or is easier to use than Virility Patch RX.
+Hello.  I am having problems getting my console (init 3) working for my 
+IBM R40 using Linux 2.6.4 (and 2.6.4-rc3).  X works fine, but the 
+console appears dead.  What kernel options should I look at in my 
+.config?  I have been tweaking all the "CONSOLE_*" options so far to no 
+avail.
 
-Learn more about it here: http://drugsbusiness.com/pp/index.php?pid=eph9106
-
-
-
-
-
-
-
-
-
-andre beautifuasterix chiquita lucas mars fozzie goat 
-orchid sallyjordan23 shelley amelie
-fiona benoit volley 
-
-Get off this list by going here: http://drugsbusiness.com/pp/applepie.php
+Thank you, Victor.
