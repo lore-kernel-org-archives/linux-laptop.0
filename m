@@ -1,26 +1,26 @@
-From: davidsen@tmr.com (bill davidsen)
-Subject: Centrino laptop source?
-Date: 28 Aug 2003 03:43:03 GMT
+From: Helge Hielscher <hhielscher@gmx.de>
+Subject: alternative to ctrl-alt-+ ?
+Date: Sat, 30 Aug 2003 00:19:32 +0200
 Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <bijto7$q7l$1@gatekeeper.tmr.com>
+Message-ID: <pan.2003.08.29.22.19.31.291970@gmx.de>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7BIT
 Return-path: <linux-laptop-owner@vger.kernel.org>
 List-Id: <linux-laptop.vger.kernel.org>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-laptop@vger.kernel.org
 
-I'm looking to buy a laptop which is (a) Centrino base for the battery
-life, (b) Linux compatible (would I post here else?), (c) available from
-a vendor who is likely to be in business in a year, and (d) available
-without and o/s installed, for obvious reasons.
+Hello,
 
-The various supported lists seem to omit current machines and install
-o/s information.
+I would like to change the resolution sometimes, but ctrl-alt-plus or
+ctrl-alt-minus do not work on my Thinkpad R40.
 
-i will be handing these to a client and I *don't* want to support them
-in the hardware sense!
--- 
-bill davidsen <davidsen@tmr.com>
-  CTO, TMR Associates, Inc
-Doing interesting things with little computers since 1979.
+I have tried xrandr, but it changes the virtual resolution too.
+
+Are there any alternative combinations one can use?
+
+Regards,
+Helge
+
+
+
