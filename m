@@ -1,40 +1,28 @@
-From: Daniel Pittman <daniel@rimspace.net>
-Subject: Re: Laptop hot under linux
-Date: Tue, 14 Sep 2004 10:45:26 +1000
+From: saiph <noskp@email.it>
+Subject: acpid failure
+Date: Mon, 11 Oct 2004 08:50:43 +0200
 Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <878ybd8yqh.fsf@enki.rimspace.net>
-References: <4145D617.1030308@spymac.com>
-	<000001c499e2$82015300$0201a8c0@migueliyo>
+Message-ID: <200410110850.43143.noskp@email.it>
 Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-laptop-owner@vger.kernel.org>
+Content-Disposition: inline
 List-Id: <linux-laptop.vger.kernel.org>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-laptop@vger.kernel.org
 
-On 14 Sep 2004, Miguel A. wrote:
 
-It is generally much nicer to write replies *under* the existing text,
-rather than at the top, since that is the natural way people read
-English text. :)
+hy list,
 
-[... overheating since the fan does not activate under Linux ...]
+i've some kernel problems with acpi subsystem.
+with 2.4.27 serie all work well, with a 2.8.6.1 vanilla kernell
+the shutdown is incomplete (i see acpi_power_off message)
 
-> Thanks for the idea, but ACPI is already enable and even I can do a  
-> "acpi -t" and see how temperature is going up but fan do not speed up
-> :(
+the laptop is a sony vaio z1xmp.
 
-One of the problems with ACPI is that while it can improve power
-management performance it can also cause issues if it depends on the OS
-doing work than Linux does not.
+thank you.
+regards
 
-The other thing to try is turning *off* ACPI support in Linux, and
-determine if it works correctly then.
-
-Regards,
-        Daniel
 -- 
-Vision without action is merely a dream. Action without vision just
-passes the time. Vision with action can change the world.
-        -- Joel Barker
-
+>here are more things in heaven and earth,
+horatio, than are dreamt of in your philosophy.
