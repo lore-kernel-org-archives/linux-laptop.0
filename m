@@ -1,29 +1,33 @@
 From: "E. Robert Bogusta" <rob23@tmr.com>
-Subject: Re: Make it fast
-Date: Fri, 21 Jun 2002 09:58:05 -0400 (EDT)
+Subject: Re: fsck and shutdown
+Date: Fri, 21 Jun 2002 10:03:50 -0400 (EDT)
 Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <Pine.LNX.3.96.1020621095558.11267G-100000@gatekeeper.tmr.com>
-References: <20020609114420.A5635@Addy>
+Message-ID: <Pine.LNX.3.96.1020621100000.11267H-100000@gatekeeper.tmr.com>
+References: <Pine.LNX.4.21.0206091419030.9105-100000@dnabank.bot.tcd.ie>
 Mime-Version: 1.0
 Return-path: <linux-laptop-owner@vger.kernel.org>
-In-Reply-To: <20020609114420.A5635@Addy>
+In-Reply-To: <Pine.LNX.4.21.0206091419030.9105-100000@dnabank.bot.tcd.ie>
 List-Id: <linux-laptop.vger.kernel.org>
 Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Patrick Onegin <patrick@onegin.de>
+To: Nicolas Salamin <salaminn@tcd.ie>
 Cc: linux-laptop@vger.kernel.org
 
-On Sun, 9 Jun 2002, Patrick Onegin wrote:
+On Sun, 9 Jun 2002, Nicolas Salamin wrote:
 
-> have you tried compiling the sources with gcc optimisation options?
-> usually boosts applications a bit in the range from 5-10%.
-> optimisation can slow down your compile time seriously when having a
-> slower cpu.
+> I've got SuSE linux 7.3 installed on a Dell Inspiron 2500. I recently got
+> a problem when shutting down (or restarting) the computer. At boot up, the
+> message "/dev/hda4 (root partition) not cleanly unmouted" appears and
+> fsck is run to check the filesystems. But that's when "shutdown -h (or
+> -r) now" is used to shutdown the computer, and even when the "/dev/hda4 
+> unmounted" appears in the message log during the shutdown.
+> I tried to check /etc/fstab or /etc/inittab but nothing seems wrong. Any
+> ideas??
 
-Hey! There's a thought, gcc 3.1 has an option, I think -Os, to make the
-code as small as possible, as well as the usual other things. I think CPU
-is the problem for running things and memory for graphics, sort of the
-worst of all possible worlds.
+One cause of this is that some other filesystem doesn't get unmounted
+cleanly. I've seen this when a compact flash hangs. It's not a laptop
+problem only, if that's what's causing it. Making root ext3 will lessen
+the pain.
 
 		-- rob bogus
 
