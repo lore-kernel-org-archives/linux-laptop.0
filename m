@@ -1,84 +1,53 @@
-From: Vadim <lkml@vadim.ws>
-Subject: APM suspend on 2.6.0-test9 causes Toshiba 470CDT laptop to hang after resume
-Date: Sun, 26 Oct 2003 23:14:44 +0100
+From: Werner Heuser <Werner.Heuser@web.de>
+Subject: new issue of the Linux-Mobile-Guide
+Date: Thu, 20 Nov 2003 10:29:10 +0100
 Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <200310262314.58446.lkml@vadim.ws>
+Message-ID: <20031120092910.GD14810@tuxmobil.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1;
-  boundary="Boundary-02=_idEn/OdIqOFhXdH";
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-laptop-owner@vger.kernel.org>
-List-Id: <linux-laptop.vger.kernel.org>
-To: sfr@canb.auug.org.au, weissg@vienna.at
-Cc: linux-laptop@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb-users@lists.sourceforge.net
-
-
---Boundary-02=_idEn/OdIqOFhXdH
-Content-Type: text/plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Content-Description: signed data
 Content-Disposition: inline
+List-Id: <linux-laptop.vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: "linux-laptop@vger.kernel.org" <linux-laptop@vger.kernel.org>
 
-When I suspend and later resume on this laptop it looks like=20
-everything that involves the disk breaks.  For example, when I=20
-tried this after resume:
 
-dmesg > dmesg.log
-sync
+Hi,
 
-it hung on sync. The kernel seems to continue working, for=20
-example I can scroll up, but anything I try to run hangs. USB=20
-seems to break as well, if I connect a card reader after resume=20
-there's no kernel messages, and its LED doesn't light. Here are=20
-some messages I copied:
+a new issue of the Linux-Mobile-Guide is available. This guide covers
+laptop, PDA and mobile phone related Linux features, such as installation
+methods (via PCMCIA, without CD drive, etc.), hardware features (PCMCIA,
+IrDA, BlueTooth, APM, ACPI, etc.) and configurations for different
+(network) environments. 
 
-(apm --suspend)
-hdc: start_power_step(step: 0)
-hdc: completing PM request, suspend
-hda: start_power_step(step: 0)
-hda: start_power_step(step: 1)
-hda: complete_power_step(step: 1, stat: 50, err: 0)
-hda: completing PM request, suspend
-ohci_hdc 000:00:0b.0: suspend D4 --> D3
-ohci_hdc 000:00:0b.0: suspend to 3
-ohci_hdc 000:00:0b.0: suspended
 
-(resume, apm --suspend not returning, Ctrl+C works to abort it)
-ohci_hdc 000:00:0b.0: resume from state D4
-ohci_hdc 000:00:0b.0: OHCI 1.0, with legacy support registers
-ohci_hdc 000:00:0b.0: control 0x000 HCFS=3Dreset CBSR=3D0
-ohci_hdc 000:00:0b.0: cmdstatus 0x00000 SOC=3D0
-ohci_hdc 000:00:0b.0: intrstatus 0x00000000
-ohci_hdc 000:00:0b.0: intrenable 0x00000000
-ohci_hdc 000:00:0b.0: USB restart
-usb usb1: USB disconnect, address 1
-usb 1-1: usb_disable_device nuking all URBs
-ohci_hcd 0000:00:0b.0: shutdown urb c1297f00 pipe 40408180=20
-ep1in-intr
-usb usb1: unregistering interface 1-0:1.0
-usb usb1: hcd_unlink_urb c1297f00 fail -22
+Werner
 
-Thanks in advance
+Downlaod:
 
-=2D-=20
-Use the PGP path finder to find a trust path to my key:
-http://the.earth.li/~noodles/pathfind.html
+There are different formats (HTML, IPK for Linux PDAs) available
+http://tuxmobil.org/howtos.html
 
---Boundary-02=_idEn/OdIqOFhXdH
-Content-Type: application/pgp-signature
-Content-Description: signature
+Changes:
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.3 (GNU/Linux)
-
-iD8DBQA/nEdivCkUtBccqkoRApZdAKCgQI9I/fmjBtcjwH02qh54qgriCQCdEpFL
-tnSQAOpGdk1DXPKkmjf+Au0=
-=5Lmp
------END PGP SIGNATURE-----
-
---Boundary-02=_idEn/OdIqOFhXdH--
-
+v3.14 19 November 2003, 
+- APM chapter and Different Environments section were reworked
+  by Thomas Hood http://panopticon.csustan.edu/thood/tp600lnx.htm ,
+- some links to different ACPI-HOWTOs were added,
+- a chapter about Intel's Centrino technology was added,
+- some remedies to cure fan problems were added,
+- the URL of the Battery FAQ was added to the battery chapter,
+- added link to Tclkeymon driver for Toshiba hotkeys,
+- a new section about port replicators/docking stations for laptops
+  was added to the USB accessories chapter,
+- some remarks about screen rotations under X11 were added,
+- some additions to the cross-compiling chapter for the Zaurus PDA were made,
+- a virtual keyboard chapter was added,
+- a new section about BlueTooth dongles for PDAs was added,
+- a new section about the ecological status of laptops was added to the appendix,
+- minor changes
+-- 
+|=| Werner Heuser = Berliner Str. 122 = D-13187 Berlin = Germany
+|=| <wehe at tuxmobil.org>     T. 0049 - (0)30 - 349 53 86
+|=| http://TuxMobil.org        UniX on Mobile Systems: HOWTOs,Software
+|*| This is no time for phony rhetoric -- Lou Reed
