@@ -1,48 +1,35 @@
-From: Werner Heuser <Werner.Heuser@web.de>
-Subject: ANN: Infrared-HOWTO 3.4
-Date: Fri, 6 Sep 2002 07:17:52 -0100
+From: "Wilbur R. Johnson" <wrjohns@sandia.gov>
+Subject: Bad laptop video
+Date: Sat, 07 Sep 2002 13:21:26 -0600
 Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <20020906081752.GF6487@mobilix.org>
+Message-ID: <3D7A51B6.CB5B1D75@sandia.gov>
 Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-laptop-owner@vger.kernel.org>
-Content-Disposition: inline
 List-Id: <linux-laptop.vger.kernel.org>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: "linux-laptop@vger.kernel.org" <linux-laptop@vger.kernel.org>
+To: linux-laptop@vger.kernel.org
 
-Hi,
+I have installed 7.3 redhat on my DELL C600. Everything works great for all my
+applications until I try using the alternate video port to send video to an infocus.
 
-the new issue v3.4 of the Linux-InfraRed-HOWTO is available at
-http://mobilix.org/howtos.html
+After that, everything screws up.
 
-Werner
+1. Have to use right and left mouse button to "grab" windows to move them.
+2, My perfectly functional Java (1.3.1) application blows up (no error other than
+abort).
 
-changes:
+Guess I'm looking for someone who knows these things well.
+Anybody out there have experienced the same? Solved the
+problem?
 
-- improved the Linux PDA (Agenda, iPAQ, Yopy, Zaurus) chapter 
-  with information about PPP, OpenOBEX, printing and more,
-- worked the new syntax for -s option of irattach into the 
-  appropriate sections,
-- reworked and improved the IrDA and USB chapter,
-- reworked printing stuff, removed obsolet hints to 
-  irlpt_server and IrLPT, 
-- described how to use the Common Unix Printing System - CUPS,
-- added the new irda-users mailing list address as well as 
-  of the new archive,
-- added links to Gnome IrDA applet and Beamster GTK/Python 
-  into the new GUI section,
-- added link to Japanese translation,
-- added information about some LIRC programms 
-  (IR Chooser, IControl, jlirc),
-- changed all references to URLs into hyperlinks,
-- changed all @s in mail addresses to _at_ to help 
-  prevent spam (at least a little),
-- URL corrections (LDP, ..),
-- minor changes (spell checking, formatting)
--- 
-|=| Werner Heuser = Keplerstr. 11A = D-10589 Berlin = Germany
-|=| <wehe_AT_mobilix.org>      T. 0049 - (0)30 - 349 53 86
-|=| http://MobiliX.org         UniX on Mobile Systems: HOWTOs,Software
-|=| http://Xtops.DE            Laptops+PDAs pre-installed with UniX
-|*| This is no time for phony rhetoric -- Lou Reed
+Thanks....
+
+--
+Wilbur R. Johnson
+Distributed Decision Support Systems
+Sandia National Laboratories
+
+
+
+
