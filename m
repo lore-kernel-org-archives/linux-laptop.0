@@ -1,50 +1,86 @@
 From: "Virgil" <yyz001@euroseek.com>
-Subject: Kernel problems with HP ze4145
-Date: Thu, 24 Apr 2003 20:56:39 -0400
+Subject: Re: Kernel problems with HP ze4145
+Date: Sun, 27 Apr 2003 13:28:02 -0400
 Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <web-3290494@euroseek.com>
+Message-ID: <web-3337523@euroseek.com>
+References: <20030425111159.GB660@erdbeere.net>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Return-path: <linux-laptop-owner@vger.kernel.org>
+In-Reply-To: <20030425111159.GB660@erdbeere.net>
 List-Id: <linux-laptop.vger.kernel.org>
 Content-Type: text/plain; charset="us-ascii"; 
 To: linux-laptop@vger.kernel.org
+Cc: Patrick Plattes <patrick@erdbeere.net>
 
-Hello,
+Patrick,
 
-This particular laptop has an Athlon XP1800 mobile 
-processor with an ALI USB 1.1 controller. It uses a 
-synaptics PS/2 touchpad. In the following I'll try to best 
-describe the problem I have.
+> is there anything interessting in /var/log/* ?
+No, there's absolutely nothing interesting in both 
+kern.log and sys.log.
 
-Kernel versions covered: 2.4.19 - 2.4.21pre6 patched with 
-acpi-patch. Distribution: none (LFS 4.0)
+I did ln -sf ../init.d/usb-init S45usb in /etc/rc.d/rc3.d 
+so that the modules would be loaded automatically at 
+startup.
 
-1) I compiled the kernel with usb support built-in (not as 
-modules). Upon booting and entering the login prompt, the 
-keyboard is blocked (i.e. I can't write anything with it). 
-If I press the power button, the computer enters runlevel 
-6 (so it is not frozen) and powers off.
+My /etc/rc.d/init.d/usb-init script
+#!/bin/bash
+#Begin /etc/rc.d/init.d/usb-init
 
-2) Recompile the kernel with usb as modules (usbcore and 
-usb-ohci) and do a script in /etc/rc.d/init.d/ to load the 
-modules at boot time. Symptoms stay as above.
+source /etc/sysconfig/rc
+source $rc_functions
 
-3) Remove the script from /etc/rc.d/rc3.d (e.g.). Boot. 
-Login as root. The keyboard works (yee!). Do cat 
-/dev/mouse. Keyboard no longer works (all three LEDs light 
-up). Reboot.
+case "$1" in
+       start)
+                echo "Initialising USB..."
+                modprobe usbcore
+                modprobe usb-ohci
+                evaluate_retval
+                ;;
+       stop)
+                echo "Unloading USB..."
+                rmmod usb-ohci
+                rmmod usbcore
+                evaluate_retval
+                ;;
+       restart)
+                $0 stop
+                sleep 1
+                $0 start
+                ;;
+       status)
+                lsmod | grep usb-ohci
+                evaluate_retval
+                ;;
+       *)
+                echo "Usage: $0 
+{start|stop|restart|status}"
+                exit 1
+                ;;
+esac
+# End /etc/rc.d/init.d/usb-init
 
-4) Do step 3 above but don't cat the mouse anymore. 
-Instead do modprobe usbcore and modprobe usb-ohci. The 
-keyboard is NOT blocked. Do cat /dev/mouse. The mouse 
-works (yee). Do mount -t usbdevfs none /proc/bus/usb. The 
-USB filesystem is initialised and the USB works 
-beautifully (tested with a digital camera and a scanner).
+---------- Excerpt from kern.log --------------
+usb.c: registered new driver usbdevfs
+usb.c: registered new driver hub
+usb-ohci.c: USB OHCI at membase 0xe08cb00, IRQ 9
+usb-ohci.c: usb-00:02.0, Acer Laboratories Inc. [ALi] USB 
+1.1 Controller
+usb.c: new USB bus registered, assigned bus number 1
+hub.c: USB hub found
+hub.c: 4 ports detected
+(At this point the keyboard does not work, so I pressed 
+the power button)
+Kernel logging (proc) stopped
+Kernel log daemon terminating
+---------- end kern.log -----------------------
 
-So, does any1 have a similar problem and a real solution 
-on this thing? Do I do something wrong? Is this a kernel 
-bug?
+Exactly the above messages appear if I manually do the 
+modprobe, except this time the keyboard no longer locks.
+
+So, at this point I'm really out of ideas. Does anyone 
+think posting my problem on linux-kernel would yield 
+anything?
 
 Virgil
 -------------------------------------------------
