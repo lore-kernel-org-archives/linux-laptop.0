@@ -1,53 +1,27 @@
-From: Werner Heuser <Werner.Heuser@web.de>
-Subject: new issue of the Linux-Mobile-Guide
-Date: Thu, 20 Nov 2003 10:29:10 +0100
+From: Joshua Rogers <joshuarogers@hopper.net>
+Subject: Dell Inspiron 1100 Video Woes
+Date: Thu, 27 Nov 2003 10:50:42 -0600
 Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <20031120092910.GD14810@tuxmobil.org>
+Message-ID: <3FC62B62.4030802@hopper.net>
 Mime-Version: 1.0
-Return-path: <linux-laptop-owner@vger.kernel.org>
-Content-Disposition: inline
-List-Id: <linux-laptop.vger.kernel.org>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Return-path: <linux-laptop-owner@vger.kernel.org>
+List-Id: <linux-laptop.vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: "linux-laptop@vger.kernel.org" <linux-laptop@vger.kernel.org>
 
+Hi.
 
-Hi,
+Recently I upgraded the BIOS on my Dell Inspiron 1100.  I upgraded it to 
+A23.  Now, when ever I try and use Linux (right now I'm trying SuSE 9.0, 
+but it did the same thing with Mandrake 9.2) If I try and use 8 bit 
+color, then it outputs at 1024x768.  If I choose 16bit color it only 
+displays at 640x480.  If I choose 24bit (which I've always used in the 
+past) I'm told that my BIOS doesn't support that mode.  I read of some 
+other people with similar problems, but couldn't find a solution.  My 
+video chipset is the i845.  I would greatly appreciate advice.  Until I 
+get this solved I'm having to use Windows XP Home.
 
-a new issue of the Linux-Mobile-Guide is available. This guide covers
-laptop, PDA and mobile phone related Linux features, such as installation
-methods (via PCMCIA, without CD drive, etc.), hardware features (PCMCIA,
-IrDA, BlueTooth, APM, ACPI, etc.) and configurations for different
-(network) environments. 
+Thanks for the assistance,
+Joshua Rogers
 
-
-Werner
-
-Downlaod:
-
-There are different formats (HTML, IPK for Linux PDAs) available
-http://tuxmobil.org/howtos.html
-
-Changes:
-
-v3.14 19 November 2003, 
-- APM chapter and Different Environments section were reworked
-  by Thomas Hood http://panopticon.csustan.edu/thood/tp600lnx.htm ,
-- some links to different ACPI-HOWTOs were added,
-- a chapter about Intel's Centrino technology was added,
-- some remedies to cure fan problems were added,
-- the URL of the Battery FAQ was added to the battery chapter,
-- added link to Tclkeymon driver for Toshiba hotkeys,
-- a new section about port replicators/docking stations for laptops
-  was added to the USB accessories chapter,
-- some remarks about screen rotations under X11 were added,
-- some additions to the cross-compiling chapter for the Zaurus PDA were made,
-- a virtual keyboard chapter was added,
-- a new section about BlueTooth dongles for PDAs was added,
-- a new section about the ecological status of laptops was added to the appendix,
-- minor changes
--- 
-|=| Werner Heuser = Berliner Str. 122 = D-13187 Berlin = Germany
-|=| <wehe at tuxmobil.org>     T. 0049 - (0)30 - 349 53 86
-|=| http://TuxMobil.org        UniX on Mobile Systems: HOWTOs,Software
-|*| This is no time for phony rhetoric -- Lou Reed
