@@ -1,105 +1,55 @@
-From: Patrick Onegin <patrick@onegin.de>
-Subject: Fwd: Re[2]: Make it fast
-Date: Sun, 9 Jun 2002 19:03:50 +0200
+From: Werner Heuser <Werner.Heuser@web.de>
+Subject: Trademark Trouble: MobiliX wins Against Obelix
+Date: Thu, 13 Jun 2002 13:11:27 +0200
 Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <1953629839.20020609190350@onegin.de>
-References: <200206090824.39195.felix.seeger@gmx.de>
- <20020609114420.A5635@Addy> <200206091155.37932.felix.seeger@gmx.de>
- <1562931715.20020609185212@onegin.de>
-Reply-To: Patrick Onegin <patrick@onegin.de>
+Message-ID: <3D087DDF.C63E5E33@web.de>
+Reply-To: Werner Heuser <wehe@mobilix.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-laptop-owner@vger.kernel.org>
-In-Reply-To: <1562931715.20020609185212@onegin.de>
 List-Id: <linux-laptop.vger.kernel.org>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-laptop@vger.kernel.org
+Content-Type: text/plain; charset="iso-8859-1"
+To: "linux-laptop@vger.kernel.org" <linux-laptop@vger.kernel.org>
 
-the main options are described in the gcc manual.
-you'll find options here:
+In the hearing from June 12th the court=20
+has rejected the arguments of
+"L=E9s Editions Albert Ren=E9". The court says=20
+the words "MobiliX" and "Obelix" can
+hardly be mixed up with each other. Also the work of MobiliX=20
+is dedicated to another audience. This is a great
+success for the Free Software Community.
 
-http://gcc.gnu.org/onlinedocs/gcc-2.95.3/gcc_2.html#SEC16
+MobiliX is a very wellknown site dedicated to
+Linux and BSD on mobile devices (like laptops, PDAs,
+cell phones and more). In November 2001 Werner Heuser, owner of=20
+the Open Source project MobiliX  - UniX on Mobile Computers=20
+(http://mobilix.org) was charged by "L=E9s Editions Albert Ren=E9",=20
+which is owner of the trademark "Obelix".=20
+In their opinion the names Obelix and MobiliX are
+very similar. The charge aimed on a deletion of the
+trademark "MobiliX" and a compensation fee.
 
-optimization options are here:
-
-http://gcc.gnu.org/onlinedocs/gcc-2.95.3/gcc_2.html#SEC10
-
-rgds,
-
-/patrick onegin
-www.chickenteam.org
-
-FS> -----BEGIN PGP SIGNED MESSAGE-----
-FS> Hash: SHA1
-
-FS> The cpu is not the problem. It is a 650 Mhz Celeron.
-FS> I know there are some options for gcc, g++ but I don't know them.
-FS> Is there a website for this kind of gcc use or other information ?
-
-FS> Maybe I try to compile kde with gcc 3.1 and opti options, maybe that helps.
-
-
-FS> Am Sonntag, 9. Juni 2002 11:44 schrieb Patrick Onegin:
->> hi
->>
->> have you tried compiling the sources with gcc optimisation options?
->> usually boosts applications a bit in the range from 5-10%.
->> optimisation can slow down your compile time seriously when having a
->> slower cpu.
->> rgds,
->>
->> /patrick onegin
->> www.chickenteam.org
->>
->> On Sun, Jun 09, 2002 at 08:24:39AM +0200, Felix Seeger wrote:
->> > -----BEGIN PGP SIGNED MESSAGE-----
->> > Hash: SHA1
->> >
->> > Hi
->> >
->> > Are there any standard things that I can do to tune my linux on the
->> > laptop ? I have a vaio qr10.
->> > Everything runs nice only the battery management (I will see in 2.5 ;))
->> > and the speed. It has only 64 MB RAM and kde needs more.
->> > What can I do from the kernel side to make linux faster ?
->> >
->> > I use always the current 2.4 kernel
->> > Ext2
->> > Xfree 4.1
->> >
->> >
->> >
->> > thanks
->> > have fun
->> > Felix
->> > -----BEGIN PGP SIGNATURE-----
->> > Version: GnuPG v1.0.7 (GNU/Linux)
->> >
->> > iD8DBQE9AvSnS0DOrvdnsewRArFdAJ9YaY8jwc9CHdVy0WgIRweNfl+2GACeMYa6
->> > eSlK4sr5GPBq8PXgBH5QVGU=
->> > =SrWx
->> > -----END PGP SIGNATURE-----
->> >
->> > -
->> > To unsubscribe from this list: send the line "unsubscribe linux-laptop"
->> > in the body of a message to majordomo@vger.kernel.org
->> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
->> -
->> To unsubscribe from this list: send the line "unsubscribe linux-laptop" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-FS> -----BEGIN PGP SIGNATURE-----
-FS> Version: GnuPG v1.0.7 (GNU/Linux)
-
-FS> iD8DBQE9AyYZS0DOrvdnsewRAm1DAJ9SZohlIa1lT3GVXGQP8bLvCgEN+ACfeMdE
-FS> xW50uGvsDfXrP3Aj+o5bB8U=
-FS> =6wq6
-FS> -----END PGP SIGNATURE-----
-
-FS> -
-FS> To unsubscribe from this list: send the line "unsubscribe linux-laptop" in
-FS> the body of a message to majordomo@vger.kernel.org
-FS> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The charge has been discussed in many newsgroups
+and mailing lists. It seems to be a very important case
+for the Free Software Community, because there are
+many projects, which names are also ending on "iX".
+Some other projects have even silently withdrawn=20
+there names, because the financial risk of loosing a trademark
+case is high.
 
 
+The documentation of the case is available online
+(http://mobilix.org/de/mobilix_asterix.html).
+It includes the letters from MobiliX lawerys=20
+Jaschinski Biere Brexl - JBB (http://www.jbb.de).
+--=20
+|=3D| Werner Heuser =3D Keplerstr. 11A =3D D-10589 Berlin =3D Germany
+|=3D| <wehe(@)mobilix.org>       T. 0049 - (0)30 - 349 53 86
+|=3D| http://MobiliX.org         Linux and BSD on Mobile Computers
+|=3D| http://Xtops.DE            Laptops+PDAs pre-installed with UniX
+|*| This  is  no  time  for  phony  rhetoric  --  Lou Reed
+-
+To unsubscribe from this list: send the line "unsubscribe linux-laptop"=
+ in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
