@@ -1,48 +1,105 @@
-From: Werner Heuser <Werner.Heuser@web.de>
-Subject: ANN: Linux-Mobile-Guide v3.11 available
-Date: Mon, 4 Nov 2002 14:16:44 -0100
-Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <20021104151644.GC11436@mobilix.org>
+From: Paolo Pumilia <paolo.pumilia@acm.org>
+Subject: ioport.h fixed in 2.2.22
+Date: Sun, 10 Nov 2002 14:07:23 +0100
+Sender: netdev-bounce@oss.sgi.com
+Message-ID: <20021110130723.GA15090@wigner.cstc.lan>
+Reply-To: paolo.pumilia@inwind.it
 Mime-Version: 1.0
-Return-path: <linux-laptop-owner@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="oyUTqETQ0mS9luUI"
+Return-path: <netdev-bounce@oss.sgi.com>
 Content-Disposition: inline
+Errors-to: netdev-bounce@oss.sgi.com
 List-Id: <linux-laptop.vger.kernel.org>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: "linux-laptop@vger.kernel.org" <linux-laptop@vger.kernel.org>
+To: linux-laptop@vger.kernel.org, linux-config@vger.kernel.org, netdev@oss.sgi.com
 
-Hi,
+--oyUTqETQ0mS9luUI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-still fighting the trademark trouble Obelix versus MobiliX, I have
-found some time to finish a new issue of the Linux-Mobile-Guide.
+In order to compile 3.1.28 pcmcia modules (package pcmcia-cs-3.1.28), 
+commenting out lines referring to compatibility to kernel 2.4
+in file: include/linux/ioport.h, in kernel-source 2.2.22 has been
+required, 
+Here enclosed is my fixed file. 
 
-The Linux-Mobile-Guide  is a guide covering laptop and PDA related
-Linux features, such as installation methods (via PCMCIA, without
-CD drive, etc.), hardware features (PCMCIA, IrDA, APM, etc.), and
-configurations for different (network) environments. It's
-available at http://mobilix.org/howtos.html in HTML format and
-from the MobiliX IPK feed http://mobilix.org/feed.html
+Being just a newbie, i hope it has been the right action to take. 
 
-Werner
+Thank you 
 
-Changes:
+--
+Paolo Pumilia
+AICA- OpenSource workgroup 
+AICA OpenSource WorkGroup Coordinator 
+Website: http//www.linfe.it/AICA-OpenSource
 
-- added chapter about the SHARP Zaurus Linux PDA,
-- added SuSE Configuration Profile Management - SCPM
-  to mobile configuration chapter,
-- added link to new Synaptics TouchPad driver,
-- put the "Mobile Hardware" chapter behind the PDA chapter,
-- many URL corrections (LDP and others),
-- minor changes
 
-PS:
-A documentation of the trademark case is at
-http://mobilix.org/mobilix_asterix.html the next
-proceeding in court (second instance) is at
-November 21st 2002 at Oberlandesgericht Munich (Germany).
--- 
-|=| Werner Heuser = Keplerstr. 11A = D-10589 Berlin = Germany
-|=| <wehe_AT_mobilix.org>      T. 0049 - (0)30 - 349 53 86
-|=| http://MobiliX.org         UniX on Mobile Systems: HOWTOs,Software
-|=| http://Xtops.DE            Laptops+PDAs pre-installed with UniX
-|*| This is no time for phony rhetoric -- Lou Reed
+
+--oyUTqETQ0mS9luUI
+Content-Type: text/x-chdr; charset=us-ascii
+Content-Disposition: attachment; filename="v2.2.22-fixed-ioport.h"
+
+/* file:  /home/src/kernel-source-2.2.22/include/linux/ioport.h
+ * modified in order to allow pcmcia modules compilation 
+ * Paolo Pumilia, nov 10, 2002 - paolo.pumilia@acm.org
+ */ 
+
+/*
+ * portio.h	Definitions of routines for detecting, reserving and
+ *		allocating system resources.
+ *
+ * Version:	0.01	8/30/93
+ *
+ * Author:	Donald Becker (becker@super.org)
+ */
+
+#ifndef _LINUX_PORTIO_H
+#define _LINUX_PORTIO_H
+
+#define HAVE_PORTRESERVE
+/*
+ * Call check_region() before probing for your hardware.
+ * Once you have found you hardware, register it with request_region().
+ * If you unload the driver, use release_region to free ports.
+ */
+extern void reserve_setup(char *str, int *ints);
+extern int check_region(unsigned long from, unsigned long extent);
+extern void request_region(unsigned long from, unsigned long extent,const char *name);
+extern void release_region(unsigned long from, unsigned long extent);
+extern int get_ioport_list(char *);
+
+#ifdef __sparc__
+extern unsigned long occupy_region(unsigned long base, unsigned long end,
+				   unsigned long num, unsigned int align,
+				   const char *name);
+#endif
+
+#define HAVE_AUTOIRQ
+extern void autoirq_setup(int waittime);
+extern int autoirq_report(int waittime);
+
+/*
+ * for compatibility with 2.4
+ */
+
+/* commented out, in order to allow pcmcia modules compilation 
+ * Paolo Pumilia, nov 10, 2002 - paolo.pumilia@acm.org
+ *
+ * extern inline int check_mem_region(unsigned long from, unsigned long extent)
+ * {
+ * 	return 0;
+ * }
+ * 
+ * extern inline void request_mem_region(unsigned long from, unsigned long extent,const char *name)
+ * {
+ * }
+ * 
+ * extern inline void release_mem_region(unsigned long from, unsigned long extent)
+ * {
+ * }
+ */ 
+
+#endif	/* _LINUX_PORTIO_H */
+
+--oyUTqETQ0mS9luUI--
+
+
