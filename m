@@ -1,50 +1,53 @@
-From: Jamie Lokier <jamie@shareable.org>
+From: Rob Landley <rob@landley.net>
 Subject: Re: APM and 2.5.75 not resuming properly
-Date: Sat, 16 Aug 2003 17:12:13 +0100
-Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <20030816161213.GA24293@mail.jlokier.co.uk>
-References: <1059211833.576.13.camel@teapot.felipe-alfaro.com> <200308132024.36967.rob@landley.net> <3F3B41C7.1000906@mvista.com> <200308160510.44627.rob@landley.net> <20030816142933.GE23646@mail.jlokier.co.uk> <20030817010320.0668d246.sfr@canb.auug.org.au>
+Date: Sat, 16 Aug 2003 16:43:45 -0400
+Sender: linux-kernel-owner@vger.kernel.org
+Message-ID: <200308161643.45753.rob@landley.net>
+References: <1059211833.576.13.camel@teapot.felipe-alfaro.com> <200308160510.44627.rob@landley.net> <20030816142933.GE23646@mail.jlokier.co.uk>
+Reply-To: rob@landley.net
 Mime-Version: 1.0
-Return-path: <linux-laptop-owner@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner+linux-kernel=40quimby.gnus.org@vger.kernel.org>
+In-Reply-To: <20030816142933.GE23646@mail.jlokier.co.uk>
 Content-Disposition: inline
-In-Reply-To: <20030817010320.0668d246.sfr@canb.auug.org.au>
 List-Id: <linux-laptop.vger.kernel.org>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: rob@landley.net, george@mvista.com, linux-kernel@vger.kernel.org, linux-laptop@vger.kernel.org
+To: Jamie Lokier <jamie@shareable.org>
+Cc: George Anzinger <george@mvista.com>, LKML <linux-kernel@vger.kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>, linux-laptop@vger.kernel.org
 
-Stephen Rothwell wrote:
-> On Sat, 16 Aug 2003 15:29:33 +0100 Jamie Lokier <jamie@shareable.org> wrote:
-> > Rob Landley wrote:
-> > > (APM suspends, and then never comes back until you yank the #*%(&#
-> > > battery.  Great.  Trying it with the real mode bios calls next
-> > > reboot...)
-> > 
-> > Similar here.  Using 2.5.75.  APM with no local APIC (kernel is unable
-> > to enable it anyway).
-> > 
-> > It suspends.  On resume, the screen is blank and the keyboard doesn't
-> > respond (no Caps Lock or SysRq).  Occasionally when it resumes the
-> > keyboard does respond, but the screen stays blank.  At least it is
-> > possible to do SysRq-S SysRq-B in this state.  Sometimes, if I'm
-> > lucky, I can make it reboot by holding down the power key for 5 seconds.
-> 
-> I may have missed somthing, but let me ask anyway: What laptop? Have you
-> tried switching to a text console before suspending?  Have you tried
-> 	Options "NoPM" "True"
-> in the ServerFlags section of your XF86Config?
+On Saturday 16 August 2003 10:29, Jamie Lokier wrote:
+> Rob Landley wrote:
+> > (APM suspends, and then never comes back until you yank the #*%(&#
+> > battery.  Great.  Trying it with the real mode bios calls next
+> > reboot...)
+>
+> Similar here.  Using 2.5.75.  APM with no local APIC (kernel is unable
+> to enable it anyway).
 
-Toshiba Satellite 4070CDT.  APM has worked without any problems, in
-2.4 and earlier kernels, both Red Hat kernels and vanilla ones.
+I'm still trying to get 2.4.21 to work on the new hardware before tackling 
+2.5.  I think I've written off APM as a lost cause for the moment, though.  I 
+need to catch up on some real work for a bit, but I'll probably see if 2.5 is 
+also horked on monday.
 
-I'm not using X :)
+My problem is that although the drive spins down, the cpu fan goes off, and 
+the monitor goes black, the little "I am sleeping" moon shaped light never 
+lights up.  (And the "I am running off of battery" light never goes off.)
 
-I am using vesafb, as my text console.  Same with 2.4.
+Once it's in this state, there's no way to get the sucker to wake up.  I've 
+pressed every key, and fn-every key, and the power button (repeatedly), and 
+the special function keys, and the "thinkpad" key (whatever that's for...)
 
-I've just noticed a notable change: the Toshiba SMM driver.  That is
-now configured in, whereas before it was a module and I never loaded
-it.  Although I don't use it, when it initialises it does some funky
-SMM stuff - might that be breaking resume?
+If I hold the power button for ten seconds, the thing will fully power down, 
+so that if I press it again it'll reboot from a cold start.  I suppose this 
+is an improvement over popping the battery to get it out of "brick" mode...
 
--- Jamie
+> It suspends.  On resume, the screen is blank and the keyboard doesn't
+> respond (no Caps Lock or SysRq).
+
+If I could get it to resume at all, life would be good.
+
+> 2.4 APM works great.
+
+Not for me.  Still fiddling...
+
+Rob
