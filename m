@@ -1,65 +1,133 @@
-From: Werner Heuser <Werner.Heuser@web.de>
-Subject: MobiliX with new name TuxMobil.org
-Date: Thu, 20 Feb 2003 18:31:24 -0100
+From: Samuel Thibault <Samuel.Thibault@ens-lyon.fr>
+Subject: Re: [PATCH 2.4 & 2.5] Armada laptops' apm BIOS flaw
+Date: Sun, 03 Mar 2003 11:07:31 +0100
 Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <20030220193123.GD7533@tuxmobil.org>
+Message-ID: <20030228000731.GA721@bouh.famille.thibault.fr>
+References: <Pine.LNX.4.10.10208042353270.815-100000@unit.famille.thibault.fr> <200208051014.g75AEeg01377@devserv.devel.redhat.com>
+Reply-To: Samuel Thibault <samuel.thibault@fnac.net>
 Mime-Version: 1.0
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-laptop-owner@vger.kernel.org>
 Content-Disposition: inline
+In-Reply-To: <200208051014.g75AEeg01377@devserv.devel.redhat.com>
 List-Id: <linux-laptop.vger.kernel.org>
-Content-Type: text/plain; charset="iso-8859-1"
-To: "linux-laptop@vger.kernel.org" <linux-laptop@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Linus Torvalds <torvalds@transmeta.com>, Marcelo Rosatti <marcelo@conectiva.com.br>, Alan Cox <alan@redhat.com>
+Cc: Alastair McKinstry <mckinstry@computer.org>, Stephen Rothwell <sfr@canb.auug.org.au>, linux-laptop@vger.kernel.org, linux-kernel@vger.kernel.org
 
-MobiliX with new name TuxMobil.org
+Hello,
 
-    *- Please update your bookmarks and help by changing all -*
-    *-      the links from mobilix.org to tuxmobil.org       -*
+It's been a while since I submitted a patch to correct it, but I
+couldn't see it applied, except to alan's kernels, here it is again,
+still working on both current 2.4 & 2.5:
 
-In the trademark case between the owners of the trademark Obelix and
-Werner Heuser owner of the project "MobiliX - UniX on Mobile Devices" t=
-he
-last verdict says that Werner Heuser has to withdraw his trademark
-MobiliX. Therefore he has decided to rename his Open Source project to
-"TuxMobil" (http://tuxmobil.org).
+--- linux-2.4.20-orig/arch/i386/kernel/apm.c	2002-11-29 13:23:24.000000000 +0100
++++ linux-2.4.20/arch/i386/kernel/apm.c	2002-11-29 13:21:05.000000000 +0100
+@@ -1074,6 +1074,19 @@
+ 	}
+ 	if ((error == APM_SUCCESS) || (error == APM_NO_ERROR))
+ 		return 1;
++	if (error == APM_NOT_ENGAGED) {
++		static int tried;
++		int eng_error;
++		if (tried++ == 0) {
++			eng_error = apm_engage_power_management(APM_DEVICE_ALL, 1);
++			if (eng_error) {
++				apm_error("set display", error);
++				apm_error("engage interface", eng_error);
++				return 0;
++			} else
++				return apm_console_blank(blank);
++		}
++	}
+ 	apm_error("set display", error);
+ 	return 0;
+ }
 
-Nevertheless he is already asking the highest German court to permit
-an appelation against the decision of the latest instance in court. The
-appelation will take approximately four years. In the meantime the
-trademark MobiliX can't be used, except he would be able to give
-a pawn of 200.000 EURO for this time. The lawyers of Werner Heuser
-Jaschinski, Biere und Brexl - JBB (http://www.jbb.de) are confident
-to win the last instance. This would also help many other projects. The
-number of trademarks ending on "ix", which have trouble with
-Les Edition Albert Ren=E9 is increasing. Many projects can't effort
-the high financial risk to fight back.
+(just to remember, it was intended to fix Armada's bioses which don't
+engage display apm, while they claim general apm to be engaged)
 
-In autumn 2001 Les Edition Albert Ren=E9, the owner of the trademark Ob=
-elix
-has charged Werner Heuser. He is the owner of the wellknown open source
-project MobiliX (now TuxMobil http://tuxmobil.org) . This project provi=
-des a
-plenty of information about UniX operating systems like Linux, BSD and
-Solaris on mobile computers.  Therefore he has choosen a name, which
-expresses this by a combination of the words "Mobile" and "iX".  Accord=
-ing
-to the plaintiff he has choosen a word very similar to their trademark
-Obelix, because he wants to take advantage of their famous name.
+But I also got further troubles, concerning drivers/char/console.c:
+I could recover from the blanking done after blankinterval, but not from
+vesa_powerdown_screen() after vesa_off_interval : the screen gets
+powered, but nothing is displayed, I have to launch X to reset video
+board's status.
+I had to set vesa_off_interval to 0 or already set vesa_blank_mode to
+3 (powerdown).
+The problem seems to come from this:
 
-A detailed documentation of the case, containing information
-about other projects under siege and the written statements of the
-lawyers JBB, is available online
-(http://tuxmobil.org/mobilix_asterix.html).
+(console.c:2703, timer_do_blank_screen())
+	i = sw->con_blank(vc_cons[currcons].d, 1);
+	/* which only blanks vga palette in vgacon case */
+	...
+	if (console_blank_hook && console_blank_hook(1))
+		return;
+	/* this is not reached, since apm's hook does work */
+    	if (vesa_blank_mode)
+		sw->con_blank(vc_cons[currcons].d, vesa_blank_mode + 1);
+}
+which is followed (iff vesa_off_interval != 0) by a timed call to
+vesa_powerdown_screen which also does a con_blank(1) unless
+vesa_blank_mode is already set to powerdown.
 
---=20
-|=3D| Werner Heuser =3D Keplerstr. 11A =3D D-10589 Berlin =3D Germany
-|=3D| <wehe_AT_tuxmobil.org>     T. 0049 - (0)30 - 349 53 86
-|=3D| http://TuxMobil.org        UniX on Mobile Systems: HOWTOs,Softwar=
-e
-|=3D| http://Xtops.DE            Laptops+PDAs pre-installed with UniX
-|*| This is no time for phony rhetoric -- Lou Reed
--
-To unsubscribe from this list: send the line "unsubscribe linux-laptop"=
- in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+and this:
+(console.c:2751, unblank_screen())
+	if (console_blank_hook)
+		console_blank_hook(0);
+	set_palette(currcons);
+	if (sw->con_blank(vc_cons[currcons].d, 0))
+
+My interpretation is that when the timed call to con_blank(1) is done, it
+saves vga registers of the 'apm blanked' status, so that when unblanking,
+the call to con_blank(0) sets back this status, although the apm hook
+correctly set back registers...
+
+Rewriten in a more LIFO way:
+
+--- linux-2.4.20-orig/drivers/char/console.c	2002-11-29 13:23:34.000000000 +0100
++++ linux-2.4.20/drivers/char/console.c	2003-02-28 00:38:06.000000000 +0100
+@@ -2748,12 +2748,12 @@
+ 	}
+ 
+ 	console_blanked = 0;
+-	if (console_blank_hook)
+-		console_blank_hook(0);
+-	set_palette(currcons);
+ 	if (sw->con_blank(vc_cons[currcons].d, 0))
+ 		/* Low-level driver cannot restore -> do it ourselves */
+ 		update_screen(fg_console);
++	if (console_blank_hook)
++		console_blank_hook(0);
++	set_palette(currcons);
+ 	set_cursor(fg_console);
+ }
+ 
+
+my trouble was fixed, whatever the parameters I set.
+Here is the same for 2.5 kernels:
+
+--- linux-2.5.63/drivers/char/vt.c	2003-02-18 02:29:12.000000000 +0100
++++ linux-2.5.63-work/drivers/char/vt.c	2003-02-28 00:43:43.000000000 +0100
+@@ -2769,12 +2769,12 @@
+ 	}
+ 
+ 	console_blanked = 0;
+-	if (console_blank_hook)
+-		console_blank_hook(0);
+-	set_palette(currcons);
+ 	if (sw->con_blank(vc_cons[currcons].d, 0))
+ 		/* Low-level driver cannot restore -> do it ourselves */
+ 		update_screen(fg_console);
++	if (console_blank_hook)
++		console_blank_hook(0);
++	set_palette(currcons);
+ 	set_cursor(fg_console);
+ }
+ 
+
+I'm not sure if this is the good order, but to my mind, LIFO order
+should be preserved.
+
+Regards,
+
+Samuel Thibault
