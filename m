@@ -1,58 +1,54 @@
-From: Bob Toxen <bob@cavu.com>
+From: Felix Seeger <felix.seeger@gmx.de>
 Subject: Re: Make it fast
-Date: Sun, 9 Jun 2002 02:37:35 -0400
+Date: Sun, 9 Jun 2002 08:49:36 +0200
 Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <200206090637.g596bZH07923@cavu.com>
+Message-ID: <200206090849.37072.felix.seeger@gmx.de>
+References: <20020609064626.83923.qmail@web15004.mail.bjs.yahoo.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-laptop-owner@vger.kernel.org>
+In-Reply-To: <20020609064626.83923.qmail@web15004.mail.bjs.yahoo.com>
+Content-Description: clearsigned data
+Content-Disposition: inline
 List-Id: <linux-laptop.vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: felix.seeger@gmx.de, linux-laptop@vger.kernel.org
+Content-Type: Text/Plain; charset="gb2312"
+To: linux-laptop@vger.kernel.org
 
-> Hi
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-> Are there any standard things that I can do to tune my linux on the laptop ?
-> I have a vaio qr10.
-> Everything runs nice only the battery management (I will see in 2.5 ;)) and 
-> the speed. It has only 64 MB RAM and kde needs more.
-> What can I do from the kernel side to make linux faster ?
+Am Sonntag, 9. Juni 2002 08:46 schrieb George Ma:
+> Hi, Felix!
+>
+> What means "vaio qr10" in your post?
+It is the Laptop: Sony PCG-QR10
 
-Consider a less costly desktop.  My 25 BogoMips 486 24 MB laptop runs
-just fine with fvwm (Slackware).  You also might turn off whatever icons,
-dancing girls, and other things that you don't need.  Doing a "top" or
-"ps -axlww | more" will show what is using CPU and memory.
+The nice and beautiful black one with the nice white keyboard and the g=
+ripe=20
+for putting it into trash if it's time is over ;)
 
-Also, some programs, most notably X and Netscrape leak memory over time.
-Thus, you will want to shut down Netscrape every day or two and probably
-shut down X weekly to free up the leaked memory.
+have fun
+=46elix
 
-> I use always the current 2.4 kernel
-> Ext2
-> Xfree 4.1
 
-> thanks
-> have fun
-> Felix
+> Cheers,
+> George Ma
+>
+> _________________________________________________________
+> Do You Yahoo!?
+> 2002=C4=EA=CA=C0=BD=E7=B1=AD=C8=BA=D0=DB=F7=E9=D5=BD =D1=C5=BB=A2=D6=D0=
+=B9=FA=BE=DB=BD=B9=C8=D5=BA=AB
+> http://cn.fifaworldcup.yahoo.com/
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.7 (GNU/Linux)
 
-Best regards,
+iD8DBQE9AvqAS0DOrvdnsewRAguBAJ9Qabw1/0W4SMhOA8/45/YdYlek5gCfZm7q
+w1ZsvVWIdcBcFHt9DksO+R0=3D
+=3D2lmp
+-----END PGP SIGNATURE-----
 
-Bob Toxen, President
-Fly-By-Day Consulting, Inc.           "Experts in Linux & Network Security"
-Author,
-"Real World Linux Security: Intrusion Detection, Prevention, and Recovery"
-700 pages
-Prentice Hall
-November 2000
-bob@verysecurelinux.com
-http://www.verysecurelinux.com       [Linux/Unix & Network Security Consulting]
-http://www.realworldlinuxsecurity.com [My 5* book: "Real World Linux Security"]
-http://www.verysecurelinux.com/sunset.html                    [Sunset Computer]
-Quality Linux, UNIX and network security and software consulting since 1990.
-
-GPG Public key available at http://www.cavu.com/pubkey.txt (book@cavu.com)
-  and at http://pgp5.ai.mit.edu/pks-commands.html#extract
-  and on the CD-ROM that comes sealed and attached to Real World Linux Security
-pub  1024D/E3A1C540 2000-06-21 Bob Toxen <book@cavu.com>
-     Key fingerprint = 30BA AA0A 31DD B68B 47C9  601E 96D3 533D E3A1 C540
-sub  2048g/03FFCCB9 2000-06-21
+-
+To unsubscribe from this list: send the line "unsubscribe linux-laptop"=
+ in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
