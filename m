@@ -1,53 +1,49 @@
-From: "Prasanta Sadhukhan" <prasanta@tataelxsi.co.in>
-Subject: kernel panic for cardbus adapter - please help
-Date: Sat, 05 Apr 2003 23:19:17 +0530
+From: Choprboy <choprboy@dakotacom.net>
+Subject: Re: kernel panic for cardbus adapter - please help
+Date: Sat, 5 Apr 2003 15:46:59 -0700
 Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <3E8F171D.29F09E50@tataelxsi.co.in>
+Message-ID: <200304051546.59098.choprboy@dakotacom.net>
+References: <3E8F171D.29F09E50@tataelxsi.co.in>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
 Return-path: <linux-laptop-owner@vger.kernel.org>
+In-Reply-To: <3E8F171D.29F09E50@tataelxsi.co.in>
 List-Id: <linux-laptop.vger.kernel.org>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-laptop@vger.kernel.org
 
-Hi,
-We are using Madge 16/4 MK 2 CardBus Adapter in Redhat linux 8.0 on
-Comapaq laptop i586.
-We are using pcmcia-cs 3.2.4 source tree which we have compiled and
-installed.
-The problem we are facing is when we are plugging out the adapter from
-the socket, it's giving the following dump and the processor hangs.
-We have to restart the laptop after that. It's happening everytime. The
-same thing happens for pcmcia-cs 3.1.31 source tree also.
+On Saturday 05 April 2003 10:49 am, Prasanta Sadhukhan wrote:
+> Hi,
+> We are using Madge 16/4 MK 2 CardBus Adapter in Redhat linux 8.0 on
+> Comapaq laptop i586.
+> We are using pcmcia-cs 3.2.4 source tree which we have compiled and
+> installed.
+> The problem we are facing is when we are plugging out the adapter from
+> the socket, it's giving the following dump and the processor hangs.
+[snip]
 
 
-    [<c28801fe>] cb_release [cb_enabler] 0xee (0xc02e5e38))
-[<c2880e20>] bus_table [cb_enabler] 0x0 (0xc02e5e50))
-[<c2880268>] cb_event [cb_enabler] 0x5e (0xc02e5e58))
-[<c01ab820>] multiwrite_intr [kernel] 0x0 (0xc02e5e64))
-[<c286178e>] send_event [pcmcia-core] 0x46 (0xc02e5e88))
-[<c2861867>] parse_event [pcmcia-core] 0x11f (0xc02e5eb8))
-[<c28876d2>] common_housekeeping [mtok] 0x3a (0xc02e5ecc))
-[<c2875db4>] socket [i82365] 0x54 (0xc02e5ed8))
-[<c286d211>] pcic_interrupt [i82365] 0x17d (0xc02e5ee8))
-[<c0109d5d>] handle_IRQ_event [kernel] 0x3d (0xc02e5f28))
-[<c2875d60>] socket [i82365] 0x0 (0xc02e5f30))
-[<c0109ee8>] do_IRQ [kernel] 0x78 (0xc02e5f48))
-[<c010c378>] call_do_IRQ [kernel] 0x5 (0xc02c5f68))
-[<c0113326>] apm_bios_call_simple [kernel] 0x56 (0xc02e5f94))
-[<c011330d>] apm_bios_call_simple [kernel] 0x3d (0xc02e5fa0))
-[<c0113422>] apm_do_idle [kernel] 0x12 (0xc02e5fbc))
-[<c0113543>] apm_cpu_idle [kernel] 0xb3 (0xc02e5fd4))
-[<co105000>] stext [kernel] 0x0 (0xc02e5fe4))
-[<c0106e8b>] cpu_idle [kernel] 0x1b (0xc02e5fec))
+Well, it's hard to tell exactly from the information you gave (as we'd need 
+the driver code and a function listing from your compiled kernel to track 
+down specifics) but from your description it sounds like the Madge 16/4 
+PCMCIA driver is not responding correctly to unload requests. More 
+specifically, when a forced removal occurs (you pull the card) the driver is 
+still trying to talk to the card, so it walks all over places it shouldn't 
+be. It's a driver problem specific to that card, not a general kernel 
+problem.
 
-Code: 0f 0b ae 00 9b 5f 22 c0 58 5a e9 7c fe ff ff 90 90 8d b4 26
-<0>Kernel panic: Aiee, killing interrupt handler'
-In interrupt handler - not syncing
+How good of a kernel hacker are you? The best solution is to dig into the 
+driver, figure out what's wrong, and submit a patch to fix it... But since 
+not all of us are proficient kernel hackers (myself included), a simple work 
+around would be to make sure you "soft eject" the card first. That is, tell 
+the PCMCIA core to remove the card before you actually pull the card out.
 
-Any idea what can be wrong?
+The PCMCIA card control program is called "cardctl" (it's in /sbin, so as a 
+normal user you'll have to add it to your path). Just do a:
+  "cardctl eject"
 
-Thanks in advance
-Prasanta
+Or, if your have more than one card in at a time, do a "cardctl status" to 
+figure out which slot the Madge is in and do a "cardctl eject <slot#>". This 
+will soft remove the card and unload the driver before you pull the card.
 
-
+Adrian
