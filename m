@@ -1,55 +1,25 @@
-From: Andrew McGregor <andrew@indranet.co.nz>
-Subject: Re: Dell precision M50 and _very_ slow process startup
-Date: Tue, 14 Jan 2003 08:03:01 +1300
+From: Jan Van Belle <Jan.Van_Belle@alcatel.be>
+Subject: Experiences with Kdrive/TinyX on laptops??
+Date: Thu, 16 Jan 2003 12:39:43 +0100
 Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <86350000.1042484581@localhost.localdomain>
-References: <200301131627.h0DGRX101413@rapfast.petcom.com>
+Message-ID: <20030116123943.30db183b.Jan.Van_Belle@alcatel.be>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-laptop-owner@vger.kernel.org>
-In-Reply-To: <200301131627.h0DGRX101413@rapfast.petcom.com>
-Content-Disposition: inline
 List-Id: <linux-laptop.vger.kernel.org>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Roe Peterson <roe@petcom.com>, linux-laptop@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+To: linux-laptop@vger.kernel.org
 
-Yes, that is what it does (CDs and hotplug storage only, actually).
+	Hello all,
 
-It's part of GNOME, you might see it mentioned in 8.0 in the splash screen 
-as you log in.  It's been known to cause many kinds of trouble :-)
+	A few weeks ago I bought a Dell Latitude 233 laptop, 4GB harddisk, 96MB RAM etc. It's only a little slow when running XFree86 on it, even when compiling X with the latest GCC, optimization = -march=pentium2 -mmmx .
+So I saw that there are some other Xservers available under the XFree86 source tree. 
 
-You can disable this from the GUI in 8.0, but renaming the binary is just 
-as effective.  The only feature you lose will be automount on CD insertion.
+--> Has anyone tried then yet? 
+--> Is it possible to run other windowmanagers on it?? (eg: WindowMaker)
 
-Andrew
+Kind regards,
 
---On Monday, January 13, 2003 10:27:32 -0600 Roe Peterson <roe@petcom.com> 
-wrote:
-
->
-> After _quite_ a bit more investigation, and some good pointers from
-> the net (thanks, all!), this has turned out _not_ to be a problem
-> with swapping/paging at all.
->
-> For some reason, the magicdev process slows the system to a crawl!
->
-> I'm guessing that this process watches for cd insertion, changes
-> to home directory, et. al.
->
-> There seems to be no man page or info for magicdev itself.
->
-> Does anyone know more about this beast?
->
-> I've solved the problem temporarily by simply renameing
-> /usr/bin/magicdev...
->
->
-> -
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
->
->
+Jan
 
 
