@@ -1,42 +1,51 @@
-From: Jay Goodman Tamboli <jay@tamboli.cx>
-Subject: Re: alternative to ctrl-alt-+ ?
-Date: Sat, 30 Aug 2003 12:36:09 -0400
+From: FaRaOhh <faraohh@ih.com.br>
+Subject: Framebuffer problema.
+Date: Sat, 06 Sep 2003 11:24:58 -0300
 Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <20030830163609.GA5799@localhost.localdomain>
-References: <pan.2003.08.29.22.19.31.291970@gmx.de>
+Message-ID: <1062858298.4630.123.camel@toshibao>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="opJtzjQTFsWo+cga"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-laptop-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <pan.2003.08.29.22.19.31.291970@gmx.de>
 List-Id: <linux-laptop.vger.kernel.org>
-To: linux-laptop@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+To: linux-laptop <linux-laptop@vger.kernel.org>
 
+Hi all,
+	I have one Notebook toshiba satellite 2430-S255 (graphics Geforce 4 go
+32mb) and I've compilled kernel-2.6.0-test4, but I have one problem too
+:) I have set:
 
---opJtzjQTFsWo+cga
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+# Graphics support
+#
+CONFIG_FB=y
+# CONFIG_FB_CIRRUS is not set
+# CONFIG_FB_PM2 is not set
+# CONFIG_FB_CYBER2000 is not set
+# CONFIG_FB_IMSTT is not set
+CONFIG_FB_VGA16=y
+CONFIG_FB_VESA=y
+CONFIG_VIDEO_SELECT=y
+# CONFIG_FB_HGA is not set
+CONFIG_FB_RIVA=y
 
-On Sat, Aug 30, 2003 at 12:19:32AM +0200, Helge Hielscher wrote:
-> I would like to change the resolution sometimes, but ctrl-alt-plus or
-> ctrl-alt-minus do not work on my Thinkpad R40.
+#
+# Console display driver support
+#
+CONFIG_VGA_CONSOLE=y
+CONFIG_MDA_CONSOLE=m
+CONFIG_DUMMY_CONSOLE=y
+CONFIG_FRAMEBUFFER_CONSOLE=y
+CONFIG_PCI_CONSOLE=y
+# CONFIG_FONTS is not set
+CONFIG_FONT_8x8=y
+CONFIG_FONT_8x16=y
 
-You can also use 'xvidtune -prev' and 'xvidtune -next'.
-Bind those to another key combination if you want.
+	When restart I put the GRUB vga=788 till 791 but the screen gets black
+and normally runs, that is, no kernel panic but I don't see nothing.
+Does anybody know how to solve the problem?
 
-/jgt
+-- 
+Debian User:629
+FaRaOhh - Marcello Henrique
+Inhumas - Goias - Brasil
 
---opJtzjQTFsWo+cga
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.2 (GNU/Linux)
-
-iD8DBQE/UNJ5n8BdKcvxgGIRAsJ7AKDHwAdgOBXKtSx1ljcmKSwMGVSWIgCdG/7f
-hWo9wFDXuPIJywr5dqkttmI=
-=svqR
------END PGP SIGNATURE-----
-
---opJtzjQTFsWo+cga--
