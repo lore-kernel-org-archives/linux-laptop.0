@@ -1,70 +1,53 @@
-From: Werner Heuser <Werner.Heuser@web.de>
-Subject: ANN: Infrared-HOWTO 3.5
-Date: Mon, 31 Mar 2003 19:14:34 -0100
+From: "Prasanta Sadhukhan" <prasanta@tataelxsi.co.in>
+Subject: kernel panic for cardbus adapter - please help
+Date: Sat, 05 Apr 2003 23:19:17 +0530
 Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <20030331201434.GG25060@tuxmobil.org>
+Message-ID: <3E8F171D.29F09E50@tataelxsi.co.in>
 Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-laptop-owner@vger.kernel.org>
-Content-Disposition: inline
 List-Id: <linux-laptop.vger.kernel.org>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: "linux-laptop@vger.kernel.org" <linux-laptop@vger.kernel.org>
+To: linux-laptop@vger.kernel.org
 
 Hi,
+We are using Madge 16/4 MK 2 CardBus Adapter in Redhat linux 8.0 on
+Comapaq laptop i586.
+We are using pcmcia-cs 3.2.4 source tree which we have compiled and
+installed.
+The problem we are facing is when we are plugging out the adapter from
+the socket, it's giving the following dump and the processor hangs.
+We have to restart the laptop after that. It's happening everytime. The
+same thing happens for pcmcia-cs 3.1.31 source tree also.
 
-there is a new issue of the InfraRed-HOWTO available in different
-formats:
 
-HTML http://tuxmobil.org/howtos.html
-SGML http://tuxmobil.org/howtos.html
-IPK feed for PDAs http://tuxmobil.org/feed.html
+    [<c28801fe>] cb_release [cb_enabler] 0xee (0xc02e5e38))
+[<c2880e20>] bus_table [cb_enabler] 0x0 (0xc02e5e50))
+[<c2880268>] cb_event [cb_enabler] 0x5e (0xc02e5e58))
+[<c01ab820>] multiwrite_intr [kernel] 0x0 (0xc02e5e64))
+[<c286178e>] send_event [pcmcia-core] 0x46 (0xc02e5e88))
+[<c2861867>] parse_event [pcmcia-core] 0x11f (0xc02e5eb8))
+[<c28876d2>] common_housekeeping [mtok] 0x3a (0xc02e5ecc))
+[<c2875db4>] socket [i82365] 0x54 (0xc02e5ed8))
+[<c286d211>] pcic_interrupt [i82365] 0x17d (0xc02e5ee8))
+[<c0109d5d>] handle_IRQ_event [kernel] 0x3d (0xc02e5f28))
+[<c2875d60>] socket [i82365] 0x0 (0xc02e5f30))
+[<c0109ee8>] do_IRQ [kernel] 0x78 (0xc02e5f48))
+[<c010c378>] call_do_IRQ [kernel] 0x5 (0xc02c5f68))
+[<c0113326>] apm_bios_call_simple [kernel] 0x56 (0xc02e5f94))
+[<c011330d>] apm_bios_call_simple [kernel] 0x3d (0xc02e5fa0))
+[<c0113422>] apm_do_idle [kernel] 0x12 (0xc02e5fbc))
+[<c0113543>] apm_cpu_idle [kernel] 0xb3 (0xc02e5fd4))
+[<co105000>] stext [kernel] 0x0 (0xc02e5fe4))
+[<c0106e8b>] cpu_idle [kernel] 0x1b (0xc02e5fec))
 
-Please note these URLs have moved from mobilix.org to tuxmobil.org because
-of severe trademark trouble with Asterix and Obelix. A documentation of the
-trademark case is at 
-http://tuxmobil.org/mobilix_asterix.html
+Code: 0f 0b ae 00 9b 5f 22 c0 58 5a e9 7c fe ff ff 90 90 8d b4 26
+<0>Kernel panic: Aiee, killing interrupt handler'
+In interrupt handler - not syncing
 
-The Infrared-HOWTO provides an introduction to Linux and infrared
-devices and how to use the software provided by the Linux/IrDA
-project. This package uses IrDA(TM) compliant standards. IrDA(TM) is
-an industrial standard for infrared wireless communication, and most
-laptops made after January 1996 are equipped with an IrDA(TM)
-compliant infrared transceiver. Infrared ports let you communicate
-with printers, modems, fax machines, LANs, and other laptops.
+Any idea what can be wrong?
 
-Remote Control (RC) via infrared is the aim of the Linux Infrared Remote
-Control - LIRC project, and also described in this HOWTO.
+Thanks in advance
+Prasanta
 
-A note to Jean: I have not finished the re-ordering of the HOWTO according
-to your recommendation yet. But I'm on the way. Also I have asked to get the
-document into CVS at the Linux Documentation Project. But I haven't got an
-answer yet.
 
-Werner
-
-Changes:
-
--  v3.5, 29 March 2003,
--  added new dongles to /etc/modules.conf,
--  added link to IrCOMM2k,
--  added links to LIRC progs (lircemu, tonto),
--  added some more infos about OBEX,
--  removed a misleading reference to setserial,
--  removed obsolete IrLAN stuff (irlan_client, irlan_server modules),
--  added warning about IrLAN currently unmaintainded,
--  corrected wrong issue date of v3.4,
--  changed all URLs from mobilix.org to tuxmobil.org and other URL corrections,
--  converted whole document to XML 4.1.2 
-   (all tags are now lowercase, some closing tags added),
--  rearranged the order of some chapters (SIR, FIR, dongles),
--  chapter about cell phone connection rewritten 
-   (added link to scmxx, added generic instructions, thanks to Matthias Schmidt),
--  added chapter about connections to PocketPC (thanks to Stanislav Sokolov), 
--  minor changes
-
--- 
-|=| Werner Heuser = Keplerstr. 11A = D-10589 Berlin = Germany
-|=| <wehe at tuxmobil.org>     T. 0049 - (0)30 - 349 53 86
-|=| http://TuxMobil.org        UniX on Mobile Systems: HOWTOs,Software
-|*| This is no time for phony rhetoric -- Lou Reed
