@@ -1,32 +1,62 @@
-From: Chuck Gelm <gelmce@ameritech.net>
-Subject: pcmcia-cs stopped working
-Date: Sun, 05 Jan 2003 10:29:02 -0500
+From: Roe Peterson <roe@petcom.com>
+Subject: dell precision m50 _very_ slow paging/swapping
+Date: Sat, 11 Jan 2003 09:37:41 -0600
 Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <3E184F3E.F35C4DF9@ameritech.net>
-Reply-To: chuck@gelm.org
+Message-ID: <3E203A45.B590F101@petcom.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-laptop-owner@vger.kernel.org>
 List-Id: <linux-laptop.vger.kernel.org>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-laptop@vger.kernel.org
+To: linux-laptop@vger.kernel.org, linux-kernel@vger.kernel.org
 
- My pcmcia-cs stopped working.  
-modprobe ds.o fails.
-depmod -a now returns about 100 lines of
-e.g.
-depmod: *** Unresolved symbols in /lib/modules/2.2.19/block/linear.o.gz
-...
-depmod: *** Unresolved symbols in
-/lib/modules/2.2.19/video/matroxfb.o.gz
 
-At the suggestion of some others in an IRC, I edited
-/etc/pcmcia/wlan-ng.conf 
-to get my system to recognize and configure a 
-Belkin F5D6020 pcmcia card.
-Now my pcmcia modules do not load!
+Although Dell doesn't consider the precision M50 a laptop (it's a
+"portable workstation"), this list
+looks like a good place to start :-)
 
-What did I do wrong?
-What do I do to fix it?
+I'm having a big problem with a brand-new M50.  The symptoms persist
+whether I try Redhat 7.3
+or 8.0.
 
-Thanks, Chuck
+Generally, everything is fine, right up to the time the machine starts
+paging out to disk.  Then, the
+system essentially grinds to a halt.
+
+The paging activity eventually gets done, and, once things are running
+in RAM, the machine flies.
+
+However, I've seen starting mozilla take ~45 seconds, and starting vi
+take 15!!!
+
+This machine:
+
+    1.8Ghz Pentium 4 Pro Mobile CPU
+    256MB RAM
+    40 GB hard drive (userland benchmarks look good - 16-18 MB/sec
+transfer rates)
+    nVidia Quadro 4 GoGl video
+    PIIX4 EIDE chipset
+    i810 compatible sound
+    Latest BIOS upgrade from Dell (A07)
+
+I see the same result with redhat 7.3 and 8.0.
+
+I've even disabled the PIIX support in the kernel, on the theory that
+something in the IDE
+subsystem was responsible - no change, except (as expected) user mode
+disk IO slowed down
+somewhat.
+
+I freely admit I'm confused.
+
+Dell support is:
+    1 - extremely frustrating
+    2 - totally useless
+
+And I don't even want to talk about Redhat.
+
+Can anyone point me at a theory, even??
+
+
+
