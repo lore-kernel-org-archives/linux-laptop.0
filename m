@@ -1,8 +1,8 @@
 From: Werner Heuser <Werner.Heuser@web.de>
-Subject: ANN: Synaptics touchpad driver 0.11.3
-Date: Wed, 28 Aug 2002 07:25:37 -0100
+Subject: ANN: Infrared-HOWTO 3.4
+Date: Fri, 6 Sep 2002 07:17:52 -0100
 Sender: linux-laptop-owner@vger.kernel.org
-Message-ID: <20020828082537.GD5954@mobilix.org>
+Message-ID: <20020906081752.GF6487@mobilix.org>
 Mime-Version: 1.0
 Return-path: <linux-laptop-owner@vger.kernel.org>
 Content-Disposition: inline
@@ -13,56 +13,33 @@ To: "linux-laptop@vger.kernel.org" <linux-laptop@vger.kernel.org>
 
 Hi,
 
-a new issue of the XFree86 4.x driver for the 
-Synaptics touchpad is available at 
-http://mobilix.org/software.html
-The driver is programmed by Stefan Gmeiner.
+the new issue v3.4 of the Linux-InfraRed-HOWTO is available at
+http://mobilix.org/howtos.html
 
 Werner
 
-Changes:
-Works with the two-dimensional scroll wheel.
+changes:
 
-Features
-
-- Movement with adjustable, non-linear acceleration 
-  and speed (Options: MinSpeed, MaxSpeed, AccelFactor)
-- Button events through short touching of the 
-  touchpad (Options: MaxTapTime, MaxTapMove)
-- Double-Button events through double short 
-  touching of the touchpad 
-- Dragging through short touching and holding down the 
-  finger on the touchpad
-- Middle and right button events on the upper and lower 
-  corner of the touchpad (Option: Edges)
-- Scrolling (button four and five events) through moving 
-  the finger on the right side of the touchpad 
-  (Options: Edges, VertScrollDelta)
-- The up/down button sends button four/five events
-- Adjustable finger detection (Option: Finger)
-- Ext Mouse repeater support - Alpha! (Option: Repeater)
-- Multifinger taps: two finger for middle button and three 
-  finger for right button events
-- Online configuration through short-memory (in development) 
-  (Option: SHMConfig)
-
-It works with this machines and probably other 
-laptops (please let me know your results).
-
-- Acer TravelMate 210TEV
-- Acer TravelMate 630
-- Acer TravelMate 739TL
-- COMPAQ EVO N160
-- COMPAQ Presario 1213EA
-- DELL Inspiron 2500
-- DELL Inspiron 8000
-- DELL Latitude C800
-- Gateway Solo 9300
-- Gericom M6T
-- Gericom Webboy
-- HP Omnibook XE3 500
-- Medion MD9580-F - Aldi (Nord)
-- Samsung GT8800DXV
+- improved the Linux PDA (Agenda, iPAQ, Yopy, Zaurus) chapter 
+  with information about PPP, OpenOBEX, printing and more,
+- worked the new syntax for -s option of irattach into the 
+  appropriate sections,
+- reworked and improved the IrDA and USB chapter,
+- reworked printing stuff, removed obsolet hints to 
+  irlpt_server and IrLPT, 
+- described how to use the Common Unix Printing System - CUPS,
+- added the new irda-users mailing list address as well as 
+  of the new archive,
+- added links to Gnome IrDA applet and Beamster GTK/Python 
+  into the new GUI section,
+- added link to Japanese translation,
+- added information about some LIRC programms 
+  (IR Chooser, IControl, jlirc),
+- changed all references to URLs into hyperlinks,
+- changed all @s in mail addresses to _at_ to help 
+  prevent spam (at least a little),
+- URL corrections (LDP, ..),
+- minor changes (spell checking, formatting)
 -- 
 |=| Werner Heuser = Keplerstr. 11A = D-10589 Berlin = Germany
 |=| <wehe_AT_mobilix.org>      T. 0049 - (0)30 - 349 53 86
