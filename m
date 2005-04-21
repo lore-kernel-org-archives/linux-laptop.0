@@ -1,77 +1,44 @@
-From: Nishanth Aravamudan <nacc@us.ibm.com>
-Subject: apm_mainloop() waitqueue usage
-Date: Thu, 16 Dec 2004 12:06:19 -0800
-Message-ID: <20041216200619.GD2565@us.ibm.com>
+From: Davy Durham <pubaddr2@davyandbeth.com>
+Subject: Dell D810 Laptop Suspend/Resume
+Date: Thu, 21 Apr 2005 01:18:32 -0500
+Message-ID: <426745B8.1090401@davyandbeth.com>
 Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-laptop-owner@vger.kernel.org>
-Content-Disposition: inline
 Sender: linux-laptop-owner@vger.kernel.org
 List-Id: <linux-laptop.vger.kernel.org>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: sfr@canb.auug.org.au
-Cc: linux-laptop@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-laptop@vger.kernel.org
 
-Hello,
+Hi,
+   I've been trying for the last few days to get my D810 to suspend and 
+resume in linux.
 
-I am working on a Kernel Janitors TODO entry dealing with the use of
-schedule_timeout(). In the process, I came across
-arch/i386/kernel/apm.c::apm_mainloop(), which uses waitqueues &
-schedule_timeout() to check for events at a regular interval, depending on
-waitqueue events occurring.
+I'm doing it from klaptop in kde using Fedora Core 3, but I've now 
+compiled my own linux-2.6.12-rc2-mm3 kernel since I've seen some ACPI 
+changes going in.
 
-A few considerations:
+At 2.6.11 it would seem to suspend ok, but when doing the resume it 
+would come back and have I/O errors.. causing the computer to freeze for 
+a few seconds, then run for a second, then freeze again, etc.. the HDD 
+light would stay on solid, and at the tty1 I saw something like "ata1: 
+command 0xc8 timeout... I/O error..."  So apparently something isn't 
+getting starting back up.  Thinking it might be the HDD not spinning, I 
+powered off, but DID hear it spin down.
 
-Ideally, I would like to convert as many waitqueue users as possible to the
-wait_event* family of macros. For reference, here is the code in 2.6.10-rc3:
+Running what I compiled,  2.6.12-rc2-mm3, the suspend happens a little 
+faster but the resume comes to a blank screen, then immediately reboots 
+without any messages that I can see.
 
+I'm very interested in getting this to work and will do whatever someone 
+needs to gather information.
 
-static void apm_mainloop(void)
-{
-	DECLARE_WAITQUEUE(wait, current);
+I may need to ask basic kernel info questions when asked to do something 
+as I haven't done much trouble shooting at this low a level before but 
+I'm game.  From googling around this is a problem for many and I would 
+like to help resolve it.
 
-	add_wait_queue(&apm_waitqueue, &wait);
-	set_current_state(TASK_INTERRUPTIBLE);
-	for (;;) {
-		schedule_timeout(APM_CHECK_TIMEOUT);
-		if (exit_kapmd)
-			break;
-		/*
-		 * Ok, check all events, check for idle (and mark us sleeping
-		 * so as not to count towards the load average)..
-		 */
-		set_current_state(TASK_INTERRUPTIBLE);
-		apm_event_handler();
-	}
-	remove_wait_queue(&apm_waitqueue, &wait);
-}
-
-I have already easily changed the pre-loop initialization to:
-
-	DECLARE_WAITQUEUE(wait, current);
-
-	prepare_to_wait(&apm_waitqueue, &wait, TASK_UNINTERRUPTIBLE);
-
-First, I changed the state to TASK_UNINTERRUPTIBLE. The code as it is does not
-deal with signals in any way (that I see); I believe that is incorrect for
-TASK_INTERRUPTIBLE sleeps, as the code must deal with both potential waitqueue
-events & signals as being the cause for early wakeups. Please correct me if I
-misunderstood.
-
-Second, if the call to apm_event_handler() were not there, the change to
-wait_event_timeout() would be very straightforward, as the code would be
-identical... However, the call is there. So, I have a few questions:
-
-Do you think it would be possible to perhaps change the structuring of the
-function? I don't think it is, but it can't hurt to ask.
-
-Second, if I added another macro to the wait_event family which allows the
-invocation of a function at an interval (effectively exactly what you do in
-apm_mainloop), would you be willing to convert to this macro? -- presuming of
-course, the community agreed to merge the new macro to mainline.
-
-Third, if neither of these options appeals to you, I may just push a patch
-which does the prepare_to_wait() change.
+Any ideas?
 
 Thanks,
-Nish
+   Davy
