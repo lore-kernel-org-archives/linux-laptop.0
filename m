@@ -1,38 +1,58 @@
-From: Jim Carter <jimc@math.ucla.edu>
-Subject: Re: Laptop APM & ACPI
-Date: Thu, 28 Apr 2005 10:51:42 -0700 (PDT)
-Message-ID: <Pine.LNX.4.61.0504281043190.4715@simba.math.ucla.edu>
-References: <4270D455.7020208@shoden.co.za>
+From: Nishanth Aravamudan <nacc@us.ibm.com>
+Subject: [PATCH] i386/apm: use wait_event_interruptible_timeout()
+Date: Sun, 1 May 2005 23:18:24 -0700
+Message-ID: <20050502061824.GC10173@us.ibm.com>
+References: <20050502061446.GB10173@us.ibm.com>
 Mime-Version: 1.0
 Return-path: <linux-laptop-owner@vger.kernel.org>
-In-Reply-To: <4270D455.7020208@shoden.co.za>
+Content-Disposition: inline
+In-Reply-To: <20050502061446.GB10173@us.ibm.com>
 Sender: linux-laptop-owner@vger.kernel.org
 List-Id: <linux-laptop.vger.kernel.org>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Bennie Kahler-Venter <bennie.venter@shoden.co.za>
-Cc: linux-laptop@vger.kernel.org
+To: sfr@canb.auug.org.au
+Cc: linux-laptop@vger.kernel.org, Kernel-Janitors <kernel-janitors@lists.osdl.org>
 
-On Thu, 28 Apr 2005, Bennie Kahler-Venter wrote:
-
-> I currently have a problem with an AOpen 1845 Laptop.  When ACPI & APM is
-> turned on, the mouse plugged into the PS/2 port will misbehave occasionally
-> when the machine gets a bit busy.  Turning APM and ACPI off at boot time
-> solved the problem but now the power management is gone.  
-
-This probably won't actually solve the problem, but try it with just 
-apm=off (using ACPI), or just acpi=off (using APM).  You might get lucky.  
-If you have neither off, the first to be initialized is the winner, and if 
-your kernel is modular, that depends on the order of loading drivers.
-
-In kernel 2.4.x and previous, APM support was more mature than ACPI; 
-however, ACPI is mature in the 2.6.x kernels, and vendors put work into the 
-ACPI BIOS and not into APM.  Some, e.g. Dell, have even dropped APM 
-entirely.
-
-Might there be a BIOS update for your laptop?  
+Use wait_event_interruptible_timeout() instead of custom wait-queue.
 
 
-James F. Carter          Voice 310 825 2897    FAX 310 206 6673
-UCLA-Mathnet;  6115 MSA; 405 Hilgard Ave.; Los Angeles, CA, USA  90095-1555
-Email: jimc@math.ucla.edu    http://www.math.ucla.edu/~jimc (q.v. for PGP key)
+Signed-off-by: Nishanth Aravamudan <nacc@us.ibm.com>
+
+--- 2.6.12-rc3/arch/i386/kernel/apm.c	2005-04-29 11:03:03.000000000 -0700
++++ 2.6.12-rc3-dev/arch/i386/kernel/apm.c	2005-05-01 19:02:48.000000000 -0700
+@@ -224,6 +224,7 @@
+ #include <linux/smp_lock.h>
+ #include <linux/dmi.h>
+ #include <linux/suspend.h>
++#include <linux/wait.h>
+ 
+ #include <asm/system.h>
+ #include <asm/uaccess.h>
+@@ -1418,22 +1419,15 @@ static void apm_event_handler(void)
+ 
+ static void apm_mainloop(void)
+ {
+-	DECLARE_WAITQUEUE(wait, current);
+-
+-	add_wait_queue(&apm_waitqueue, &wait);
+-	set_current_state(TASK_INTERRUPTIBLE);
+-	for (;;) {
+-		schedule_timeout(APM_CHECK_TIMEOUT);
+-		if (exit_kapmd)
+-			break;
++	do {
++		wait_event_interruptible_timeout(apm_waitqueue,
++				exit_kapmd, APM_CHECK_TIMEOUT);
+ 		/*
+ 		 * Ok, check all events, check for idle (and mark us sleeping
+ 		 * so as not to count towards the load average)..
+ 		 */
+-		set_current_state(TASK_INTERRUPTIBLE);
+ 		apm_event_handler();
+-	}
+-	remove_wait_queue(&apm_waitqueue, &wait);
++	} while (!exit_kapmd);
+ }
+ 
+ static int check_apm_user(struct apm_user *as, const char *func)
