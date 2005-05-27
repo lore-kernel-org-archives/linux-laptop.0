@@ -1,53 +1,48 @@
-From: Nishanth Aravamudan <nacc@us.ibm.com>
-Subject: Re: [KJ] [PATCH] i386/apm: use wait_event_interruptible_timeout()
-Date: Tue, 3 May 2005 14:40:26 -0700
-Message-ID: <20050503214026.GC3372@us.ibm.com>
-References: <20050502061446.GB10173@us.ibm.com> <20050502061824.GC10173@us.ibm.com>
+From: Thomas Hood <jdthood@aglu.demon.nl>
+Subject: [FIX] apm.c: ignore_normal_resume is set to 1 a bit too late
+Date: Sat, 28 May 2005 00:45:32 +0200
+Message-ID: <1117233933.13528.295.camel@thanatos>
 Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-laptop-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20050502061824.GC10173@us.ibm.com>
 Sender: linux-laptop-owner@vger.kernel.org
 List-Id: <linux-laptop.vger.kernel.org>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: sfr@canb.auug.org.au
-Cc: Kernel-Janitors <kernel-janitors@lists.osdl.org>, linux-laptop@vger.kernel.org
+To: linux-laptop@vger.kernel.org
+Cc: sfr@canb.auug.org.au
 
-On 01.05.2005 [23:18:24 -0700], Nishanth Aravamudan wrote:
-> Use wait_event_interruptible_timeout() instead of custom wait-queue.
-> 
-> 
-> Signed-off-by: Nishanth Aravamudan <nacc@us.ibm.com>
-> 
-> --- 2.6.12-rc3/arch/i386/kernel/apm.c	2005-04-29 11:03:03.000000000 -0700
-> +++ 2.6.12-rc3-dev/arch/i386/kernel/apm.c	2005-05-01 19:02:48.000000000 -0700
-> @@ -224,6 +224,7 @@
->  #include <linux/smp_lock.h>
->  #include <linux/dmi.h>
->  #include <linux/suspend.h>
-> +#include <linux/wait.h>
->  
->  #include <asm/system.h>
->  #include <asm/uaccess.h>
-> @@ -1418,22 +1419,15 @@ static void apm_event_handler(void)
->  
->  static void apm_mainloop(void)
->  {
-> -	DECLARE_WAITQUEUE(wait, current);
-> -
-> -	add_wait_queue(&apm_waitqueue, &wait);
-> -	set_current_state(TASK_INTERRUPTIBLE);
-> -	for (;;) {
-> -		schedule_timeout(APM_CHECK_TIMEOUT);
-> -		if (exit_kapmd)
-> -			break;
-> +	do {
-> +		wait_event_interruptible_timeout(apm_waitqueue,
-> +				exit_kapmd, APM_CHECK_TIMEOUT);
+This message contains a fix for a bug in the apm driver.
 
-Hmm, this will lead to some not so subtle breakage with wait-queues.
-Please do not apply.
+A bug report was submitted to the Debian BTS saying that on the
+submitter's system the apmd proxy script was being run twice on resume.
 
-Thanks,
-Nish
+Having seen exactly the same problem some years ago and knowing that the
+solution then was to ensure that the ignore_normal_resume flag got set
+before there was any chance of an APM RESUME event being processed, I
+checked the current apm.c and I found that ignore_normal_resume was once
+again being set too late.  I asked the submitter to move the line where
+the flag was set and he reported that this change solved the problem.  I
+append the message in question.  The line numbers I mention there are
+for Linux 2.6.11.
+
+Please make the indicated change to the apm driver.
+
+-------- Forwarded Message --------
+jdthood@aglu.demon.nl wrote to the submitter of Debian bug #310865:
+> In arch/i386/kernel/apm.c there is at approximately line 1229:
+> 
+>         ignore_normal_resume = 1;
+> 
+> Move this up so that it occurs right after line 1222:
+> 
+>         err = set_system_power_state(APM_STATE_SUSPEND);
+> 
+> Let us know if that helps.
+
+
+It does. Very nice.
+I don't understand what I did and how it works. Will you try to
+push that into kernel sources or is this no permanent fix?
+-- 
+Thomas Hood <jdthood@aglu.demon.nl>
+
