@@ -1,7 +1,7 @@
 From: Thomas Hood <jdthood@aglu.demon.nl>
 Subject: [FIX] apm.c: ignore_normal_resume is set to 1 a bit too late
-Date: Sat, 28 May 2005 00:45:32 +0200
-Message-ID: <1117233933.13528.295.camel@thanatos>
+Date: Sun, 05 Jun 2005 23:24:55 +0200
+Message-ID: <1118006695.25919.8.camel@thanatos>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-laptop-owner@vger.kernel.org>
