@@ -1,52 +1,41 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: PCI Power management (was: Re: [PATCH 4/13]: PCI Err: e100
-	ethernet driver recovery
-Date: Fri, 01 Jul 2005 09:32:43 +1000
-Message-ID: <1120174364.31924.57.camel@gaston>
-References: <20050628235848.GA6376@austin.ibm.com>
-	<1120009619.5133.228.camel@gaston>
-	<20050629155954.GH28499@austin.ibm.com>
-	<20050629165828.GA73550@muc.de> <20050630203931.GY28499@austin.ibm.com>
+From: Vinod <geekvinod@yahoo.com>
+Subject: system call to check battery energy?
+Date: Mon, 11 Jul 2005 06:44:53 -0700 (PDT)
+Message-ID: <20050711134454.45790.qmail@web33514.mail.mud.yahoo.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc64-dev-bounces@ozlabs.org>
-In-Reply-To: <20050630203931.GY28499@austin.ibm.com>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-laptop-owner@vger.kernel.org>
+Sender: linux-laptop-owner@vger.kernel.org
 List-Id: <linux-laptop.vger.kernel.org>
-List-Unsubscribe: <https://ozlabs.org/mailman/listinfo/linuxppc64-dev>,
-	<mailto:linuxppc64-dev-request@ozlabs.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/linuxppc64-dev>
-List-Post: <mailto:linuxppc64-dev@ozlabs.org>
-List-Help: <mailto:linuxppc64-dev-request@ozlabs.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc64-dev>,
-	<mailto:linuxppc64-dev-request@ozlabs.org?subject=subscribe>
-Sender: linuxppc64-dev-bounces@ozlabs.org
-Errors-To: linuxppc64-dev-bounces@ozlabs.org
-Content-Type: text/plain; charset="us-ascii"
-To: Linas Vepstas <linas@austin.ibm.com>
-Cc: sfr@canb.auug.org.au, Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>, long <tlnguyen@snoqualmie.dp.intel.com>, Greg KH <greg@kroah.com>, linux-laptop@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Kleen <ak@muc.de>, pavel@suse.cz, Paul Mackerras <paulus@samba.org>, linuxppc64-dev <linuxppc64-dev@ozlabs.org>, linux-pci@atrey.karlin.mff.cuni.cz, johnrose@us.ibm.com, mochel@transmeta.com
+Content-Type: text/plain; charset="windows-1252"
+To: linux-laptop@vger.kernel.org
 
-On Thu, 2005-06-30 at 15:39 -0500, Linas Vepstas wrote:
+Hi All.=20
 
-> Thus, the right thing to do might be to split up the 
-> struct pci_dev->suspend() and pci_dev->resume() calls into
-> 
->    suspend()
->    poweroff()
->    poweron()
->    resume()
+Would anyone know if i could make a simple system call
+and find the battery energy remaining?
 
-No. There are very good reasons not to do that split at the pci_dev
-level.
- 
-> and then have the generic pci error recovery routines call
-> suspend/resume only, skipping the poweroff-on calls.  Does that 
-> sound good?
-> 
-> I'm not sure I can pull this off without having someone from 
-> the power-management world throw a brick at me.
+I am relatively new to linux, but i have uncovered
+that apm and acpi are power management tools. trying
+apm gives me the lifetime  ,not in terms of energy say
+in terms of mAh. acpi on the other hand does
+seem(havent tried it yet) to give me values in terms
+of energy. But i was wondering if there is a way i can
+just do a system call and find the energy value than
+having to configure acpi. Would appreciate any
+pointers.
 
-Just keep the error recovery callbacks for now, and we might be able to
-provide a generic "helper" doing the watchdog thing (yes, there is a
-watchdog in the net core)
+Thanks,
+Vinod=20
 
-Ben.
+
+
+	=09
+____________________________________________________
+Sell on Yahoo! Auctions =96 no fees. Bid on great items. =20
+http://auctions.yahoo.com/
+-
+To unsubscribe from this list: send the line "unsubscribe linux-laptop"=
+ in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
