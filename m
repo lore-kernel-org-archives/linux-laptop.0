@@ -1,26 +1,26 @@
-From: Fanny <par@twcmi.com>
-Subject: Bigger, harder, and longer - lasting results NOW with a discreet little patch.
-Date: Wed, 3 Aug 2005 17:05:28 +0200
-Message-ID: <77088112891.949433784@81-203-99-218.user.ono.com>
-Mime-Version: 1.0
+From: Gwendolen Torres <midget@pollack.net>
+Subject: No pills, no pumps - Its the Patch
+Date: Wed, 5 Oct 2005 16:03:07 -0700
+Message-ID: <1636478925.1776594702@VDSL-130-13-114-124.PHNX.QWEST.NET>
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-laptop-owner@vger.kernel.org>
 Sender: linux-laptop-owner@vger.kernel.org
 List-Id: <linux-laptop.vger.kernel.org>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 To: linux-laptop@vger.kernel.org
 
-Wanna be more man? Check this dude
-http://www.matawe.com/pt/?9&floater
+Bro check out this awesome new product
+http://www.timath.com/pt/
 
 
 
+Traffic signals in New York are just rough guidelines.    
+Our best work is done when it needs to be.   
 
+No one is completely unhappy at the failure of his best friend. 
+Whenever people agree with me I always feel I must be wrong. 
 
-My tears stuck in their little ducts, refusing to be jerked.  
-Wisdom is knowledge which has become a part of one's being.  
-The best soldiers are not warlike.       
-A free society is a place where it's safe to be unpopular. 
-The classes that wash most are those that work least.   
+Facts are stupid things.         
 
 
