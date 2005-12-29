@@ -1,40 +1,30 @@
-From: Frederik Eaton <frederik@a5.repetae.net>
-Subject: fan control (thinkpad t42)
-Date: Thu, 29 Dec 2005 00:36:32 +0000
-Message-ID: <20051229003632.GA7888@a5.repetae.net>
-Reply-To: frederik@ofb.net
+From: Robert Zwerus <arzie@dds.nl>
+Subject: Re: fan control (thinkpad t42)
+Date: Thu, 29 Dec 2005 02:47:44 +0100
+Message-ID: <200512290247.44875.arzie@dds.nl>
+References: <20051229003632.GA7888@a5.repetae.net>
 Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-laptop-owner@vger.kernel.org>
+In-Reply-To: <20051229003632.GA7888@a5.repetae.net>
 Content-Disposition: inline
 Sender: linux-laptop-owner@vger.kernel.org
 List-Id: <linux-laptop.vger.kernel.org>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-laptop@vger.kernel.org
+To: frederik@ofb.net
+Cc: linux-laptop@vger.kernel.org
 
-Hello,
+On Thursday 29 December 2005 01:36, Frederik Eaton wrote:
+> Most of the noise it makes comes from the CPU fan. This is very quiet
+> when the computer first turns on, or when it comes out of sleep, but
+> usually after a few minutes it goes into a different mode. In the new
+> mode the fan is loud, and worse, it "revs" every few seconds - so
+> rather than making a constant noise, there is something of a rhythm to
+> it which I find annoying.
 
-I have just purchased an IBM ThinkPad T42.
-
-Most of the noise it makes comes from the CPU fan. This is very quiet
-when the computer first turns on, or when it comes out of sleep, but
-usually after a few minutes it goes into a different mode. In the new
-mode the fan is loud, and worse, it "revs" every few seconds - so
-rather than making a constant noise, there is something of a rhythm to
-it which I find annoying.
-
-I'm wondering if there is a way to control the fan to keep it from
-doing this. I have the processor running at the slowest speed, so it
-shouldn't be producing too much heat.
-
-There is nothing in "/proc/acpi/fan/", I'm not sure what to make of
-that.
-
-# uname -a
-Linux fly 2.6.12-9-686 #1 Mon Oct 10 13:25:32 BST 2005 i686 GNU/Linux
-# cat /proc/cmdline 
-root=/dev/hda1 ro apm=on acpi=on nolapic quiet splash
-
-Thanks,
-
-Frederik
+You should have a look at:
+http://www.thinkwiki.org/wiki/Problem_with_fan_noise
+-- 
+A Dieu,
+ Robert Zwerus - WWW: http://zwering.adsl.utwente.nl
+ ICQ UIN: 3943443 - MSN: robert_zwerus@hotmail.com
