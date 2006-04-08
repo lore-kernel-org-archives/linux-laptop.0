@@ -1,50 +1,67 @@
-From: "Christopher Anderson" <tdrtugynkxdbse@futbolsoccer.com>
-Subject: Fw[13]: Hello !! Tue, 14 Feb 2006 19:42:57 +0200 linux-laptop@vger.kernel.org
-Date: Tue, 14 Feb 2006 19:42:57 +0200
-Message-ID: <367046181486054.20060214194257@gianni>
-Return-path: <linux-laptop-owner@vger.kernel.org>
-Sender: linux-laptop-owner@vger.kernel.org
+From: "Brown, Len" <len.brown@intel.com>
+Subject: kernel vs user power management
+Date: Sat, 8 Apr 2006 02:42:12 -0400
+Message-ID: <CFF307C98FEABE47A452B27C06B85BB622B194@hdsmsx411.amr.corp.intel.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-class: urn:content-classes:message
+Sender: linux-acpi-owner@vger.kernel.org
 List-Id: <linux-laptop.vger.kernel.org>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-laptop@vger.kernel.org
+To: thoenig@suse.de, Holger Macht <hmacht@suse.de>
+Cc: linux-acpi@vger.kernel.org, linux-laptop@vger.kernel.org, Andi Kleen <ak@suse.de>
 
+Timo, Holger,
+Andi pointed me to your FOSDEM Linux Power Management presentation:
 
-Do You have enough pwoer to provide your patrner high
+http://en.opensuse.org/FOSDEM2006
 
-quality SE-X on St. Valentine day? 
+http://files.opensuse.org/opensuse/en/b/b5/One_step_opendesign.pdf
 
-Get a MOONSTER pwoer, nothing can bring your ererction down!
+And I'm glad to see you working on Linux Power Management.
 
-Show your partner the PWOER of your LOEV and she will always remember You. 
+But I'm a little concerned that user-space and the kernel are
+a little out of sync on a few things.
 
-Loev will ALWAYS be associated with YOU!  
+I'm happy to see that the userspace p-state governor
+is no longer enabled by default on SuSE systems.
+While it was passable on servers with steady-state
+workloads, it was very bad for laptops where the
+machine spends a lot of time idle, but has short
+bursts of processing need which userspace could
+not detect.  These laptops would spend virtually
+all their time in Pn when using the userspace governor.
 
-Your order will be PRIVATE, nobody will know what You use. 
+The next step is to delete the userspace governor
+as a valid governor selection entirely.  If somebody
+really wants manual control, they can still set the
+limits within which "ondemand" will stay.
 
-Follow this link and get SSPECIAL DISSCOOUNT for that period:
+I'm happy to see that clock throttling is not enabled by
+default in recent SuSE release, at least on my laptop
+which supports P-states.
 
-http://ksLfk1k7y6r6u78p4djjhk4juo1jj.cerebralka.com/
+I'd like to see no option to enable clock-throttling on
+systems that support real p-states.
 
+It is useful only for workloads which have an infinite
+amount of non-idle computing which you don't care how
+slow it computes.  For the vast majority of workloads
+it just slows down the machine and delays the processor
+from getting into idle where it can save a non-linear
+amount of power.  Further, there exist today systems which
+will consume MORE power in deep C-states when throttled
+vs. when not throttled.
 
+The other major topic is the user/kernel interface
+for power management policy.  there needs to be in-kernel
+state for this, else the device drivers will have no low-latency
+way to get the answer to the simple policy question of how they should
+optimize for performance vs power at any given instant when they
+recognize their device is idle..  this state should be controlled
+by user space, but I think it is most practical for it to
+be kernel resident.
 
-
- Vfyukvsxsgpteg Aipidupdyj
-
-
-
- Tue, 14 Feb 2006 19:42:57 +0200
-
-
-
-
-
-
-
-
-
-
-
-
-
+thanks,
+-Len
