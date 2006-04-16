@@ -1,226 +1,156 @@
-From: Holger Macht <hmacht@suse.de>
-Subject: Re: kernel vs user power management
-Date: Mon, 10 Apr 2006 10:35:45 +0200
-Message-ID: <20060410083544.GB20070@homac.suse.de>
-References: <CFF307C98FEABE47A452B27C06B85BB622B275@hdsmsx411.amr.corp.intel.com>
+From: Andreas Mohr <andi@rhlx01.fht-esslingen.de>
+Subject: [PATCH] -mm: i386 apm.c optimization
+Date: Mon, 17 Apr 2006 00:05:53 +0200
+Message-ID: <20060416220552.GA22998@rhlx01.fht-esslingen.de>
 Mime-Version: 1.0
 Return-path: <linux-laptop-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CFF307C98FEABE47A452B27C06B85BB622B275@hdsmsx411.amr.corp.intel.com>
 Sender: linux-laptop-owner@vger.kernel.org
 List-Id: <linux-laptop.vger.kernel.org>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "Brown, Len" <len.brown@intel.com>
-Cc: thoenig@suse.de, linux-acpi@vger.kernel.org, linux-laptop@vger.kernel.org, Andi Kleen <ak@suse.de>
+To: Andrew Morton <akpm@osdl.org>
+Cc: sfr@canb.auug.org.au, linux-laptop@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Sat 08. Apr - 23:06:54, Brown, Len wrote:
-> >On Sat 08. Apr - 02:42:12, Brown, Len wrote:
-> >> Timo, Holger,
-> >> Andi pointed me to your FOSDEM Linux Power Management presentation:
-> >> 
-> >> http://en.opensuse.org/FOSDEM2006
-> >> 
-> >> http://files.opensuse.org/opensuse/en/b/b5/One_step_opendesign.pdf
-> >> 
-> >> And I'm glad to see you working on Linux Power Management.
-> >> 
-> >> But I'm a little concerned that user-space and the kernel are
-> >> a little out of sync on a few things.
-> >> 
-> >> I'm happy to see that the userspace p-state governor
-> >> is no longer enabled by default on SuSE systems.
-> >> While it was passable on servers with steady-state
-> >> workloads, it was very bad for laptops where the
-> >> machine spends a lot of time idle, but has short
-> >> bursts of processing need which userspace could
-> >> not detect.  These laptops would spend virtually
-> >> all their time in Pn when using the userspace governor.
-> >
-> >To be honest, this observation suprises me a little bit. We did some
-> >measurements with userspace agains ondemand governor some time 
-> >ago and did not notice any big differences in the results between them.
-> >Well, these tests are about 1 1/2 years ago, though, and there went some 
-> >changes into the kernel until now ;-)
-> 
-> Yes, measurements show that ondemand as improved
-> considerably since its initial implementation.
-> It continues to improve today, though there is now smaller room for improvement.
-> 
-> Also, the other important thing to meausre here is *response time* --
-> not throughput.  This will expose the benefits of switching quickly
-> via ondemand vs. slowly via userspace.
-> This is particularly important on interarctive workloads.
-> 
-> No, you'll not notice much, if any,  difference for course grain things
-> like doing a kernel build or running a steady-state server workload.
+Hello all,
 
-Agreed.
+- avoid expensive modulo (integer division) which happened
+  since APM_MAX_EVENTS is 20 (non-power-of-2)
+- kill compiler warnings by initializing two variables
+- add __read_mostly to some important static variables that are read often
+  (by idle loop etc.)
+- constify several structures
 
-> 
-> >Nevertheless, we adjust the sampling rate in any case and 
-> >currently set it to 333 milliseconds (that's configurable).
-> >We noticed if we use the
-> >default ondemand setting, the ondemand governor increases the frequency
-> >too often although there is not much to do which is also not 
-> >helpful.
-> 
-> I have not observed the ondemand governor today switching up
-> more often than is helpful.
-> 
-> I speak for intel hardware, of course.
-> It might be that other hardware, which can not switch up and down
-> very quickly, not not benefit from ondemand and may be better
-> suited to userspace.
+Patch tested on 2.6.16-ck5, rediffed against 2.6.17-rc1-mm2.
 
-Ok. But to decrease this value of 333 milliseconds should be a good idea
-in any case.
+Signed-off-by: Andreas Mohr <andi@lisas.de>
 
-> 
-> >But 333 milliseconds is maybe a bit too high, it's taken because 
-> >of historical reasons.
-> >This value _was_ the default interval of our main event loop.
-> >I think I will lower it a bit.
-> 
-> Go ahead and tune userspace to work optimally on systems that can't run ondemand.
-> Systems that are able to run ondemand should not be running userspace
-> at all.
 
-They don't at the moment.
-
-> 
-> >Furthermore, we had some problems on multiprocessor systems in the past
-> >(about 1/2 year ago) with the ondemand governor. After some time the
-> >system was running (even some hours or even days) the machine locked up
-> >hard.  Thus, we set the userspace governor by default on those systems
-> >where we never experienced such problems. At the moment I did 
-> >only get one similar report where the root cause is not clear.
-> 
-> It is important that this failure be root caused and this
-> doubt be put behind us.  Got a bug URL?
-
-See Andi's mail. I didn't know that this is already fixed.
-
-> 
-> >So I stick to the
-> >ondemand governor in any case in newer releases. And such lockups are
-> >really hard to reproduce and to debug.
-> >
-> >Another argument was that speedstep_ich was not yet ready for ondemand
-> >which it is now IIRC.
-> 
-> speedstep-centrino and acpi-cpufreq support real p-states and can
-> can support ondemand.  (indeed, these two drivers need to be merged into a single driver)
-> 
-> While older systems will use speedstep-ich, I don't expect to see much
-> use for it on modern systems.  p4clockmod is just t-states,
-> and one could argue that it should not exist at all.
-
-Yes, we do not use or load p4clockmod it in any case because of that.
-
-> 
-> I don't know if the amd-specific drivers would work or not.
-> Last I heard their latency was too high, but maybe they've
-> fixed that.
-> 
-> There is a cpufreq architecture issue here here, of course.
-> the drivers make all the different states look the same
-> to the governors.  But P-states and T-states are not the same,
-> they are very different.
-
-Yes, of course.
-
-> 
-> >> The next step is to delete the userspace governor
-> >> as a valid governor selection entirely.  If somebody
-> >> really wants manual control, they can still set the
-> >> limits within which "ondemand" will stay.
-> >
-> >In current code, I always try to use the ondemand governor at 
-> >first and if that fails we automatically switch to the userspace
-> >implementation at runtime.
-> >
-> >This way has the advantage that we always get a working cpu
-> >frequency scaling support.. But it also has one big disadvantage, we do
-> >not get reports about not working ondemand governor so maybe 
-> >we simply did fot notice the improvements in this area. For our stable 
-> >releases, I will keep the current inplementation. For the unstable one,
-> >I will disable the
-> >autoswitching code and if it still works good then for a few 
-> >month, I will remove the userspace implementation completely.
-> >It should not hurt to let
-> >the code in for some time and remove the visible configuration option,
-> >just to have fallback under strange circumstances.  Would this 
-> >be ok with you?
-> 
-> I think you'll need to keep the userspace backup scheme for systems
-> which have switching latency too high to load and run ondemand.
-> 
-> However, systems which can run ondemand, should never run userspace,
-> and providing userspace as an option on such systems is probably
-> not the right knob to present to administrators on those boxes.
-
-Well, then could change that configuration option we have currently
-(CPUFREQ_CONTROL="") to a secret one. Not showing it in the configuration
-file, but it can still be put in if someone knows it or we tell him.
-
-> 
-> >> I'm happy to see that clock throttling is not enabled by
-> >> default in recent SuSE release, at least on my laptop
-> >> which supports P-states.
-> >> 
-> >> I'd like to see no option to enable clock-throttling on
-> >> systems that support real p-states.
-> >
-> >Yes, this is reasonable, indeen. Will do that. With p-states in this
-> >context, you mean cpufreq here?
-> 
-> throttling is always T-states.
-> cpufreq is usually p-states, but in the case of p4clockmod,
-> it is T-states also.  As I mentioned above, cpufreq is doing
-> you a dis-service by hiding the difference from you
-> and really need to be enhanced to know (and export)
-> the difference.
-
-Yes, this would be good, indeed. But what else drivers are currently
-affected? It's only p4clockmod I know of.
-
-> 
-> >> It is useful only for workloads which have an infinite
-> >> amount of non-idle computing which you don't care how
-> >> slow it computes.  For the vast majority of workloads
-> >> it just slows down the machine and delays the processor
-> >> from getting into idle where it can save a non-linear
-> >> amount of power.  Further, there exist today systems which
-> >> will consume MORE power in deep C-states when throttled
-> >> vs. when not throttled.
-> >> 
-> >> The other major topic is the user/kernel interface
-> >> for power management policy.  there needs to be in-kernel
-> >> state for this, else the device drivers will have no low-latency
-> >> way to get the answer to the simple policy question of how 
-> >they should
-> >> optimize for performance vs power at any given instant when they
-> >> recognize their device is idle..  this state should be controlled
-> >> by user space, but I think it is most practical for it to
-> >> be kernel resident.
-> >
-> >I'm not sure if I completely understand what you mean here. Do you mean
-> >the so called "runtime device power management"?
-> 
-> yes.
-> 
-> >If so, I fully agree with you. But I do not set a specific 
-> >policy in the powersave code explicitely for that feature.
-> >If the policy information
-> >will go into the kernel, I will use and set this one, of course.
-> 
-> okay, great.
-> Yes, the kernel folks have known for years that this has to be done.
-> Hopefully progress will be made soon...
-> 
-> thanks,
-> -Len
-
-Regards,
-	Holger
+diff -urN linux-2.6.17-rc1-mm2.orig/arch/i386/kernel/apm.c linux-2.6.17-rc1-mm2/arch/i386/kernel/apm.c
+--- linux-2.6.17-rc1-mm2.orig/arch/i386/kernel/apm.c	2006-04-03 05:22:10.000000000 +0200
++++ linux-2.6.17-rc1-mm2/arch/i386/kernel/apm.c	2006-04-16 23:49:00.000000000 +0200
+@@ -374,14 +374,14 @@
+ 	unsigned short	segment;
+ }				apm_bios_entry;
+ static int			clock_slowed;
+-static int			idle_threshold = DEFAULT_IDLE_THRESHOLD;
+-static int			idle_period = DEFAULT_IDLE_PERIOD;
++static int			idle_threshold __read_mostly = DEFAULT_IDLE_THRESHOLD;
++static int			idle_period __read_mostly = DEFAULT_IDLE_PERIOD;
+ static int			set_pm_idle;
+ static int			suspends_pending;
+ static int			standbys_pending;
+ static int			ignore_sys_suspend;
+ static int			ignore_normal_resume;
+-static int			bounce_interval = DEFAULT_BOUNCE_INTERVAL;
++static int			bounce_interval __read_mostly = DEFAULT_BOUNCE_INTERVAL;
+ 
+ #ifdef CONFIG_APM_RTC_IS_GMT
+ #	define	clock_cmos_diff	0
+@@ -390,8 +390,8 @@
+ static long			clock_cmos_diff;
+ static int			got_clock_diff;
+ #endif
+-static int			debug;
+-static int			smp;
++static int			debug __read_mostly;
++static int			smp __read_mostly;
+ static int			apm_disabled = -1;
+ #ifdef CONFIG_SMP
+ static int			power_off;
+@@ -403,8 +403,8 @@
+ #else
+ static int			realmode_power_off;
+ #endif
+-static int			exit_kapmd;
+-static int			kapmd_running;
++static int			exit_kapmd __read_mostly;
++static int			kapmd_running __read_mostly;
+ #ifdef CONFIG_APM_ALLOW_INTS
+ static int			allow_ints = 1;
+ #else
+@@ -416,15 +416,15 @@
+ static DECLARE_WAIT_QUEUE_HEAD(apm_suspend_waitqueue);
+ static struct apm_user *	user_list;
+ static DEFINE_SPINLOCK(user_list_lock);
+-static struct desc_struct	bad_bios_desc = { 0, 0x00409200 };
++static const struct desc_struct	bad_bios_desc = { 0, 0x00409200 };
+ 
+-static char			driver_version[] = "1.16ac";	/* no spaces */
++static const char		driver_version[] = "1.16ac";	/* no spaces */
+ 
+ /*
+  *	APM event names taken from the APM 1.2 specification. These are
+  *	the message codes that the BIOS uses to tell us about events
+  */
+-static char *	apm_event_name[] = {
++static const char *	const apm_event_name[] = {
+ 	"system standby",
+ 	"system suspend",
+ 	"normal resume",
+@@ -616,7 +616,7 @@
+  *	@ecx_in: ECX register value for BIOS call
+  *	@eax: EAX register on return from the BIOS call
+  *
+- *	Make a BIOS call that does only returns one value, or just status.
++ *	Make a BIOS call that returns one value only, or just status.
+  *	If there is an error, then the error code is returned in AH
+  *	(bits 8-15 of eax) and this function returns non-zero. This is
+  *	used for simpler BIOS operations. This call may hold interrupts
+@@ -822,7 +822,7 @@
+ #define IDLE_CALC_LIMIT   (HZ * 100)
+ #define IDLE_LEAKY_MAX    16
+ 
+-static void (*original_pm_idle)(void);
++static void (*original_pm_idle)(void) __read_mostly;
+ 
+ /**
+  * apm_cpu_idle		-	cpu idling for APM capable Linux
+@@ -1063,7 +1063,8 @@
+  
+ static int apm_console_blank(int blank)
+ {
+-	int error, i;
++	int error = APM_NOT_ENGAGED; /* silence gcc */
++	int i;
+ 	u_short state;
+ 	static const u_short dev[3] = { 0x100, 0x1FF, 0x101 };
+ 
+@@ -1104,7 +1105,8 @@
+ 
+ static apm_event_t get_queued_event(struct apm_user *as)
+ {
+-	as->event_tail = (as->event_tail + 1) % APM_MAX_EVENTS;
++	if (++as->event_tail >= APM_MAX_EVENTS)
++		as->event_tail = 0;
+ 	return as->events[as->event_tail];
+ }
+ 
+@@ -1118,13 +1120,16 @@
+ 	for (as = user_list; as != NULL; as = as->next) {
+ 		if ((as == sender) || (!as->reader))
+ 			continue;
+-		as->event_head = (as->event_head + 1) % APM_MAX_EVENTS;
++		if (++as->event_head >= APM_MAX_EVENTS)
++			as->event_head = 0;
++
+ 		if (as->event_head == as->event_tail) {
+ 			static int notified;
+ 
+ 			if (notified++ == 0)
+ 			    printk(KERN_ERR "apm: an event queue overflowed\n");
+-			as->event_tail = (as->event_tail + 1) % APM_MAX_EVENTS;
++			if (++as->event_tail >= APM_MAX_EVENTS)
++				as->event_tail = 0;
+ 		}
+ 		as->events[as->event_head] = event;
+ 		if ((!as->suser) || (!as->writer))
+@@ -1282,7 +1287,7 @@
+ static apm_event_t get_event(void)
+ {
+ 	int		error;
+-	apm_event_t	event;
++	apm_event_t	event = APM_NO_EVENTS; /* silence gcc */
+ 	apm_eventinfo_t	info;
+ 
+ 	static int notified;
