@@ -1,52 +1,64 @@
-From: Bill Davidsen <davidsen@tmr.com>
-Subject: Re: [PATCH] -mm: i386 apm.c optimization
-Date: Fri, 05 May 2006 09:55:13 -0400
-Message-ID: <445B5941.3020606@tmr.com>
-References: <20060416220552.GA22998@rhlx01.fht-esslingen.de>
+From: "Brown, Len" <len.brown@intel.com>
+Subject: RE: kernel vs user power management
+Date: Wed, 17 May 2006 00:20:12 -0400
+Message-ID: <CFF307C98FEABE47A452B27C06B85BB679B59B@hdsmsx411.amr.corp.intel.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-laptop-owner@vger.kernel.org>
-In-Reply-To: <20060416220552.GA22998@rhlx01.fht-esslingen.de>
+Content-class: urn:content-classes:message
 Sender: linux-laptop-owner@vger.kernel.org
 List-Id: <linux-laptop.vger.kernel.org>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Andreas Mohr <andi@rhlx01.fht-esslingen.de>
-Cc: Andrew Morton <akpm@osdl.org>, sfr@canb.auug.org.au, linux-laptop@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+To: Holger Macht <hmacht@suse.de>
+Cc: thoenig@suse.de, linux-acpi@vger.kernel.org, linux-laptop@vger.kernel.org, Andi Kleen <ak@suse.de>
 
-Andreas Mohr wrote:
-
->Hello all,
+ 
+>> >> I'm happy to see that clock throttling is not enabled by
+>> >> default in recent SuSE release, at least on my laptop
+>> >> which supports P-states.
+>> >> 
+>> >> I'd like to see no option to enable clock-throttling on
+>> >> systems that support real p-states.
+>> >
+>> >Yes, this is reasonable, indeen. Will do that. With p-states in this
+>> >context, you mean cpufreq here?
+>> 
+>> throttling is always T-states.
+>> cpufreq is usually p-states, but in the case of p4clockmod,
+>> it is T-states also.  As I mentioned above, cpufreq is doing
+>> you a dis-service by hiding the difference from you
+>> and really need to be enhanced to know (and export)
+>> the difference.
 >
->- avoid expensive modulo (integer division) which happened
->  since APM_MAX_EVENTS is 20 (non-power-of-2)
->- kill compiler warnings by initializing two variables
->- add __read_mostly to some important static variables that are read often
->  (by idle loop etc.)
->- constify several structures
+>Yes, this would be good, indeed. But what else drivers are currently
+>affected? It's only p4clockmod I know of.
 >
->Patch tested on 2.6.16-ck5, rediffed against 2.6.17-rc1-mm2. 
->@@ -1104,7 +1105,8 @@
-> 
-> static apm_event_t get_queued_event(struct apm_user *as)
-> {
->-	as->event_tail = (as->event_tail + 1) % APM_MAX_EVENTS;
->+	if (++as->event_tail >= APM_MAX_EVENTS)
->+		as->event_tail = 0;
-> 	return as->events[as->event_tail];
-> }
-> 
->  
->
-Either event_tail can never be > APM_MAX_EVENTS (I believe that's true) 
-and you should use ==, or you should do a proper mod function:
-  ++as->event_tail;
-  while (as->event_tail >= APM_MAX_EVENTS) as->event_tail -= APM_MAX_EVENTS;
+>> 
+>> >> It is useful only for workloads which have an infinite
+>> >> amount of non-idle computing which you don't care how
+>> >> slow it computes.  For the vast majority of workloads
+>> >> it just slows down the machine and delays the processor
+>> >> from getting into idle where it can save a non-linear
+>> >> amount of power.  Further, there exist today systems which
+>> >> will consume MORE power in deep C-states when throttled
+>> >> vs. when not throttled.
 
-In the unlikely even that the event_tail is already too large you want a 
-proper mod, not to set it to zero.
+I installed SL10.1 today on a P3M laptop (Dell D600)
+and it defaults to the "Powersave" scheme which includes
+"Dynamic Frequency Scaling" (ondemand), so that is good.
 
--- 
-bill davidsen <davidsen@tmr.com>
-  CTO TMR Associates, Inc
-  Doing interesting things with small computers since 1979
+However, by defaulit "Allow Throttling" is CHECKED
+and Max %  is set to 50%.
 
+Exactly what does this mean?
+I looked in /proc/acpi/processor/*/throttling and the
+laptop is still in T0.
+
+Is there an easy way for me to modify the kernel to
+convince the powersaved application that the system
+does not support throttling?  I'm thinking that we've
+given user-space too much rope and it has proceeded
+to hang itself.
+
+thanks,
+-Len
