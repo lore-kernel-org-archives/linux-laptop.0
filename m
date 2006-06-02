@@ -1,27 +1,24 @@
-From: "Brown, Len" <len.brown@intel.com>
-Subject: RE: kernel vs user power management
-Date: Wed, 17 May 2006 14:25:59 -0400
-Message-ID: <CFF307C98FEABE47A452B27C06B85BB679BDD3@hdsmsx411.amr.corp.intel.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-class: urn:content-classes:message
-Sender: linux-acpi-owner@vger.kernel.org
+From: "Leah Vargas" <XPNJKP@hotmail.com>
+Subject: Everyone Need This Linux-kernel
+Date: Fri, 02 Jun 2006 14:10:05 -0600
+Message-ID: <171.12e558d5.2a9WUS44__36632.4832234115$1149275493$gmane$org@sol.com>
+Return-path: <linux-laptop-owner@vger.kernel.org>
+Sender: linux-laptop-owner@vger.kernel.org
 List-Id: <linux-laptop.vger.kernel.org>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-To: Holger Macht <hmacht@suse.de>
-Cc: thoenig@suse.de, linux-acpi@vger.kernel.org, linux-laptop@vger.kernel.org, Andi Kleen <ak@suse.de>
+Content-Transfer-Encoding: 7bit
+To: linux-kernel@vger.kernel.org, linux-kernel-owner@vger.kernel.org, linux-laptop@vger.kernel.org
 
- 
->If you can reproduce that it switches to T2 when you do a rcpowersaved
->restart or on every unplug, it would actually be a bug which is worth
->to be reported.
 
-happens on every un-plug event.
+The most complete Phar macy Online
+We carry all major medds at bargain price
+Viggra, Ci ialis, VaIium, Xa naax
+Phantermiine, Ulltraam and etc...
+SatiisfactIon Gua ranteeed
 
-/etc/init.d/powersaved stop
+http://discountofthecenturies.net/?wid=3D102
 
-didn't make it stop happening, so it is probably an ACPI bug.
 
-thanks,
--Len
+mZM
+
