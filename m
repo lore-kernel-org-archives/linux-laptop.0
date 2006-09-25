@@ -1,61 +1,45 @@
-From: Simeon Penev <simeon_penev@web.de>
-Subject: Re: 2.6.17-1.2174_FC5: : Disabling IRQ #7 / nobody cared / usb_hcd_irq
-Date: Fri, 08 Sep 2006 00:22:15 +0200
-Message-ID: <45009B97.70905@web.de>
-References: <790873504@web.de> <44FD8932.60906@tmr.com> <44FED3A4.2010204@web.de> <44FEEB18.105@tmr.com>
+From: "Ashutosh Naik" <ashutosh.naik@gmail.com>
+Subject: [PATCH]drivers/input/misc: Added Acer TravelMate 2424NWXCi support to the wistron button interface
+Date: Mon, 25 Sep 2006 10:22:24 +0530
+Message-ID: <81083a450609242152p18730a09i58728bd2f092f8b6@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; 
+	boundary="----=_Part_24509_6010221.1159159944163"
 Return-path: <linux-laptop-owner@vger.kernel.org>
-In-Reply-To: <44FEEB18.105@tmr.com>
 Sender: linux-laptop-owner@vger.kernel.org
 List-Id: <linux-laptop.vger.kernel.org>
-Content-Type: text/plain; charset="us-ascii"
-To: Bill Davidsen <davidsen@tmr.com>
-Cc: linux-laptop@vger.kernel.org
+To: Miloslav Trmac <mitr@volny.cz>, Bernhard Rosenkraenzer <bero@arklinux.org>, dtor@mail.ru, Andrew Morton <akpm@osdl.org>
+Cc: Vojtech Pavlik <vojtech@suse.cz>, linux-kernel@vger.kernel.org, linux-laptop@vger.kernel.org, GuruPrasad <guruteck@gmail.com>
 
-Hi Bill,
+------=_Part_24509_6010221.1159159944163
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-thank you again for your help!
+This patch adds Acer TravelMate 2424NWXCi support to the wistron button
+interface.The key mappings are the same as the older Acer TravelMate
+240. I have tested it on my new laptop and it seems to work great.
 
-Bill Davidsen wrote:
-> Matter of approach. I would not disable an IRQ until there had been some
-> number of uncaught interrupts in a row, others feel the number is one.
-> But there really is an interrupt, so it's probably not a "bug" in that
-> sense.
-> 
->>  
->>
->>> - disable any CPU speed stuff you have running (just for information)
->>>   
->>
->> Yes, i'm using cpufreq, but it's a feature i'm not willing to give away
->> because the laptop is more silent. The fan works less.
->>  
->>
-> Noted, but "just for information" would let you see if the speedstep was
-> the cause, or at least contributed. That would help run it down.
+Signed-off-by: Ashutosh Naik <ashutosh.naik@gmail.com>
 
-Cpuspeed doesn't seem to be the problem. After disabling the service,
-the problem is still there.
+------=_Part_24509_6010221.1159159944163
+Content-Type: text/plain; name=acer-2424NWXCi-patch.txt; 
+	charset=ANSI_X3.4-1968
+Content-Transfer-Encoding: base64
+X-Attachment-Id: f_esidv4oc
+Content-Disposition: attachment; filename="acer-2424NWXCi-patch.txt"
 
-> 
->>  
->>
->>> Yes, that's a shotgun approach, I'm still running 2.6.16.2111 on FC4
->>> because later kernels don't init the video or wireless correctly.
->>>
->>>   
->>
->> Thank you once again.
->>
-> I have a machine which does zero or one of these, so I'm familiar with
-> the problem. I am running an older kernel which whines but doesn't
-> disable, and since I don't need IRQ7 I wouldn't be too unhappy if it did
-> disable. But I think there's an underlying hardware issue, or at least
-> hardware to driver mismatch. Since you said irqpoll causes problems
-> there's definitely something not working right.
-> 
-Could it be that the noapic kernel parameter influences this behavior?
-
-Best regards,
-simeon
+ZGlmZiAtTnVycCBsaW51eC0yLjYuMTgtdmFuaWxsYS9kcml2ZXJzL2lucHV0L21pc2Mvd2lzdHJv
+bl9idG5zLmMgbGludXgtMi42LjE4L2RyaXZlcnMvaW5wdXQvbWlzYy93aXN0cm9uX2J0bnMuYwot
+LS0gbGludXgtMi42LjE4LXZhbmlsbGEvZHJpdmVycy9pbnB1dC9taXNjL3dpc3Ryb25fYnRucy5j
+CTIwMDYtMDktMjAgMDk6MTI6MDYuMDAwMDAwMDAwICswNTMwCisrKyBsaW51eC0yLjYuMTgvZHJp
+dmVycy9pbnB1dC9taXNjL3dpc3Ryb25fYnRucy5jCTIwMDYtMDktMjUgMTA6MTI6MjMuMDAwMDAw
+MDAwICswNTMwCkBAIC0zODksNiArMzg5LDE1IEBAIHN0YXRpYyBzdHJ1Y3QgZG1pX3N5c3RlbV9p
+ZCBkbWlfaWRzW10gX18KIAkJfSwKIAkJLmRyaXZlcl9kYXRhID0ga2V5bWFwX2FjZXJfdHJhdmVs
+bWF0ZV8yNDAKIAl9LAorCXsKKwkJLmNhbGxiYWNrID0gZG1pX21hdGNoZWQsCisJCS5pZGVudCA9
+ICJBY2VyIFRyYXZlbE1hdGUgMjQyNE5XWENpIiwKKwkJLm1hdGNoZXMgPSB7CisJCQlETUlfTUFU
+Q0goRE1JX1NZU19WRU5ET1IsICJBY2VyIiksCisJCQlETUlfTUFUQ0goRE1JX1BST0RVQ1RfTkFN
+RSwgIlRyYXZlbE1hdGUgMjQyMCIpLAorCQl9LAorCQkuZHJpdmVyX2RhdGEgPSBrZXltYXBfYWNl
+cl90cmF2ZWxtYXRlXzI0MAorCX0sCiAgICAgICAgIHsKIAkJLmNhbGxiYWNrID0gZG1pX21hdGNo
+ZWQsCiAJCS5pZGVudCA9ICJBT3BlbiAxNTU5QVMiLAo=
+------=_Part_24509_6010221.1159159944163--
