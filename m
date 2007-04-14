@@ -1,45 +1,49 @@
-From: "Ashutosh Naik" <ashutosh.naik@gmail.com>
-Subject: [PATCH]drivers/input/misc: Added Acer TravelMate 2424NWXCi support to the wistron button interface
-Date: Mon, 25 Sep 2006 10:22:24 +0530
-Message-ID: <81083a450609242152p18730a09i58728bd2f092f8b6@mail.gmail.com>
+From: "ice`" <icestorm@ngi.it>
+Subject: Linux stops my F10 (or others) keys to work at boot
+Date: Sat, 14 Apr 2007 14:39:10 +0200
+Message-ID: <C12A1DBF6F3D471FA4FD1948D5D6604C@LaptopHP>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; 
-	boundary="----=_Part_24509_6010221.1159159944163"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-laptop-owner@vger.kernel.org>
 Sender: linux-laptop-owner@vger.kernel.org
 List-Id: <linux-laptop.vger.kernel.org>
-To: Miloslav Trmac <mitr@volny.cz>, Bernhard Rosenkraenzer <bero@arklinux.org>, dtor@mail.ru, Andrew Morton <akpm@osdl.org>
-Cc: Vojtech Pavlik <vojtech@suse.cz>, linux-kernel@vger.kernel.org, linux-laptop@vger.kernel.org, GuruPrasad <guruteck@gmail.com>
+Content-Type: text/plain; format="flowed"; charset="us-ascii"; reply-type="original"
+To: linux-laptop@vger.kernel.org
 
-------=_Part_24509_6010221.1159159944163
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Hi,
+don't know if this is the right list to ask and if this problem is related 
+to the Kernel i'm using (2.6.18), to my Distribution (Debian etch) or to 
+something else...
 
-This patch adds Acer TravelMate 2424NWXCi support to the wistron button
-interface.The key mappings are the same as the older Acer TravelMate
-240. I have tested it on my new laptop and it seems to work great.
+I will try to explain it at best:
 
-Signed-off-by: Ashutosh Naik <ashutosh.naik@gmail.com>
+I have an HP NX7400 Laptop with Latest bios.
+On boot it's possible to press F10 to enter BIOS settings (or F9 for example 
+to choose boot sequence).
 
-------=_Part_24509_6010221.1159159944163
-Content-Type: text/plain; name=acer-2424NWXCi-patch.txt; 
-	charset=ANSI_X3.4-1968
-Content-Transfer-Encoding: base64
-X-Attachment-Id: f_esidv4oc
-Content-Disposition: attachment; filename="acer-2424NWXCi-patch.txt"
+I started having problem when I noticed that pressing F10 (or F9) on boot 
+wasn't working anymore...the laptop didn't get it and I wasn't able to 
+access BIOS...
 
-ZGlmZiAtTnVycCBsaW51eC0yLjYuMTgtdmFuaWxsYS9kcml2ZXJzL2lucHV0L21pc2Mvd2lzdHJv
-bl9idG5zLmMgbGludXgtMi42LjE4L2RyaXZlcnMvaW5wdXQvbWlzYy93aXN0cm9uX2J0bnMuYwot
-LS0gbGludXgtMi42LjE4LXZhbmlsbGEvZHJpdmVycy9pbnB1dC9taXNjL3dpc3Ryb25fYnRucy5j
-CTIwMDYtMDktMjAgMDk6MTI6MDYuMDAwMDAwMDAwICswNTMwCisrKyBsaW51eC0yLjYuMTgvZHJp
-dmVycy9pbnB1dC9taXNjL3dpc3Ryb25fYnRucy5jCTIwMDYtMDktMjUgMTA6MTI6MjMuMDAwMDAw
-MDAwICswNTMwCkBAIC0zODksNiArMzg5LDE1IEBAIHN0YXRpYyBzdHJ1Y3QgZG1pX3N5c3RlbV9p
-ZCBkbWlfaWRzW10gX18KIAkJfSwKIAkJLmRyaXZlcl9kYXRhID0ga2V5bWFwX2FjZXJfdHJhdmVs
-bWF0ZV8yNDAKIAl9LAorCXsKKwkJLmNhbGxiYWNrID0gZG1pX21hdGNoZWQsCisJCS5pZGVudCA9
-ICJBY2VyIFRyYXZlbE1hdGUgMjQyNE5XWENpIiwKKwkJLm1hdGNoZXMgPSB7CisJCQlETUlfTUFU
-Q0goRE1JX1NZU19WRU5ET1IsICJBY2VyIiksCisJCQlETUlfTUFUQ0goRE1JX1BST0RVQ1RfTkFN
-RSwgIlRyYXZlbE1hdGUgMjQyMCIpLAorCQl9LAorCQkuZHJpdmVyX2RhdGEgPSBrZXltYXBfYWNl
-cl90cmF2ZWxtYXRlXzI0MAorCX0sCiAgICAgICAgIHsKIAkJLmNhbGxiYWNrID0gZG1pX21hdGNo
-ZWQsCiAJCS5pZGVudCA9ICJBT3BlbiAxNTU5QVMiLAo=
-------=_Part_24509_6010221.1159159944163--
+so I investigate the issue and re-flashed laptop BIOS and discovered that 
+then it was working...but after playing in my Debian system it stopped 
+working again...
+
+so I re-flashed it again and did some tests and discovered that:
+
+- if I boot into Windows (Vista) and reboot the keys are still working at 
+boot and I can press F10 (or F9) to access BIOS settings (or choose boot 
+sequence)
+- if I boot into Linux (Debian etch 4.0) once, I won't be able to use F10 
+(F9) again on next reboot
+
+who can be the culprit? What do you think?
+Could it be a kernel issue when reading the laptop BIOS, creating some 
+problems in it? A re-flash of the bios (restoring original settings) make it 
+work again.
+I didn't test it against other distributions like FC6 which I have installed 
+in my laptop, with newer kernels, but I will try it later, to understand 
+better the issue.
+
+Thanks to anyone that can help. 
+
