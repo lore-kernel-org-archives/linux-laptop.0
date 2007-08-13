@@ -1,49 +1,30 @@
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: build #310 failed for 2.6.23-rc1-g05ff097 in
- linux/arch/i386/kernel/apm.c
-Date: Mon, 30 Jul 2007 20:01:50 +1000
-Message-ID: <20070730200150.8b4a5efe.sfr@canb.auug.org.au>
-References: <200707301058.02103.toralf.foerster@gmx.de>
-	<20070730194029.10a05731.sfr@canb.auug.org.au>
-	<200707301155.12836.toralf.foerster@gmx.de>
+From: joe@perches.com
+Subject: [PATCH] [44/2many] MAINTAINERS - APM DRIVER
+Date: Sun, 12 Aug 2007 23:22:46 -0700
+Message-ID: <46bff8b6.XgYxpWqOSD9Itfw6%joe@perches.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pgp-signature";
- micalg="PGP-SHA1";
- boundary="Signature=_Mon__30_Jul_2007_20_01_50_+1000_Q_5wu4tSxWbMnjT5"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-laptop-owner@vger.kernel.org>
-In-Reply-To: <200707301155.12836.toralf.foerster@gmx.de>
 Sender: linux-laptop-owner@vger.kernel.org
 List-Id: <linux-laptop.vger.kernel.org>
-To: Toralf =?UTF-8?B?RsO2cnN0ZXI=?= <toralf.foerster@gmx.de>
-Cc: linux-laptop@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+To: torvalds@linux-foundation.org, sfr@canb.auug.org.au, linux-laptop@vger.kernel.org, linux-kernel@vger.kernel.org, akpm@linux-foundation.org
 
---Signature=_Mon__30_Jul_2007_20_01_50_+1000_Q_5wu4tSxWbMnjT5
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Add file pattern to MAINTAINER entry
 
-On Mon, 30 Jul 2007 11:55:10 +0200 Toralf F=C3=B6rster <toralf.foerster@gmx=
-.de> wrote:
->
-> the patch works, now the build completed succesfully. The diff withion th=
-e .config files is :
+Signed-off-by: Joe Perches <joe@perches.com>
 
-Thanks fo testing.
-
---=20
-Cheers,
-Stephen Rothwell                    sfr@canb.auug.org.au
-http://www.canb.auug.org.au/~sfr/
-
---Signature=_Mon__30_Jul_2007_20_01_50_+1000_Q_5wu4tSxWbMnjT5
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.6 (GNU/Linux)
-
-iD8DBQFGrbcTTgG2atn1QN8RAslPAJ435zNwMvIMPi2OKW9GHeRsRJgUtQCfSzxd
-CVBG2LJwmTugJNinhH/O9k4=
-=+KPT
------END PGP SIGNATURE-----
-
---Signature=_Mon__30_Jul_2007_20_01_50_+1000_Q_5wu4tSxWbMnjT5--
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 016f342..da9bc6d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -428,6 +428,9 @@ M:	sfr@canb.auug.org.au
+ L:	linux-laptop@vger.kernel.org
+ W:	http://www.canb.auug.org.au/~sfr/
+ S:	Supported
++F:	arch/i386/boot/apm.c
++F:	arch/i386/kernel/apm.c
++F:	include/linux/apm_bios.h
+ 
+ APPLE SMC DRIVER
+ P:	Nicolas Boichat
