@@ -1,7 +1,7 @@
 From: kg4awg@email.unc.edu
 Subject: Re: Netgear FA511 and Red-Hat Linux Enterprise 4 WS
-Date: Tue, 02 Oct 2007 19:11:46 -0400
-Message-ID: <20071002191146.3gogziv7cwc48w0w@webmail4.isis.unc.edu>
+Date: Tue, 02 Oct 2007 19:27:02 -0400
+Message-ID: <20071002192702.epsaj05we8w84sco@webmail4.isis.unc.edu>
 References: <S1755254AbXI1RUE/20070928172004Z+321@vger.kernel.org>
 	<20071002172209.q4fx3hlbusgcog4s@webmail4.isis.unc.edu>
 	<1191362507.26449.0.camel@chimay>
@@ -20,11 +20,12 @@ Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
 To: Benoit Rouits <brouits@free.fr>
 Cc: linux-laptop@vger.kernel.org
 
-Only shows the USB netgear im using till I can get the pcmcia working
+Ok, did a little messing around, and this is a little more information=20
+I found.
+PCMCIA Controler is Texus Instruments PCI1410PC card Cardbus Controller
 
-eth1: register usbnet at usb-0000:00:07.2-2, Netgear FA-120 USB Etherne=
-t
-
+When the FA511 card is inserted the hardware detection shows an=20
+unidentified device and labels it AMDtek:Unknown Device 1085
 
 Quoting Benoit Rouits <brouits@free.fr>:
 
