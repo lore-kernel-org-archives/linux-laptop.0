@@ -1,30 +1,21 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH] [44/2many] MAINTAINERS - APM DRIVER
-Date: Mon, 13 Aug 2007 10:47:45 -0700
-Message-ID: <1187027266.10249.172.camel@localhost>
-References: <46bff8b6.XgYxpWqOSD9Itfw6%joe@perches.com>
-	 <20070813114730.107f1402@the-village.bc.nu>
+From: kg4awg@email.unc.edu
+Subject: Netgear FA511 and Red-Hat Linux Enterprise 4 WS
+Date: Tue, 02 Oct 2007 17:22:09 -0400
+Message-ID: <20071002172209.q4fx3hlbusgcog4s@webmail4.isis.unc.edu>
+References: <S1755254AbXI1RUE/20070928172004Z+321@vger.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-laptop-owner@vger.kernel.org>
-In-Reply-To: <20070813114730.107f1402@the-village.bc.nu>
+In-Reply-To: <S1755254AbXI1RUE/20070928172004Z+321@vger.kernel.org>
+Content-Disposition: inline
 Sender: linux-laptop-owner@vger.kernel.org
 List-Id: <linux-laptop.vger.kernel.org>
-Content-Type: text/plain; charset="us-ascii"
-To: Alan Cox <alan@lxorguk.ukuu.org.uk>
-Cc: torvalds@linux-foundation.org, sfr@canb.auug.org.au, linux-laptop@vger.kernel.org, linux-kernel@vger.kernel.org, akpm@linux-foundation.org
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-laptop@vger.kernel.org
 
-On Mon, 2007-08-13 at 11:47 +0100, Alan Cox wrote:
-> NAK - boot/apm.c seems to be maintained by H Peter Anvin
+Can someone point me to a place where I can either find drives for the 
+PCMCIA card for my version of linux, or tell me what I need to do to 
+get the code to compile on my Presario 700US Notebook?
 
-APM DRIVER
-P:	Stephen Rothwell
-M:	sfr@canb.auug.org.au
-L:	linux-laptop@vger.kernel.org
-W:	http://www.canb.auug.org.au/~sfr/
-S:	Supported
-F:	arch/i386/kernel/apm.c
-F:	include/linux/apm_bios.h
-
-
-
+Thanks
+Greg
