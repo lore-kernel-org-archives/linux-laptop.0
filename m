@@ -1,67 +1,70 @@
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH] apm: make apm=power-off configurable like
- apm=realmode-power-off
-Date: Thu, 8 May 2008 01:27:56 +1000
-Message-ID: <20080508012756.9b9bbe5c.sfr@canb.auug.org.au>
-References: <4821B4BD.9010402@wincor-nixdorf.com>
-	<20080508004605.cc2e1531.sfr@canb.auug.org.au>
-	<4821C581.8050409@wincor-nixdorf.com>
+From: Tino Keitel <tino.keitel+linux-laptop@tikei.de>
+Subject: Enforce power saving policies
+Date: Tue, 8 Jul 2008 20:15:45 +0200
+Message-ID: <20080708181545.GA3250@dose.home.local>
 Mime-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pgp-signature";
- micalg="PGP-SHA1";
- boundary="Signature=_Thu__8_May_2008_01_27_56_+1000_Z9QMJ2Gp03o5vITa"
 Return-path: <linux-laptop-owner@vger.kernel.org>
-In-Reply-To: <4821C581.8050409@wincor-nixdorf.com>
+Content-Disposition: inline
 Sender: linux-laptop-owner@vger.kernel.org
 List-ID: <linux-laptop.vger.kernel.org>
-To: Niels de Vos <niels.devos@wincor-nixdorf.com>
-Cc: linux-laptop@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-laptop@vger.kernel.org
 
---Signature=_Thu__8_May_2008_01_27_56_+1000_Z9QMJ2Gp03o5vITa
-Content-Type: text/plain; charset=US-ASCII
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi folks,
 
-On Wed, 07 May 2008 17:06:41 +0200 Niels de Vos <niels.devos@wincor-nixdorf=
-.com> wrote:
->
-> Stephen Rothwell wrote:
-> > Hi Neils,
-> >=20
-> > On Wed, 07 May 2008 15:55:09 +0200 Niels de Vos <niels.devos@wincor-nix=
-dorf.com> wrote:
-> >> On some systems (with broken BIOSes?) apm=3Dpower-off should be append=
-ed
-> >> as kernel parameter. apm=3Drealmode-power-off is configurable during=20
-> >> compile-time. apm=3Dpower-off should be configurable likewise.
-> >>
-> >> On non-SMP systems apm=3Dpower-off is the default. For kernels with SMP
-> >> support it is not.
-> >=20
-> > We had a similar compile time option that we removed in 2.3.26pre1 in
-> > favour of the kernel parameter ...
->=20
-> Okay, but why not have both options like apm=3Drealmode-power-off?
+I'm currently searching for all the knobs in kernel and userland to
+save as much power as possible on a Thinkpad X61s. Some of them are
+hare to find, some of them must be re-set during runtime, which makes
+it hard to create power saving setup.
 
-It was a long time ago ... and APM must be almost dead my now, surely? :-)
+Currently, 2 settings cause some headache:
 
-Maybe I just never got around to removing the compile time config of real
-mode power off.
+1. USB autosuspend
 
---=20
-Cheers,
-Stephen Rothwell                    sfr@canb.auug.org.au
-http://www.canb.auug.org.au/~sfr/
+This seems to be split into 2 settings: power/autosuspend and
+power/level. Some devices seem to be initialized with power/level set
+to "on". On my Thinkpad, this even leads to a really hot fingerprint
+reader. I found no way to automatically set power/level to "auto" for
+all new devices, I always have to set it manually for some devices.
 
---Signature=_Thu__8_May_2008_01_27_56_+1000_Z9QMJ2Gp03o5vITa
-Content-Type: application/pgp-signature
+2. Intel wireless power saving
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.6 (GNU/Linux)
+The Intel power saving needs to be turned on after the module is
+loaded, but sometimes I get a write error at the echo 5 >
+.../power_level and the kernel reports an error. Furthermore, scanning
+does not work anymore after setting the power_level to 5, and setting
+it back to 6 only gives an error. I have to reload the module to get it
+working again. To make it short, it's a bit frustrating.
 
-iD8DBQFIIcqCTgG2atn1QN8RAoeeAJ944FBOjKE1kuNWWZol0R/unUeOYwCdH7FF
-6roU8hRkU9fte2hvZBPzzZs=
-=d2CL
------END PGP SIGNATURE-----
+That's why I would like to enforce power saving by default for these
+settings, but found to way to do it.
 
---Signature=_Thu__8_May_2008_01_27_56_+1000_Z9QMJ2Gp03o5vITa--
+And while thinking about this, all the other knobs like SATA link power
+management, PCIE active state power management (in 2.6.26), the cpufreq
+governors, the power saving settings in the ALSA drivers, laptop mode,
+Ethernet link speed (on some Intel chips) and maybe more, seem to
+follow the same pattern: adjust the ballance between
+performance/latency and power consumption.
+
+So how about a global kernel policy where the user can say "I want
+maximum power saving per default", or "I want maximum performance", and
+all the currently existing settings make use of that policy to adjust
+their defaults? It would reduce the mess in the userspace that tries to
+apply such a policy, and help the user who tries to get the maximum out
+of the battery of his shiny new laptop.
+
+Of cause, it should be possible to exclude certain settings from that
+policy and leave it in a failsafe default setting, for broken hardware.
+
+I think it would be a good start to collect all the currently
+implemented settings that influence the power consumption in a central
+place, like somewhere in Documentation/laptops, with some further
+details what hardware is affected, what performance/latency penalties
+can happen and possible problems that may occur.
+
+Is this a totally new idea, or is there already some work/planning in
+progress?
+
+Regards,
+Tino
