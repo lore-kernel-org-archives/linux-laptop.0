@@ -1,88 +1,36 @@
-From: =?UTF-8?B?Tm9ybWFuIFJpZcOf?= <norman@smash-net.org>
-Subject: Re: gigabit ethernet on Thinkpad X300?
-Date: Fri, 19 Sep 2008 10:00:25 +0200
-Message-ID: <48D35C19.7070206@smash-net.org>
-References: <20080919021535.1FE01E80FD@jindo.eecs.harvard.edu>
+From: Emanoil Kotsev <deloptes@yahoo.com>
+Subject: kernel strange behaviour
+Date: Fri, 10 Oct 2008 02:42:47 -0700 (PDT)
+Message-ID: <788629.6861.qm@web53202.mail.re2.yahoo.com>
+Reply-To: deloptes@yahoo.com
 Mime-Version: 1.0
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-laptop-owner@vger.kernel.org>
-In-Reply-To: <20080919021535.1FE01E80FD@jindo.eecs.harvard.edu>
 Sender: linux-laptop-owner@vger.kernel.org
 List-ID: <linux-laptop.vger.kernel.org>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
-To: Norman Ramsey <nr@cs.tufts.edu>
-Cc: linux-laptop@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-laptop@vger.kernel.org
 
-Norman Ramsey schrieb:
-> I've just booted kernel 2.6.26 (Debian lenny) on my new Thinkpad X300=
-=2E
-> Things seem working OK so far except I can't get gigabit ethernet.
-> Output from ethtool says:
->
-> Settings for eth0:
->         Supported ports: [ TP ]
->         Supported link modes:   10baseT/Half 10baseT/Full=20
->                                 100baseT/Half 100baseT/Full=20
->                                 1000baseT/Full=20
->         Supports auto-negotiation: Yes
->         Advertised link modes:  10baseT/Half 10baseT/Full=20
->                                 100baseT/Half 100baseT/Full=20
->                                 1000baseT/Full=20
->         Advertised auto-negotiation: Yes
->         Speed: 100Mb/s
->         Duplex: Full
->         Port: Twisted Pair
->         PHYAD: 1
->         Transceiver: internal
->         Auto-negotiation: on
->         Supports Wake-on: pumbag
->         Wake-on: g
->         Current message level: 0x00000001 (1)
->         Link detected: yes
->
->
-> As you can see both the hardware and the link support full duplex
-> 1000baseT, but I'm getting only 100Mb/s (confirmed by lights on switc=
-h).
->
-> I tried
->
->   sudo ifconfig eth0 media 1000baseT
->
-> but that media type isn't even recognized.
->
-> I also tried
->
->   sudo ethtool -s eth0 speed 1000
->
-> but this seems to have broken the ethernet port entirely
-> (although a reboot brings it back).
->
-> Does anybody have any ideas?
->
->
-> Norman
->
-> P.S. After all this messaing around, it now negotiates down to 10Mb/s=
-=2E
-> Booting 2.6.24 seems to get back to 100Mb/s.
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-lapto=
-p" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
->  =20
-I had a simmilar problem once. Turned out my Linksys Gigabit Switches=20
-didn=C2=B4t quite like to work with Intel and Realtek NICs. Only Marvel=
- could=20
-get GiBit speed. All else negotiated at 100 and 10.
-I tried D-Link Switches an had GiBit on all NICs again.
 
-Regards
-Norman (also)
---
-To unsubscribe from this list: send the line "unsubscribe linux-laptop"=
- in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hello, I'm new here, please be patient and correct me if I'm at the wrong place.
+
+I have following problm.
+I've recently installed a debian prebuild kernel 2.6.26.5 on my DELL D520 (Centrino Duo Core 2 with 2GB RAM).
+Before I was using 2.6.26 booting from usb drive, but I was missing the ata support for my internal drive that's why I had to update.
+After I installed the new kernel I'm not able to watch tv and compile in the same time or record tv and watch in the same time. I'm even not able to just record tv. tv is coming from a usb-stick, but it's irelevant, because if I run a compiler the system slows down (CPU load gets above 5).
+The system is getting very slow after just few minutes. I then break the process but it takes about 15min for the system to sattle down again.
+
+I've then downloaded 2.6.26.2 and 2.6.26.5 took the .config from the debian kernel and compiled - the same result. I noticed that the SATA drivers are compiled as modules, so I took the pure 2.6.26 compiled the SATA into the kernel and now it works fine or at least much better.
+
+I'm going to test it with 2.6.26.5.
+
+It would be nice if someone could give definite answer of what is the reason for this behaviour.
+
+thank you in advance and kind regards
+
+
+
+I then 
+
+
+      
