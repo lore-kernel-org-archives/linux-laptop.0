@@ -1,7 +1,7 @@
 From: Emanoil Kotsev <deloptes@yahoo.com>
 Subject: Re: kernel strange behaviour
-Date: Tue, 14 Oct 2008 15:59:48 -0700 (PDT)
-Message-ID: <476285.40100.qm@web53207.mail.re2.yahoo.com>
+Date: Wed, 15 Oct 2008 15:48:32 -0700 (PDT)
+Message-ID: <26106.82066.qm@web53204.mail.re2.yahoo.com>
 References: <pan.2008.10.14.10.43.00.569581@gmail.com>
 Reply-To: deloptes@yahoo.com
 Mime-Version: 1.0
@@ -41,9 +41,6 @@ To: linux-laptop@vger.kernel.org, Thorny <thorntreehome@gmail.com>
 > flood of emails (except the ones you CC to me even though I
 > didn't request
 > that you do that).
-
-thanks for the advise ... I'll have to try it. Didn't know such thing is possible ... though I've been reading few newsgroups in the past. Will have to have a look at it.
-
 > 
 >  
 > > I'm using a notebook, so I was thinking
@@ -55,10 +52,13 @@ thanks for the advise ... I'll have to try it. Didn't know such thing is possibl
 > 
 > Huh? You're running a production server on a laptop?
 > 
+> 
 
-no. things got mixed up here .... I mean production machine ... on the notbook all my company data is stored, so I had enough headake with this slow down for few days ... I just preffer to be on the safe side.
+I've searched a bit and found knode pretty handy for that
 
-I explained in the other mail what I'm planning to do as soon as those time consuming projects are over.
+Thanks, this will make my life much easier.
+
+I owe you a drink
 
 regards
 
