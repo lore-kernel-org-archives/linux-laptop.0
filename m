@@ -1,39 +1,71 @@
-From: Emanoil Kotsev <deloptes@yahoo.com>
-Subject: Re: dialing phone numbers
-Date: Thu, 9 Apr 2009 13:25:48 -0700 (PDT)
-Message-ID: <654133.93511.qm@web53207.mail.re2.yahoo.com>
-References: <grka8t$7f7$3@ger.gmane.org>
-Reply-To: deloptes@yahoo.com
+From: altslipwrist <altslipwrist@gmail.com>
+Subject: LimeOS The New Linux Flavour from THTF
+Date: Wed, 13 May 2009 21:07:34 -0700 (PDT)
+Message-ID: <23534035.post@talk.nabble.com>
 Mime-Version: 1.0
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-laptop-owner@vger.kernel.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s1024; t=1239308748; bh=snk0uKuW4wXrgMpg7M7BVzIxIsEkv41bFPM5OtEMTRo=; h=Message-ID:X-YMail-OSG:Received:X-Mailer:Date:From:Reply-To:Subject:To:In-Reply-To:MIME-Version:Content-Type; b=6WpCYBPqDkn+1xRLPTtqaUZgdb6VXAT5qly33tECAVTMLjgCMmpcM77kITpslPHB5SROmJCmCPNalomehHCQoxIa3TRu0TtOWGKdeUj38NXtmqlIW8cFm579ncAlxDdnk5Apfim9DzKr4lmu5eZSKF5R2VonwohvBUECA3G0yFA=
-In-Reply-To: <grka8t$7f7$3@ger.gmane.org>
 Sender: linux-laptop-owner@vger.kernel.org
 List-ID: <linux-laptop.vger.kernel.org>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-laptop@vger.kernel.org, xtekhne@gmail.com
+Content-Type: text/plain; charset="utf-8"
+To: linux-laptop@vger.kernel.org
 
 
+There's an excellent new Linux Laptop being manufactured now by THTF, a=
+nd
+using  Freescale's green MPC5121e mobile GT processor and the new
+Linux-based LimeOS operating system.
 
---- On Thu, 4/9/09, Pol <xtekhne@gmail.com> wrote:
-> Any hints about dialing numbers by your laptop keyboard to a
-> phone connected
-> through modem?  
-> Thank you
-> ---P
-activate numlock by pressing NUMLOCK 
-activate temprary by keeping FN pressed
+These guys not only designed their machines with the deliberate intent =
+of
+using them for Linux only, but also started the development of their ow=
+n
+flavour of Linux - LimeOS.=20
 
-and use the numberd keys
-7 8 9 =
-u i o p
-j k l ;
-m l;
+If that isn't a good recommendation then I don't know what is!
 
-or whatever corresponds to them on your key board
+=46or anyone wanting to get away from Windows and onto a Linux system, =
+I
+believe LimeOS, as used and developed by THTF on their Z9 LimeBook, is =
+the
+ideal solution. The GUI makes it so easy to navigate; a child could use=
+ it,
+not to mention your granny!
 
-regards
+THFT have been at the forefront of developing this special flavour of L=
+inux
+specifically designed to make it the easiest transition from a Windows-=
+based
+environment, into OpenSource and a Linux Space.
 
+Moreover, the hardware is silent due to Freescale's chip, and extremely
+power efficient and robust.
 
-      
+What=E2=80=99s more, their machines are extremely cost effective, and r=
+eally bring
+the cost of laptop computing right down.
+
+The bugger is I haven=E2=80=99t found any shops to buy it in yet!
+
+I just found this link this morning to a page with details and contact =
+info:=20
+http://www.tongfangpc.com/indexen.shtml
+http://www.tongfangpc.com/indexen.shtml=20
+
+There=E2=80=99s a load of info on THTF and then about halfway down the =
+page some
+stuff on the Z9 LimeBook, some a couple of PDFs, and some external link=
+s
+which are pretty hot. The LimeOs FAQ=E2=80=99s link is very good, as is=
+ the LimeOS
+Quick Guide. There=E2=80=99s also a link to LimeOs.Org for developers.
+--=20
+View this message in context: http://www.nabble.com/LimeOS-The-New-Linu=
+x-Flavour-from-THTF-tp23534035p23534035.html
+Sent from the linux-laptop mailing list archive at Nabble.com.
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-laptop"=
+ in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
