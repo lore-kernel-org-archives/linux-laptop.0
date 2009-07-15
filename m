@@ -1,27 +1,35 @@
-From: Kenneth Crudup <kenny@panix.com>
-Subject: Re: sometimes kernel cannot detect GlidePoint input Device
-Date: Sat, 11 Jul 2009 21:02:30 -0700 (PDT)
-Message-ID: <Pine.LNX.4.64.0907112100480.9685@hp9800.localdomain>
-References: <62c294d80907112005n6458193dye48d5bd3203d50f4@mail.gmail.com>
-Mime-Version: 1.0
+From: Subrata Modak <subrata@linux.vnet.ibm.com>
+Subject: [PATCH 05/06] Fix compilation warning for arch/x86/kernel/apm_32.c
+Date: Wed, 15 Jul 2009 07:50:41 +0530
+Message-ID: <20090715022038.4374.74212.sendpatchset@subratamodak.linux.ibm.com>
 Return-path: <linux-laptop-owner@vger.kernel.org>
-In-Reply-To: <62c294d80907112005n6458193dye48d5bd3203d50f4@mail.gmail.com>
 Sender: linux-laptop-owner@vger.kernel.org
 List-ID: <linux-laptop.vger.kernel.org>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: haiyang kang <cornsea@gmail.com>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, linux-laptop@vger.kernel.org
+To: linux-laptop@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Sachin P Sant <sachinp@linux.vnet.ibm.com>, Ingo Molnar <mingo@redhat.com>, David Howells <dhowells@redhat.com>, Ingo Molnar <mingo@elte.hu>, Subrata Modak <subrata@linux.vnet.ibm.com>, Balbir Singh <balbir@linux.vnet.ibm.com>, LKML <linux-kernel@vger.kernel.org>
 
+Following fix is inspired by David Howells fix few days back:
+http://lkml.org/lkml/2009/7/9/109,
 
-I had this problem once; try putting
+Signed-off-by: Subrata Modak<subrata@linux.vnet.ibm.com>,
+---
 
-  i8042.noloop=1
+--- a/arch/x86/kernel/apm_32.c	2009-06-15 07:50:51.000000000 +0530
++++ b/arch/x86/kernel/apm_32.c	2009-07-15 06:43:59.000000000 +0530
+@@ -811,7 +811,7 @@ static int apm_do_idle(void)
+ 	u8 ret = 0;
+ 	int idled = 0;
+ 	int polling;
+-	int err;
++	int uninitialized_var(err);
+ 
+ 	polling = !!(current_thread_info()->status & TS_POLLING);
+ 	if (polling) {
 
-... in your kernel command line.
+---
+Regards--
+Subrata
 
-	-Kenny
-
--- 
-Kenneth R. Crudup  Sr. SW Engineer, Scott County Consulting, Los Angeles
-O: 3630 S. Sepulveda Blvd. #138, L.A., CA 90034-6809      (888) 454-8181
