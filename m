@@ -1,126 +1,186 @@
-From: Wu Zhangjin <wuzhangjin@gmail.com>
-Subject: Re: [PATCH v2] [loongson] yeeloong2f: add platform specific support
-Date: Thu, 26 Nov 2009 14:26:44 +0800
-Message-ID: <1259216804.4989.54.camel@falcon.domain.org>
-References: <9ef5a0038ec5e9b584be8c960693c434a323620a.1258803311.git.wuzhangjin@gmail.com>
-	 <9ef5a0038ec5e9b584be8c960693c434a323620a.1258803311.git.wuzhangjin@gmail.com>
-	 <20091126041047.GC23244@core.coreip.homeip.net>
-	 <1259215215.4989.38.camel@falcon.domain.org>
-	 <20091126060854.GK23244@core.coreip.homeip.net>
-Reply-To: wuzhangjin@gmail.com
+From: TAKADA Yoshihito <takada@mbf.nifty.com>
+Subject: [x86-32] apm broken
+Date: Thu, 26 Nov 2009 21:24:15 +0900 (JST)
+Message-ID: <20091126.212415.193868885.takada@mbf.nifty.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=gamma;
-        h=domainkey-signature:received:received:subject:from:reply-to:to:cc
-         :in-reply-to:references:content-type:organization:date:message-id
-         :mime-version:x-mailer:content-transfer-encoding;
-        bh=PDrEKOcis+SqanyZVA5rquxUEuL9tlF5pvqWxfAJzlY=;
-        b=p/dL9UajF6LAw6ssGTtI1wOYIAahiJqLSSawL8k1awrr9PMABSQi4gF55z47mqq0Gn
-         l0JDX51urH6nAso37fxQHAOQExrXtYWriUqllWNxVQITUq4Kd4w7qmQJoBf3srj7t1uN
-         7/k406X1zFx1h9bWrQaAaEHrMSDzjDqK/JcAo=
-In-Reply-To: <20091126060854.GK23244@core.coreip.homeip.net>
-Sender: linux-input-owner@vger.kernel.org
+Return-path: <linux-laptop-owner@vger.kernel.org>
+Sender: linux-laptop-owner@vger.kernel.org
 List-ID: <linux-laptop.vger.kernel.org>
-Content-Type: text/plain; charset="us-ascii"
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org, Richard Purdie <rpurdie@rpsys.net>, lm-sensors@lm-sensors.org, linux-input@vger.kernel.org, linux-laptop@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>, sfr@linuxcare.com, linux-kernel@vger.kernel.org
+Content-Type: Text/Plain; charset="us-ascii"
+To: linux-laptop@vger.kernel.org
 
-On Wed, 2009-11-25 at 22:08 -0800, Dmitry Torokhov wrote:
-[...]
-> > > > +	/* SW_VIDEOOUT_INSERT? not included in hald-addon-input! */
-> > > > +	{KE_KEY, EVENT_CRT_DETECT, KEY_PROG1},
-> > 
-> > any available event for reporting the inserted CRT in hald-addon-input?
-> 
-> Hmm.. not really. Again, does not seem to be related to input subsystem
-> but video one.
+Hi.
+I updated kernel for old x86 box.
+APM of kernel 2.6.29 broken on my x86-32 box.
+I attempt to suspend by APM at several kernels.
 
-It's time to remove it from keymap now, I have done some job in the
-video_output subdriver for this event ;)
+---2.6.27
+I worried about apmd said "Suspending now" though proxy rejected
+suspend, the 2.6.27 seems works correctly.
 
-> > > > +	/* Seems battery subdriver should report it */
-> > > > +	{KE_KEY, EVENT_OVERTEMP, KEY_PROG2},
-> > > 
-> > > Does not seem to be an input event?
-> > > 
-> > 
-> > It is not an input event, Will remove it from the keymap table.
-> >  
-> > BTW: how can we handle this stuff(overtemp...)? lm-sensors? Perhaps
-> > temp1_max_alarm or temp1_crit_alarm?
-> > 
-> 
-> Not really sure... HWMON list is a good place to ask I think.
+apm: BIOS version 1.2 Flags 0x03 (Driver version 1.16ac)
+apmd[1828]: apmd 3.2.1 interfacing with apm driver 1.16ac and APM BIOS 1.2
+apmd[1828]: Proxy exited with status 1
+apmd[1828]: Suspend rejected by proxy
+apmd[1828]: Suspending now
+PM: Device 1-1 failed to suspend: error -22
+PM: Device floppy.0 failed to suspend late: error -22
+hda: no DMA mode selected
+PM: Device usb1 failed to resume: error -22
+PM: Device 1-1 failed to resume: error -22
+apmd[1828]: Proxy exited with status 1
+apmd[1828]: Suspend rejected by proxy
+apmd[1828]: Suspending now
+PM: Device 1-1 failed to suspend: error -22
+PM: Device floppy.0 failed to suspend late: error -22
+hda: no DMA mode selected
+PM: Device usb1 failed to resume: error -22
+PM: Device 1-1 failed to resume: error -22
 
-okay, will split the hwmon driver out and send it to lm-sensors mailing
-list.
 
-> 
-> > > > +	/*{KE_KEY, EVENT_AC_BAT, KEY_BATTERY},*/
-> > > > +	{KE_KEY, EVENT_CAMERA, KEY_CAMERA},	/* Fn + ESC */
-> > > > +	{KE_KEY, EVENT_SLEEP, KEY_SLEEP},	/* Fn + F1 */
-> > > > +	/* Seems not clear? not included in hald-addon-input! */
-> > > > +	{KE_KEY, EVENT_BLACK_SCREEN, KEY_PROG3},	/* Fn + F2 */
-> > > 
-> > > Do you mean "lock screen"?
-> > 
-> > not lock, close the backlight of the display, any available event here?
-> 
-> What is it then? A switch that turns off backlight? What is the expected
-> reaction to it?
-> 
+---2.6.28
+The 2.6.28 seems works correctly too.
 
-Yes, a switch for turning off/on the backlight, seems no need to report
-this key to the users, will remove it too.
+apm: BIOS version 1.2 Flags 0x03 (Driver version 1.16ac)
+apmd[1726]: apmd 3.2.1 interfacing with apm driver 1.16ac and APM BIOS 1.2
+apmd[1726]: Proxy exited with status 1
+apmd[1726]: Suspend rejected by proxy
+apmd[1726]: Suspending now
+PM: Device 1-1 failed to suspend: error -22
+PM: Device floppy.0 failed to suspend late: error -22
+hda: no DMA mode selected
+PM: Device usb1 failed to resume: error -22
+PM: Device 1-1 failed to resume: error -22
+apmd[1726]: Proxy exited with status 1
+apmd[1726]: Suspend rejected by proxy
+apmd[1726]: Suspending now
+PM: Device 1-1 failed to suspend: error -22
+PM: Device floppy.0 failed to suspend late: error -22
+hda: no DMA mode selected
+PM: Device usb1 failed to resume: error -22
+PM: Device 1-1 failed to resume: error -22
 
-> > > > +	if (!yeeloong_hotkey_dev)
-> > > > +		return -ENOMEM;
-> > > 
-> > > Error unwinding?
-> > 
-> > Sorry, not clear what do you mean here?
-> 
-> If you just return you will have the SCI stuff that you did a few lines
-> above installed... I am concerned whether it is a good idea.
-> 
+---2.6.29
+The kernel said WARN_ON when APM BIOS require suspend.
 
-get it, thanks!
+apm: BIOS version 1.2 Flags 0x03 (Driver version 1.16ac)
+apmd[1738]: apmd 3.2.1 interfacing with apm driver 1.16ac and APM BIOS 1.2
+apmd[1738]: Proxy exited with status 1
+apmd[1738]: Suspend rejected by proxy
+apmd[1738]: Suspending now
+PM: Device 1-1 failed to suspend: error -22
+PM: Device floppy.0 failed to suspend late: error -22
+------------[ cut here ]------------
+WARNING: at kernel/time/timekeeping.c:98 getnstimeofday+0x20/0xc7()
+Modules linked in: apm joydev psmouse serio_raw evdev ohci_hcd floppy 8139too usbcore mii cs5520
+Pid: 1738, comm: apmd Not tainted 2.6.29-fiva #1
+Call Trace:
+ [<c01130ec>] warn_slowpath+0x80/0xb5
+ [<c01262e9>] getnstimeofday+0x20/0xc7
+ [<c01233ae>] ktime_get_ts+0x1d/0x3f
+ [<c01233df>] ktime_get+0xf/0x2b
+ [<c0124450>] sched_clock_tick+0x3e/0x71
+ [<c0110ef6>] scheduler_tick+0x14/0x81
+ [<c0119927>] update_process_times+0x36/0x3f
+ [<c0128212>] tick_handle_periodic+0xc/0x56
+ [<c0104339>] timer_interrupt+0x11/0x18
+ [<c013bc49>] handle_IRQ_event+0x1a/0x3f
+ [<c013c91d>] handle_level_irq+0x50/0x85
+ [<c010405d>] do_IRQ+0x4d/0x64
+ [<c65b46db>] do_ioctl+0x0/0x146 [apm]
+ [<c01030e7>] common_interrupt+0x27/0x30
+ [<c65b46db>] do_ioctl+0x0/0x146 [apm]
+---[ end trace 1e821420e29432aa ]---
+PM: Device usb1 failed to resume: error -22
+PM: Device 1-1 failed to resume: error -22
+apmd[1738]: Proxy exited with status 1
+apmd[1738]: Suspend rejected by proxy
+apmd[1738]: Suspending now
+PM: Device 1-1 failed to suspend: error -22
+PM: Device floppy.0 failed to suspend late: error -22
+------------[ cut here ]------------
+WARNING: at kernel/time/timekeeping.c:98 getnstimeofday+0x20/0xc7()
+Modules linked in: apm joydev psmouse serio_raw evdev ohci_hcd floppy 8139too usbcore mii cs5520
+Pid: 1738, comm: apmd Tainted: G        W  2.6.29-fiva #1
+Call Trace:
+ [<c01130ec>] warn_slowpath+0x80/0xb5
+ [<c01262e9>] getnstimeofday+0x20/0xc7
+ [<c01233ae>] ktime_get_ts+0x1d/0x3f
+ [<c01233df>] ktime_get+0xf/0x2b
+ [<c0124450>] sched_clock_tick+0x3e/0x71
+ [<c0110ef6>] scheduler_tick+0x14/0x81
+ [<c0119927>] update_process_times+0x36/0x3f
+ [<c0128212>] tick_handle_periodic+0xc/0x56
+ [<c0104339>] timer_interrupt+0x11/0x18
+ [<c013bc49>] handle_IRQ_event+0x1a/0x3f
+ [<c013c91d>] handle_level_irq+0x50/0x85
+ [<c010405d>] do_IRQ+0x4d/0x64
+ [<c65b46db>] do_ioctl+0x0/0x146 [apm]
+ [<c01030e7>] common_interrupt+0x27/0x30
+ [<c65b46db>] do_ioctl+0x0/0x146 [apm]
+---[ end trace 1e821420e29432ab ]---
+PM: Device usb1 failed to resume: error -22
+PM: Device 1-1 failed to resume: error -22
 
-I have checked the return value in the module init function:
+---2.6.30:
+The kernel said WARN_ON when APM BIOS require suspend.
 
-[...]
+apm: BIOS version 1.2 Flags 0x03 (Driver version 1.16ac)
+PM: Device 1-1 failed to suspend: error -22
+PM: Device floppy.0 failed to suspend late: error -22
+------------[ cut here ]------------
+WARNING: at kernel/time/timekeeping.c:98 getnstimeofday+0x21/0xc8()
+Modules linked in: apm ohci_hcd floppy 8139too usbcore mii cs5520
+Pid: 1388, comm: Xorg Tainted: G      D    2.6.30-fiva #2
+Call Trace:
+ [<c012986d>] ? getnstimeofday+0x21/0xc8
+ [<c012986d>] ? getnstimeofday+0x21/0xc8
+ [<c0115fcf>] ? warn_slowpath_common+0x5e/0x8a
+ [<c0116005>] ? warn_slowpath_null+0xa/0xc
+ [<c012986d>] ? getnstimeofday+0x21/0xc8
+ [<c01265ed>] ? ktime_get_ts+0x1d/0x3f
+ [<c012661e>] ? ktime_get+0xf/0x2b
+ [<c012777b>] ? sched_clock_tick+0x4f/0x133
+ [<c0113cfc>] ? scheduler_tick+0x14/0x81
+ [<c011ca5b>] ? update_process_times+0x36/0x3f
+ [<c012be87>] ? tick_handle_periodic+0xc/0x61
+ [<c01041b1>] ? timer_interrupt+0x21/0x28
+ [<c01403f3>] ? handle_IRQ_event+0x49/0xf6
+ [<c01413bc>] ? handle_level_irq+0x50/0x85
+ [<c0103ed7>] ? handle_irq+0x17/0x1c
+ [<c0103c30>] ? do_IRQ+0x2b/0x63
+ [<c0102d49>] ? common_interrupt+0x29/0x30
+---[ end trace 3f288e5fb2e867d5 ]---
+PM: Device usb1 failed to resume: error -22
+PM: Device 1-1 failed to resume: error -22
 
-yeeloong_init()
-{
-	[...]
-        ret = yeeloong_hotkey_init(&yeeloong_pdev->dev);
-        if (ret) {
-                yeeloong_hotkey_exit();
-                printk(KERN_INFO "Fail init yeeloong hotkey driver.\n");
-                return ret;
-        }
-	[...]
-
-}
-
-[...]
-
-static void yeeloong_hotkey_exit(void)
-{
-        /* free irq */
-        remove_irq(SCI_IRQ_NUM, &sci_irqaction);
-	 ...
-}
-
-but as a standalone driver, It's better to do something as following:
-
-if (!yeeloong_hotkey_dev) {
-	yeeloong_hotkey_exit();
-	return -ENOMEM;
-}
-
-Thanks & Regards!
-	Wu Zhangjin
-
+---2.6.31.6
+apm: BIOS version 1.2 Flags 0x03 (Driver version 1.16ac)
+PM: Device 1-1 failed to suspend: error -22
+PM: Device floppy.0 failed to suspend late: error -22
+------------[ cut here ]------------
+WARNING: at kernel/time/timekeeping.c:102 getnstimeofday+0x21/0xc8()
+Modules linked in: apm snd_pcsp irtty_sir snd_pcm sir_dev joydev snd_timer snd irda soundcore snd_page_alloc crc_ccitt psmouse serio_raw evdev ohci_hcd floppy usbcore 8139too nls_base mii cs5520
+Pid: 1885, comm: apmd Not tainted 2.6.31.6-fiva #1
+Call Trace:
+ [<c1029cb8>] ? getnstimeofday+0x21/0xc8
+ [<c1029cb8>] ? getnstimeofday+0x21/0xc8
+ [<c10167d7>] ? warn_slowpath_common+0x5e/0x8a
+ [<c101680d>] ? warn_slowpath_null+0xa/0xc
+ [<c1029cb8>] ? getnstimeofday+0x21/0xc8
+ [<c10267df>] ? ktime_get_ts+0x1d/0x3f
+ [<c1026810>] ? ktime_get+0xf/0x2b
+ [<c10278bb>] ? sched_clock_tick+0x4f/0x133
+ [<c101495a>] ? scheduler_tick+0x14/0xc0
+ [<c101d1f9>] ? update_process_times+0x36/0x3f
+ [<c102c303>] ? tick_handle_periodic+0xc/0x61
+ [<c1004271>] ? timer_interrupt+0x21/0x28
+ [<c1040c18>] ? handle_IRQ_event+0x1a/0x96
+ [<c1041b74>] ? handle_level_irq+0x50/0x85
+ [<c1003f93>] ? handle_irq+0x17/0x1c
+ [<c1003c72>] ? do_IRQ+0x2b/0x76
+ [<c1002d49>] ? common_interrupt+0x29/0x30
+---[ end trace ba233a454b6b6589 ]---
+PM: Device usb1 failed to resume: error -22
+PM: Device 1-1 failed to resume: error -22
