@@ -1,185 +1,301 @@
 From: Wu Zhangjin <wuzhangjin@gmail.com>
-Subject: [PATCH v7 4/8] Loongson: YeeLoong: add battery driver
-Date: Fri,  4 Dec 2009 21:34:17 +0800
-Message-ID: <059fa216d70771a6341edb2db4cc559e958273e9.1259932036.git.wuzhangjin@gmail.com>
+Subject: [PATCH v7 5/8] Loongson: YeeLoong: add hardware monitoring driver
+Date: Fri,  4 Dec 2009 21:35:28 +0800
+Message-ID: <102732263f647e47216c1f2cb121c30226cc995e.1259932036.git.wuzhangjin@gmail.com>
 References: <cover.1259932036.git.wuzhangjin@gmail.com>
-Return-path: <linux-laptop-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner+glk-linux-kernel-3=40m.gmane.org-S1756558AbZLDNfr@vger.kernel.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=gamma;
         h=domainkey-signature:received:received:from:to:cc:subject:date
          :message-id:x-mailer:in-reply-to:references;
-        bh=u/tIqaehChNypTk7mUOWlTQstK6eCnJaichBV4x0i9I=;
-        b=t5P//KHXMyepMcjQen64VwdKux/WoFVuzPjvwvx4650l/kVFnmnyDLB5FGmzfpXrTA
-         +KWiovLL+Kfo9jHXDF3y/L5OHoxDtwPhRno/uYtHhSUGimM0sfaPytgZL5tbeNLUxwde
-         W4nrzZjVwiuMZVyNy3AlZTuYCcB/2ff4uuRj8=
+        bh=vTTWvflNT3LN5bbI+XkzpkjScQ+RZ44stQaRS0dV5j4=;
+        b=DpAlSrKDPDTcYsUCMCa0CoOTe7jToHb8PlfozOp1B2yEDeuCneiVS6tM458eXwZjLY
+         91HHMl2i046sl9EqSOW/5iqSRBWQBycQKicScobil2qiFVqkwlMQcdhChekmJawu4MAU
+         sRif1+Uf0yF4VE5E9Hiw08Iil5Q3SNwvFH+FQ=
 In-Reply-To: <cover.1259932036.git.wuzhangjin@gmail.com>
-Sender: linux-laptop-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 List-ID: <linux-laptop.vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: Ralf Baechle <ralf@linux-mips.org>, akpm@linux-foundation.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pavel Machek <pavel@ucw.cz>, "Rafael J. Wysocki" <rjw@sisk.pl>, zhangfx@lemote.com, Stephen Rothwell <sfr@canb.auug.org.au>, linux-laptop@vger.kernel.org, Wu Zhangjin <wuzhangjin@gmail.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pavel Machek <pavel@ucw.cz>, "Rafael J. Wysocki" <rjw@sisk.pl>, zhangfx@lemote.com, linux-laptop@vger.kernel.org, Wu Zhangjin <wuzhangjin@gmail.com>
 
 From: Wu Zhangjin <wuzhangjin@gmail.com>
 
-This patch adds APM emulated Battery Driver, it provides standard
-interface(/proc/apm) for user-space applications(e.g. kpowersave,
-gnome-power-manager) to manage the battery.
+This patch adds hardware monitoring driver, it provides standard
+interface(/sys/class/hwmon/) for lm-sensors/sensors-applet to monitor
+the temperatures of CPU and battery, the PWM of fan, the current,
+voltage of battery.
 
 Signed-off-by: Wu Zhangjin <wuzhangjin@gmail.com>
 ---
- drivers/platform/mips/Kconfig           |    2 +
- drivers/platform/mips/yeeloong_laptop.c |  104 +++++++++++++++++++++++++++++++
- 2 files changed, 106 insertions(+), 0 deletions(-)
+ drivers/platform/mips/Kconfig           |    1 +
+ drivers/platform/mips/yeeloong_laptop.c |  221 +++++++++++++++++++++++++++++++
+ 2 files changed, 222 insertions(+), 0 deletions(-)
 
 diff --git a/drivers/platform/mips/Kconfig b/drivers/platform/mips/Kconfig
-index f7a3705..0c6b5ad 100644
+index 0c6b5ad..9c8385c 100644
 --- a/drivers/platform/mips/Kconfig
 +++ b/drivers/platform/mips/Kconfig
-@@ -18,6 +18,8 @@ config LEMOTE_YEELOONG2F
- 	tristate "Lemote YeeLoong Laptop"
- 	depends on LEMOTE_MACH2F
+@@ -20,6 +20,7 @@ config LEMOTE_YEELOONG2F
  	select BACKLIGHT_CLASS_DEVICE
-+	select SYS_SUPPORTS_APM_EMULATION
-+	select APM_EMULATION
+ 	select SYS_SUPPORTS_APM_EMULATION
+ 	select APM_EMULATION
++	select HWMON
  	default m
  	help
  	  YeeLoong netbook is a mini laptop made by Lemote, which is basically
 diff --git a/drivers/platform/mips/yeeloong_laptop.c b/drivers/platform/mips/yeeloong_laptop.c
-index fbc4ebb..729e368 100644
+index 729e368..644aaa7 100644
 --- a/drivers/platform/mips/yeeloong_laptop.c
 +++ b/drivers/platform/mips/yeeloong_laptop.c
-@@ -13,6 +13,7 @@
- #include <linux/platform_device.h>
+@@ -14,6 +14,8 @@
  #include <linux/backlight.h>	/* for backlight subdriver */
  #include <linux/fb.h>
-+#include <linux/apm-emulation.h>/* for battery subdriver */
+ #include <linux/apm-emulation.h>/* for battery subdriver */
++#include <linux/hwmon.h>	/* for hwmon subdriver */
++#include <linux/hwmon-sysfs.h>
  
  #include <ec_kb3310b.h>
  
-@@ -83,6 +84,106 @@ static void yeeloong_backlight_exit(void)
- 	}
+@@ -184,6 +186,217 @@ static void yeeloong_battery_exit(void)
+ 		apm_get_power_status = NULL;
  }
  
-+/* battery subdriver */
++/* hwmon subdriver */
 +
-+static void get_fixed_battery_info(void)
++/* pwm(auto/manual) enable or not */
++static int get_fan_pwm_enable(void)
 +{
-+	int design_cap, full_charged_cap, design_vol, vendor, cell_count;
-+
-+	design_cap = (ec_read(REG_BAT_DESIGN_CAP_HIGH) << 8)
-+	    | ec_read(REG_BAT_DESIGN_CAP_LOW);
-+	full_charged_cap = (ec_read(REG_BAT_FULLCHG_CAP_HIGH) << 8)
-+	    | ec_read(REG_BAT_FULLCHG_CAP_LOW);
-+	design_vol = (ec_read(REG_BAT_DESIGN_VOL_HIGH) << 8)
-+	    | ec_read(REG_BAT_DESIGN_VOL_LOW);
-+	vendor = ec_read(REG_BAT_VENDOR);
-+	cell_count = ec_read(REG_BAT_CELL_COUNT);
-+
-+	if (vendor != 0) {
-+		pr_info("battery vendor(%s), cells count(%d), "
-+		       "with designed capacity(%d),designed voltage(%d),"
-+		       " full charged capacity(%d)\n",
-+		       (vendor ==
-+			FLAG_BAT_VENDOR_SANYO) ? "SANYO" : "SIMPLO",
-+		       (cell_count == FLAG_BAT_CELL_3S1P) ? 3 : 6,
-+		       design_cap, design_vol,
-+		       full_charged_cap);
-+	}
++	return ec_read(REG_FAN_AUTO_MAN_SWITCH);
 +}
 +
-+#define APM_CRITICAL		5
-+
-+static void get_power_status(struct apm_power_info *info)
++static void set_fan_pwm_enable(int manual)
 +{
-+	unsigned char bat_status;
-+
-+	info->battery_status = APM_BATTERY_STATUS_UNKNOWN;
-+	info->battery_flag = APM_BATTERY_FLAG_UNKNOWN;
-+	info->units = APM_UNITS_MINS;
-+
-+	info->battery_life = (ec_read(REG_BAT_RELATIVE_CAP_HIGH) << 8) |
-+		(ec_read(REG_BAT_RELATIVE_CAP_LOW));
-+
-+	info->ac_line_status = (ec_read(REG_BAT_POWER) & BIT_BAT_POWER_ACIN) ?
-+		APM_AC_ONLINE : APM_AC_OFFLINE;
-+
-+	bat_status = ec_read(REG_BAT_STATUS);
-+
-+	if (!(bat_status & BIT_BAT_STATUS_IN)) {
-+		/* no battery inserted */
-+		info->battery_status = APM_BATTERY_STATUS_NOT_PRESENT;
-+		info->battery_flag = APM_BATTERY_FLAG_NOT_PRESENT;
-+		info->time = 0x00;
-+		return;
-+	}
-+
-+	/* adapter inserted */
-+	if (info->ac_line_status == APM_AC_ONLINE) {
-+		if (!(bat_status & BIT_BAT_STATUS_FULL)) {
-+			/* battery is not fully charged */
-+			info->battery_status = APM_BATTERY_STATUS_CHARGING;
-+			info->battery_flag = APM_BATTERY_FLAG_CHARGING;
-+		} else {
-+			/* battery is fully charged */
-+			info->battery_status = APM_BATTERY_STATUS_HIGH;
-+			info->battery_flag = APM_BATTERY_FLAG_HIGH;
-+			info->battery_life = 100;
-+		}
-+	} else {
-+		/* battery is too low */
-+		if (bat_status & BIT_BAT_STATUS_LOW) {
-+			info->battery_status = APM_BATTERY_STATUS_LOW;
-+			info->battery_flag = APM_BATTERY_FLAG_LOW;
-+			if (info->battery_life <= APM_CRITICAL) {
-+				/* we should power off the system now */
-+				info->battery_status =
-+					APM_BATTERY_STATUS_CRITICAL;
-+				info->battery_flag = APM_BATTERY_FLAG_CRITICAL;
-+			}
-+		} else {
-+			/* assume the battery is high enough. */
-+			info->battery_status = APM_BATTERY_STATUS_HIGH;
-+			info->battery_flag = APM_BATTERY_FLAG_HIGH;
-+		}
-+	}
-+	info->time = ((info->battery_life - 3) * 54 + 142) / 60;
++	ec_write(REG_FAN_AUTO_MAN_SWITCH, !!manual);
 +}
 +
-+static int yeeloong_battery_init(void)
++static int get_fan_pwm(void)
 +{
-+	get_fixed_battery_info();
++	return ec_read(REG_FAN_SPEED_LEVEL);
++}
 +
-+	apm_get_power_status = get_power_status;
++static void set_fan_pwm(int value)
++{
++	int status;
++
++	value = SENSORS_LIMIT(value, 0, 3);
++
++	/* If value is not ZERO, We should ensure it is on */
++	if (value != 0) {
++		status = ec_read(REG_FAN_STATUS);
++		if (status == 0)
++			ec_write(REG_FAN_CONTROL, BIT_FAN_CONTROL_ON);
++	}
++	ec_write(REG_FAN_SPEED_LEVEL, value);
++}
++
++static int get_fan_rpm(void)
++{
++	int value;
++
++	value = FAN_SPEED_DIVIDER /
++	    (((ec_read(REG_FAN_SPEED_HIGH) & 0x0f) << 8) |
++	     ec_read(REG_FAN_SPEED_LOW));
++
++	return value;
++}
++
++static int get_cpu_temp(void)
++{
++	int value;
++
++	value = ec_read(REG_TEMPERATURE_VALUE);
++
++	if (value & (1 << 7))
++		value = (value & 0x7f) - 128;
++	else
++		value = value & 0xff;
++
++	return value * 1000;
++}
++
++static int get_battery_temp(void)
++{
++	int value;
++
++	value = (ec_read(REG_BAT_TEMPERATURE_HIGH) << 8) |
++		(ec_read(REG_BAT_TEMPERATURE_LOW));
++
++	return value * 1000;
++}
++
++static int get_battery_temp_alarm(void)
++{
++	int status;
++
++	status = (ec_read(REG_BAT_CHARGE_STATUS) &
++			BIT_BAT_CHARGE_STATUS_OVERTEMP);
++
++	return !!status;
++}
++
++static int get_battery_current(void)
++{
++	int value;
++
++	value = (ec_read(REG_BAT_CURRENT_HIGH) << 8) |
++		(ec_read(REG_BAT_CURRENT_LOW));
++
++	if (value & 0x8000)
++		value = 0xffff - value;
++
++	return value;
++}
++
++static int get_battery_voltage(void)
++{
++	int value;
++
++	value = (ec_read(REG_BAT_VOLTAGE_HIGH) << 8) |
++		(ec_read(REG_BAT_VOLTAGE_LOW));
++
++	return value;
++}
++
++
++static int parse_arg(const char *buf, unsigned long count, int *val)
++{
++	if (!count)
++		return 0;
++	if (sscanf(buf, "%i", val) != 1)
++		return -EINVAL;
++	return count;
++}
++
++static ssize_t store_sys_hwmon(void (*set) (int), const char *buf, size_t count)
++{
++	int rv, value;
++
++	rv = parse_arg(buf, count, &value);
++	if (rv > 0)
++		set(value);
++	return rv;
++}
++
++static ssize_t show_sys_hwmon(int (*get) (void), char *buf)
++{
++	return sprintf(buf, "%d\n", get());
++}
++
++#define CREATE_SENSOR_ATTR(_name, _mode, _set, _get)		\
++	static ssize_t show_##_name(struct device *dev,			\
++				    struct device_attribute *attr,	\
++				    char *buf)				\
++	{								\
++		return show_sys_hwmon(_set, buf);			\
++	}								\
++	static ssize_t store_##_name(struct device *dev,		\
++				     struct device_attribute *attr,	\
++				     const char *buf, size_t count)	\
++	{								\
++		return store_sys_hwmon(_get, buf, count);		\
++	}								\
++	static SENSOR_DEVICE_ATTR(_name, _mode, show_##_name, store_##_name, 0);
++
++CREATE_SENSOR_ATTR(fan1_input, S_IRUGO, get_fan_rpm, NULL);
++CREATE_SENSOR_ATTR(pwm1, S_IRUGO | S_IWUSR, get_fan_pwm, set_fan_pwm);
++CREATE_SENSOR_ATTR(pwm1_enable, S_IRUGO | S_IWUSR, get_fan_pwm_enable,
++		set_fan_pwm_enable);
++CREATE_SENSOR_ATTR(temp1_input, S_IRUGO, get_cpu_temp, NULL);
++CREATE_SENSOR_ATTR(temp2_input, S_IRUGO, get_battery_temp, NULL);
++CREATE_SENSOR_ATTR(temp2_max_alarm, S_IRUGO, get_battery_temp_alarm, NULL);
++CREATE_SENSOR_ATTR(curr1_input, S_IRUGO, get_battery_current, NULL);
++CREATE_SENSOR_ATTR(in1_input, S_IRUGO, get_battery_voltage, NULL);
++
++static ssize_t
++show_name(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	return sprintf(buf, "yeeloong\n");
++}
++
++static SENSOR_DEVICE_ATTR(name, S_IRUGO, show_name, NULL, 0);
++
++static struct attribute *hwmon_attributes[] = {
++	&sensor_dev_attr_pwm1.dev_attr.attr,
++	&sensor_dev_attr_pwm1_enable.dev_attr.attr,
++	&sensor_dev_attr_fan1_input.dev_attr.attr,
++	&sensor_dev_attr_temp1_input.dev_attr.attr,
++	&sensor_dev_attr_temp2_input.dev_attr.attr,
++	&sensor_dev_attr_temp2_max_alarm.dev_attr.attr,
++	&sensor_dev_attr_curr1_input.dev_attr.attr,
++	&sensor_dev_attr_in1_input.dev_attr.attr,
++	&sensor_dev_attr_name.dev_attr.attr,
++	NULL
++};
++
++static struct attribute_group hwmon_attribute_group = {
++	.attrs = hwmon_attributes
++};
++
++static struct device *yeeloong_hwmon_dev;
++
++static int yeeloong_hwmon_init(void)
++{
++	int ret;
++
++	yeeloong_hwmon_dev = hwmon_device_register(NULL);
++	if (IS_ERR(yeeloong_hwmon_dev)) {
++		pr_err("Fail to register yeeloong hwmon device\n");
++		yeeloong_hwmon_dev = NULL;
++		return PTR_ERR(yeeloong_hwmon_dev);
++	}
++	ret = sysfs_create_group(&yeeloong_hwmon_dev->kobj,
++				 &hwmon_attribute_group);
++	if (ret) {
++		hwmon_device_unregister(yeeloong_hwmon_dev);
++		yeeloong_hwmon_dev = NULL;
++		return ret;
++	}
++	/* ensure fan is set to auto mode */
++	set_fan_pwm_enable(BIT_FAN_AUTO);
 +
 +	return 0;
 +}
 +
-+static void yeeloong_battery_exit(void)
++static void yeeloong_hwmon_exit(void)
 +{
-+	if (apm_get_power_status == get_power_status)
-+		apm_get_power_status = NULL;
++	if (yeeloong_hwmon_dev) {
++		sysfs_remove_group(&yeeloong_hwmon_dev->kobj,
++				   &hwmon_attribute_group);
++		hwmon_device_unregister(yeeloong_hwmon_dev);
++		yeeloong_hwmon_dev = NULL;
++	}
 +}
 +
  static struct platform_device_id platform_device_ids[] = {
  	{
  		.name = "yeeloong_laptop",
-@@ -120,11 +221,14 @@ static int __init yeeloong_init(void)
- 		return ret;
- 	}
+@@ -223,11 +436,19 @@ static int __init yeeloong_init(void)
  
-+	yeeloong_battery_init();
+ 	yeeloong_battery_init();
+ 
++	ret = yeeloong_hwmon_init();
++	if (ret) {
++		pr_err("Fail to register yeeloong hwmon driver.\n");
++		yeeloong_hwmon_exit();
++		return ret;
++	}
 +
  	return 0;
  }
  
  static void __exit yeeloong_exit(void)
  {
-+	yeeloong_battery_exit();
++	yeeloong_hwmon_exit();
+ 	yeeloong_battery_exit();
  	yeeloong_backlight_exit();
  	platform_driver_unregister(&platform_driver);
- 
 -- 
 1.6.2.1
-
