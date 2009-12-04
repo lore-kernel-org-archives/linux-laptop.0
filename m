@@ -1,105 +1,75 @@
 From: Wu Zhangjin <wuzhangjin@gmail.com>
-Subject: Re: [PATCH v7 6/8] Loongson: YeeLoong: add video output driver
-Date: Fri, 04 Dec 2009 23:04:36 +0800
-Message-ID: <1259939076.9554.7.camel@falcon.domain.org>
+Subject: Re: [PATCH v7 5/8] Loongson: YeeLoong: add hardware monitoring
+ driver
+Date: Sat, 05 Dec 2009 00:29:45 +0800
+Message-ID: <1259944185.9554.8.camel@falcon.domain.org>
 References: <cover.1259932036.git.wuzhangjin@gmail.com>
-	 <5fd87c1f64a3c6d3e51fc6b0224cc1be3cb0d9d5.1259932036.git.wuzhangjin@gmail.com>
-	 <20091204081124.GC1540@ucw.cz>
+	 <102732263f647e47216c1f2cb121c30226cc995e.1259932036.git.wuzhangjin@gmail.com>
+	 <20091204080813.GB1540@ucw.cz>
 Reply-To: wuzhangjin@gmail.com
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-laptop-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner+glk-linux-kernel-3=40m.gmane.org-S932199AbZLDQaL@vger.kernel.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=gamma;
         h=domainkey-signature:received:received:subject:from:reply-to:to:cc
          :in-reply-to:references:content-type:organization:date:message-id
          :mime-version:x-mailer:content-transfer-encoding;
-        bh=l8EsSlb2aImqQx1YbPtnsurQeBRtJIUeoc8BrZgnErc=;
-        b=V5IuDmhk71TosHMGwIwtypiqtLjreXcswCR7Bn8XDEM43rNLrgaVqbIZR4iUbmE7Bu
-         SwsiU63QmXmzEozuSOmyM8kr90qvLGlICTGuH04z3QKEx9GdVXxVwhpRA9DfcOrjF5JS
-         RZ9gHcPTNRFLRLXF5XY0tu1cRTbcOUE7HIniY=
-In-Reply-To: <20091204081124.GC1540@ucw.cz>
-Sender: linux-laptop-owner@vger.kernel.org
+        bh=u2gLDyxrC9BjabwZXR9sf061r5jwuKspjFs+3ivl4bc=;
+        b=mHmDFi37Qc8w9Ts860jywncImBgmXN3dv2zhsG3RelHfGMb/k45f+bMnABAS82aQRW
+         GcxITNjqv7LFjjDsoFmPuHiTxDqziUb2kOir76MnGX0jZ1udFdE7MrxrVNDpUt9/M9t+
+         abB9kCYDcu0gvOQDSc1NRhVH8pHOY5znAKAxE=
+In-Reply-To: <20091204080813.GB1540@ucw.cz>
+Sender: linux-kernel-owner@vger.kernel.org
 List-ID: <linux-laptop.vger.kernel.org>
 Content-Type: text/plain; charset="us-ascii"
 To: Pavel Machek <pavel@ucw.cz>
-Cc: Ralf Baechle <ralf@linux-mips.org>, akpm@linux-foundation.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "Rafael J. Wysocki" <rjw@sisk.pl>, zhangfx@lemote.com, linux-laptop@vger.kernel.org, luming.yu@intel.com
+Cc: Ralf Baechle <ralf@linux-mips.org>, akpm@linux-foundation.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "Rafael J. Wysocki" <rjw@sisk.pl>, zhangfx@lemote.com, linux-laptop@vger.kernel.org
 
-On Fri, 2009-12-04 at 09:11 +0100, Pavel Machek wrote:
-> On Fri 2009-12-04 21:36:43, Wu Zhangjin wrote:
-> > From: Wu Zhangjin <wuzhangjin@gmail.com>
-> > 
-> > This patch adds Video Output Driver, it provides standard
-> > interface(/sys/class/video_output) to turn on/off the video output of
-> > LCD, CRT.
-> > 
+On Fri, 2009-12-04 at 09:08 +0100, Pavel Machek wrote:
+> Hi!
 > 
-> > diff --git a/drivers/platform/mips/Kconfig b/drivers/platform/mips/Kconfig
-> > index 9c8385c..4a89c01 100644
-> > --- a/drivers/platform/mips/Kconfig
-> > +++ b/drivers/platform/mips/Kconfig
-> > @@ -21,6 +21,7 @@ config LEMOTE_YEELOONG2F
-> >  	select SYS_SUPPORTS_APM_EMULATION
-> >  	select APM_EMULATION
-> >  	select HWMON
-> > +	select VIDEO_OUTPUT_CONTROL
-> >  	default m
-> >  	help
-> >  	  YeeLoong netbook is a mini laptop made by Lemote, which is basically
+> > +static int get_cpu_temp(void)
+> > +{
+> > +	int value;
+> > +
+> > +	value = ec_read(REG_TEMPERATURE_VALUE);
+> > +
+> > +	if (value & (1 << 7))
+> > +		value = (value & 0x7f) - 128;
+> > +	else
+> > +		value = value & 0xff;
 > 
-> default m is evil.
+> wtf?
 > 
-
-why? this module can be loaded automatically, so, I let it be a module
-by default.
-
-> > +	if (status == BIT_DISPLAY_LCD_ON) {
-> > +		/* Turn on LCD */
-> > +		outb(0x31, 0x3c4);
-> > +		value = inb(0x3c5);
-> > +		value = (value & 0xf8) | 0x03;
-> > +		outb(0x31, 0x3c4);
-> > +		outb(value, 0x3c5);
-> > +		/* Turn on backlight */
-> > +		ec_write(REG_BACKLIGHT_CTRL, BIT_BACKLIGHT_ON);
-> > +	} else {
-> > +		/* Turn off backlight */
-> > +		ec_write(REG_BACKLIGHT_CTRL, BIT_BACKLIGHT_OFF);
-> > +		/* Turn off LCD */
-> > +		outb(0x31, 0x3c4);
-> > +		value = inb(0x3c5);
-> > +		value = (value & 0xf8) | 0x02;
-> > +		outb(0x31, 0x3c4);
-> > +		outb(value, 0x3c5);
-> > +	}
+> Maybe value should be 's8'?
 > 
-> IIRC this is opencoded in suspend support; should that get common
-> helpers?
+> > +static int get_battery_current(void)
+> > +{
+> > +	int value;
+> > +
+> > +	value = (ec_read(REG_BAT_CURRENT_HIGH) << 8) |
+> > +		(ec_read(REG_BAT_CURRENT_LOW));
+> > +
+> > +	if (value & 0x8000)
+> > +		value = 0xffff - value;
 > 
-> > +	if (status == BIT_CRT_DETECT_PLUG) {
-> > +		if (ec_read(REG_CRT_DETECT) == BIT_CRT_DETECT_PLUG) {
-> > +			/* Turn on CRT */
-> > +			outb(0x21, 0x3c4);
-> > +			value = inb(0x3c5);
-> > +			value &= ~(1 << 7);
-> > +			outb(0x21, 0x3c4);
-> > +			outb(value, 0x3c5);
-> > +		}
-> > +	} else {
-> > +		/* Turn off CRT */
-> > +		outb(0x21, 0x3c4);
-> > +		value = inb(0x3c5);
-> > +		value |= (1 << 7);
-> > +		outb(0x21, 0x3c4);
-> > +		outb(value, 0x3c5);
-> > +	}
+> Another version of  pair-complement conversion; this one is broken --
+> off by 1.
 > 
-> This looks suspiciously similar to one another and to code
-> above. Perhaps some more helpers?
+> > +static int parse_arg(const char *buf, unsigned long count, int *val)
+> > +{
+> > +	if (!count)
+> > +		return 0;
+> > +	if (sscanf(buf, "%i", val) != 1)
+> > +		return -EINVAL;
+> > +	return count;
+> > +}
+> 
+> We have strict_strtoul for a reason...
 > 
 
-Yes, lots of duplicated source code above, thanks!
+Done, thanks!
 
 Regards,
 	Wu Zhangjin
-
