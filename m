@@ -1,186 +1,185 @@
-From: TAKADA Yoshihito <takada@mbf.nifty.com>
-Subject: [x86-32] apm broken
-Date: Thu, 26 Nov 2009 21:24:15 +0900 (JST)
-Message-ID: <20091126.212415.193868885.takada@mbf.nifty.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+From: Wu Zhangjin <wuzhangjin@gmail.com>
+Subject: [PATCH v7 4/8] Loongson: YeeLoong: add battery driver
+Date: Fri,  4 Dec 2009 21:34:17 +0800
+Message-ID: <059fa216d70771a6341edb2db4cc559e958273e9.1259932036.git.wuzhangjin@gmail.com>
+References: <cover.1259932036.git.wuzhangjin@gmail.com>
 Return-path: <linux-laptop-owner@vger.kernel.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=gamma;
+        h=domainkey-signature:received:received:from:to:cc:subject:date
+         :message-id:x-mailer:in-reply-to:references;
+        bh=u/tIqaehChNypTk7mUOWlTQstK6eCnJaichBV4x0i9I=;
+        b=t5P//KHXMyepMcjQen64VwdKux/WoFVuzPjvwvx4650l/kVFnmnyDLB5FGmzfpXrTA
+         +KWiovLL+Kfo9jHXDF3y/L5OHoxDtwPhRno/uYtHhSUGimM0sfaPytgZL5tbeNLUxwde
+         W4nrzZjVwiuMZVyNy3AlZTuYCcB/2ff4uuRj8=
+In-Reply-To: <cover.1259932036.git.wuzhangjin@gmail.com>
 Sender: linux-laptop-owner@vger.kernel.org
 List-ID: <linux-laptop.vger.kernel.org>
-Content-Type: Text/Plain; charset="us-ascii"
-To: linux-laptop@vger.kernel.org
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Ralf Baechle <ralf@linux-mips.org>, akpm@linux-foundation.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pavel Machek <pavel@ucw.cz>, "Rafael J. Wysocki" <rjw@sisk.pl>, zhangfx@lemote.com, Stephen Rothwell <sfr@canb.auug.org.au>, linux-laptop@vger.kernel.org, Wu Zhangjin <wuzhangjin@gmail.com>
 
-Hi.
-I updated kernel for old x86 box.
-APM of kernel 2.6.29 broken on my x86-32 box.
-I attempt to suspend by APM at several kernels.
+From: Wu Zhangjin <wuzhangjin@gmail.com>
 
----2.6.27
-I worried about apmd said "Suspending now" though proxy rejected
-suspend, the 2.6.27 seems works correctly.
+This patch adds APM emulated Battery Driver, it provides standard
+interface(/proc/apm) for user-space applications(e.g. kpowersave,
+gnome-power-manager) to manage the battery.
 
-apm: BIOS version 1.2 Flags 0x03 (Driver version 1.16ac)
-apmd[1828]: apmd 3.2.1 interfacing with apm driver 1.16ac and APM BIOS 1.2
-apmd[1828]: Proxy exited with status 1
-apmd[1828]: Suspend rejected by proxy
-apmd[1828]: Suspending now
-PM: Device 1-1 failed to suspend: error -22
-PM: Device floppy.0 failed to suspend late: error -22
-hda: no DMA mode selected
-PM: Device usb1 failed to resume: error -22
-PM: Device 1-1 failed to resume: error -22
-apmd[1828]: Proxy exited with status 1
-apmd[1828]: Suspend rejected by proxy
-apmd[1828]: Suspending now
-PM: Device 1-1 failed to suspend: error -22
-PM: Device floppy.0 failed to suspend late: error -22
-hda: no DMA mode selected
-PM: Device usb1 failed to resume: error -22
-PM: Device 1-1 failed to resume: error -22
+Signed-off-by: Wu Zhangjin <wuzhangjin@gmail.com>
+---
+ drivers/platform/mips/Kconfig           |    2 +
+ drivers/platform/mips/yeeloong_laptop.c |  104 +++++++++++++++++++++++++++++++
+ 2 files changed, 106 insertions(+), 0 deletions(-)
 
+diff --git a/drivers/platform/mips/Kconfig b/drivers/platform/mips/Kconfig
+index f7a3705..0c6b5ad 100644
+--- a/drivers/platform/mips/Kconfig
++++ b/drivers/platform/mips/Kconfig
+@@ -18,6 +18,8 @@ config LEMOTE_YEELOONG2F
+ 	tristate "Lemote YeeLoong Laptop"
+ 	depends on LEMOTE_MACH2F
+ 	select BACKLIGHT_CLASS_DEVICE
++	select SYS_SUPPORTS_APM_EMULATION
++	select APM_EMULATION
+ 	default m
+ 	help
+ 	  YeeLoong netbook is a mini laptop made by Lemote, which is basically
+diff --git a/drivers/platform/mips/yeeloong_laptop.c b/drivers/platform/mips/yeeloong_laptop.c
+index fbc4ebb..729e368 100644
+--- a/drivers/platform/mips/yeeloong_laptop.c
++++ b/drivers/platform/mips/yeeloong_laptop.c
+@@ -13,6 +13,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/backlight.h>	/* for backlight subdriver */
+ #include <linux/fb.h>
++#include <linux/apm-emulation.h>/* for battery subdriver */
+ 
+ #include <ec_kb3310b.h>
+ 
+@@ -83,6 +84,106 @@ static void yeeloong_backlight_exit(void)
+ 	}
+ }
+ 
++/* battery subdriver */
++
++static void get_fixed_battery_info(void)
++{
++	int design_cap, full_charged_cap, design_vol, vendor, cell_count;
++
++	design_cap = (ec_read(REG_BAT_DESIGN_CAP_HIGH) << 8)
++	    | ec_read(REG_BAT_DESIGN_CAP_LOW);
++	full_charged_cap = (ec_read(REG_BAT_FULLCHG_CAP_HIGH) << 8)
++	    | ec_read(REG_BAT_FULLCHG_CAP_LOW);
++	design_vol = (ec_read(REG_BAT_DESIGN_VOL_HIGH) << 8)
++	    | ec_read(REG_BAT_DESIGN_VOL_LOW);
++	vendor = ec_read(REG_BAT_VENDOR);
++	cell_count = ec_read(REG_BAT_CELL_COUNT);
++
++	if (vendor != 0) {
++		pr_info("battery vendor(%s), cells count(%d), "
++		       "with designed capacity(%d),designed voltage(%d),"
++		       " full charged capacity(%d)\n",
++		       (vendor ==
++			FLAG_BAT_VENDOR_SANYO) ? "SANYO" : "SIMPLO",
++		       (cell_count == FLAG_BAT_CELL_3S1P) ? 3 : 6,
++		       design_cap, design_vol,
++		       full_charged_cap);
++	}
++}
++
++#define APM_CRITICAL		5
++
++static void get_power_status(struct apm_power_info *info)
++{
++	unsigned char bat_status;
++
++	info->battery_status = APM_BATTERY_STATUS_UNKNOWN;
++	info->battery_flag = APM_BATTERY_FLAG_UNKNOWN;
++	info->units = APM_UNITS_MINS;
++
++	info->battery_life = (ec_read(REG_BAT_RELATIVE_CAP_HIGH) << 8) |
++		(ec_read(REG_BAT_RELATIVE_CAP_LOW));
++
++	info->ac_line_status = (ec_read(REG_BAT_POWER) & BIT_BAT_POWER_ACIN) ?
++		APM_AC_ONLINE : APM_AC_OFFLINE;
++
++	bat_status = ec_read(REG_BAT_STATUS);
++
++	if (!(bat_status & BIT_BAT_STATUS_IN)) {
++		/* no battery inserted */
++		info->battery_status = APM_BATTERY_STATUS_NOT_PRESENT;
++		info->battery_flag = APM_BATTERY_FLAG_NOT_PRESENT;
++		info->time = 0x00;
++		return;
++	}
++
++	/* adapter inserted */
++	if (info->ac_line_status == APM_AC_ONLINE) {
++		if (!(bat_status & BIT_BAT_STATUS_FULL)) {
++			/* battery is not fully charged */
++			info->battery_status = APM_BATTERY_STATUS_CHARGING;
++			info->battery_flag = APM_BATTERY_FLAG_CHARGING;
++		} else {
++			/* battery is fully charged */
++			info->battery_status = APM_BATTERY_STATUS_HIGH;
++			info->battery_flag = APM_BATTERY_FLAG_HIGH;
++			info->battery_life = 100;
++		}
++	} else {
++		/* battery is too low */
++		if (bat_status & BIT_BAT_STATUS_LOW) {
++			info->battery_status = APM_BATTERY_STATUS_LOW;
++			info->battery_flag = APM_BATTERY_FLAG_LOW;
++			if (info->battery_life <= APM_CRITICAL) {
++				/* we should power off the system now */
++				info->battery_status =
++					APM_BATTERY_STATUS_CRITICAL;
++				info->battery_flag = APM_BATTERY_FLAG_CRITICAL;
++			}
++		} else {
++			/* assume the battery is high enough. */
++			info->battery_status = APM_BATTERY_STATUS_HIGH;
++			info->battery_flag = APM_BATTERY_FLAG_HIGH;
++		}
++	}
++	info->time = ((info->battery_life - 3) * 54 + 142) / 60;
++}
++
++static int yeeloong_battery_init(void)
++{
++	get_fixed_battery_info();
++
++	apm_get_power_status = get_power_status;
++
++	return 0;
++}
++
++static void yeeloong_battery_exit(void)
++{
++	if (apm_get_power_status == get_power_status)
++		apm_get_power_status = NULL;
++}
++
+ static struct platform_device_id platform_device_ids[] = {
+ 	{
+ 		.name = "yeeloong_laptop",
+@@ -120,11 +221,14 @@ static int __init yeeloong_init(void)
+ 		return ret;
+ 	}
+ 
++	yeeloong_battery_init();
++
+ 	return 0;
+ }
+ 
+ static void __exit yeeloong_exit(void)
+ {
++	yeeloong_battery_exit();
+ 	yeeloong_backlight_exit();
+ 	platform_driver_unregister(&platform_driver);
+ 
+-- 
+1.6.2.1
 
----2.6.28
-The 2.6.28 seems works correctly too.
-
-apm: BIOS version 1.2 Flags 0x03 (Driver version 1.16ac)
-apmd[1726]: apmd 3.2.1 interfacing with apm driver 1.16ac and APM BIOS 1.2
-apmd[1726]: Proxy exited with status 1
-apmd[1726]: Suspend rejected by proxy
-apmd[1726]: Suspending now
-PM: Device 1-1 failed to suspend: error -22
-PM: Device floppy.0 failed to suspend late: error -22
-hda: no DMA mode selected
-PM: Device usb1 failed to resume: error -22
-PM: Device 1-1 failed to resume: error -22
-apmd[1726]: Proxy exited with status 1
-apmd[1726]: Suspend rejected by proxy
-apmd[1726]: Suspending now
-PM: Device 1-1 failed to suspend: error -22
-PM: Device floppy.0 failed to suspend late: error -22
-hda: no DMA mode selected
-PM: Device usb1 failed to resume: error -22
-PM: Device 1-1 failed to resume: error -22
-
----2.6.29
-The kernel said WARN_ON when APM BIOS require suspend.
-
-apm: BIOS version 1.2 Flags 0x03 (Driver version 1.16ac)
-apmd[1738]: apmd 3.2.1 interfacing with apm driver 1.16ac and APM BIOS 1.2
-apmd[1738]: Proxy exited with status 1
-apmd[1738]: Suspend rejected by proxy
-apmd[1738]: Suspending now
-PM: Device 1-1 failed to suspend: error -22
-PM: Device floppy.0 failed to suspend late: error -22
-------------[ cut here ]------------
-WARNING: at kernel/time/timekeeping.c:98 getnstimeofday+0x20/0xc7()
-Modules linked in: apm joydev psmouse serio_raw evdev ohci_hcd floppy 8139too usbcore mii cs5520
-Pid: 1738, comm: apmd Not tainted 2.6.29-fiva #1
-Call Trace:
- [<c01130ec>] warn_slowpath+0x80/0xb5
- [<c01262e9>] getnstimeofday+0x20/0xc7
- [<c01233ae>] ktime_get_ts+0x1d/0x3f
- [<c01233df>] ktime_get+0xf/0x2b
- [<c0124450>] sched_clock_tick+0x3e/0x71
- [<c0110ef6>] scheduler_tick+0x14/0x81
- [<c0119927>] update_process_times+0x36/0x3f
- [<c0128212>] tick_handle_periodic+0xc/0x56
- [<c0104339>] timer_interrupt+0x11/0x18
- [<c013bc49>] handle_IRQ_event+0x1a/0x3f
- [<c013c91d>] handle_level_irq+0x50/0x85
- [<c010405d>] do_IRQ+0x4d/0x64
- [<c65b46db>] do_ioctl+0x0/0x146 [apm]
- [<c01030e7>] common_interrupt+0x27/0x30
- [<c65b46db>] do_ioctl+0x0/0x146 [apm]
----[ end trace 1e821420e29432aa ]---
-PM: Device usb1 failed to resume: error -22
-PM: Device 1-1 failed to resume: error -22
-apmd[1738]: Proxy exited with status 1
-apmd[1738]: Suspend rejected by proxy
-apmd[1738]: Suspending now
-PM: Device 1-1 failed to suspend: error -22
-PM: Device floppy.0 failed to suspend late: error -22
-------------[ cut here ]------------
-WARNING: at kernel/time/timekeeping.c:98 getnstimeofday+0x20/0xc7()
-Modules linked in: apm joydev psmouse serio_raw evdev ohci_hcd floppy 8139too usbcore mii cs5520
-Pid: 1738, comm: apmd Tainted: G        W  2.6.29-fiva #1
-Call Trace:
- [<c01130ec>] warn_slowpath+0x80/0xb5
- [<c01262e9>] getnstimeofday+0x20/0xc7
- [<c01233ae>] ktime_get_ts+0x1d/0x3f
- [<c01233df>] ktime_get+0xf/0x2b
- [<c0124450>] sched_clock_tick+0x3e/0x71
- [<c0110ef6>] scheduler_tick+0x14/0x81
- [<c0119927>] update_process_times+0x36/0x3f
- [<c0128212>] tick_handle_periodic+0xc/0x56
- [<c0104339>] timer_interrupt+0x11/0x18
- [<c013bc49>] handle_IRQ_event+0x1a/0x3f
- [<c013c91d>] handle_level_irq+0x50/0x85
- [<c010405d>] do_IRQ+0x4d/0x64
- [<c65b46db>] do_ioctl+0x0/0x146 [apm]
- [<c01030e7>] common_interrupt+0x27/0x30
- [<c65b46db>] do_ioctl+0x0/0x146 [apm]
----[ end trace 1e821420e29432ab ]---
-PM: Device usb1 failed to resume: error -22
-PM: Device 1-1 failed to resume: error -22
-
----2.6.30:
-The kernel said WARN_ON when APM BIOS require suspend.
-
-apm: BIOS version 1.2 Flags 0x03 (Driver version 1.16ac)
-PM: Device 1-1 failed to suspend: error -22
-PM: Device floppy.0 failed to suspend late: error -22
-------------[ cut here ]------------
-WARNING: at kernel/time/timekeeping.c:98 getnstimeofday+0x21/0xc8()
-Modules linked in: apm ohci_hcd floppy 8139too usbcore mii cs5520
-Pid: 1388, comm: Xorg Tainted: G      D    2.6.30-fiva #2
-Call Trace:
- [<c012986d>] ? getnstimeofday+0x21/0xc8
- [<c012986d>] ? getnstimeofday+0x21/0xc8
- [<c0115fcf>] ? warn_slowpath_common+0x5e/0x8a
- [<c0116005>] ? warn_slowpath_null+0xa/0xc
- [<c012986d>] ? getnstimeofday+0x21/0xc8
- [<c01265ed>] ? ktime_get_ts+0x1d/0x3f
- [<c012661e>] ? ktime_get+0xf/0x2b
- [<c012777b>] ? sched_clock_tick+0x4f/0x133
- [<c0113cfc>] ? scheduler_tick+0x14/0x81
- [<c011ca5b>] ? update_process_times+0x36/0x3f
- [<c012be87>] ? tick_handle_periodic+0xc/0x61
- [<c01041b1>] ? timer_interrupt+0x21/0x28
- [<c01403f3>] ? handle_IRQ_event+0x49/0xf6
- [<c01413bc>] ? handle_level_irq+0x50/0x85
- [<c0103ed7>] ? handle_irq+0x17/0x1c
- [<c0103c30>] ? do_IRQ+0x2b/0x63
- [<c0102d49>] ? common_interrupt+0x29/0x30
----[ end trace 3f288e5fb2e867d5 ]---
-PM: Device usb1 failed to resume: error -22
-PM: Device 1-1 failed to resume: error -22
-
----2.6.31.6
-apm: BIOS version 1.2 Flags 0x03 (Driver version 1.16ac)
-PM: Device 1-1 failed to suspend: error -22
-PM: Device floppy.0 failed to suspend late: error -22
-------------[ cut here ]------------
-WARNING: at kernel/time/timekeeping.c:102 getnstimeofday+0x21/0xc8()
-Modules linked in: apm snd_pcsp irtty_sir snd_pcm sir_dev joydev snd_timer snd irda soundcore snd_page_alloc crc_ccitt psmouse serio_raw evdev ohci_hcd floppy usbcore 8139too nls_base mii cs5520
-Pid: 1885, comm: apmd Not tainted 2.6.31.6-fiva #1
-Call Trace:
- [<c1029cb8>] ? getnstimeofday+0x21/0xc8
- [<c1029cb8>] ? getnstimeofday+0x21/0xc8
- [<c10167d7>] ? warn_slowpath_common+0x5e/0x8a
- [<c101680d>] ? warn_slowpath_null+0xa/0xc
- [<c1029cb8>] ? getnstimeofday+0x21/0xc8
- [<c10267df>] ? ktime_get_ts+0x1d/0x3f
- [<c1026810>] ? ktime_get+0xf/0x2b
- [<c10278bb>] ? sched_clock_tick+0x4f/0x133
- [<c101495a>] ? scheduler_tick+0x14/0xc0
- [<c101d1f9>] ? update_process_times+0x36/0x3f
- [<c102c303>] ? tick_handle_periodic+0xc/0x61
- [<c1004271>] ? timer_interrupt+0x21/0x28
- [<c1040c18>] ? handle_IRQ_event+0x1a/0x96
- [<c1041b74>] ? handle_level_irq+0x50/0x85
- [<c1003f93>] ? handle_irq+0x17/0x1c
- [<c1003c72>] ? do_IRQ+0x2b/0x76
- [<c1002d49>] ? common_interrupt+0x29/0x30
----[ end trace ba233a454b6b6589 ]---
-PM: Device usb1 failed to resume: error -22
-PM: Device 1-1 failed to resume: error -22
