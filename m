@@ -1,24 +1,27 @@
 From: Wu Zhangjin <wuzhangjin@gmail.com>
-Subject: [PATCH v8 4/8] Loongson: YeeLoong: add battery driver
-Date: Sun,  6 Dec 2009 15:01:44 +0800
-Message-ID: <57ed2090c7f1a1a9c0e31d457617c7473b9e29ad.1260082252.git.wuzhangjin@gmail.com>
+Subject: [PATCH v8 7/8] Loongson: YeeLoong: add suspend support
+Date: Sun,  6 Dec 2009 15:01:47 +0800
+Message-ID: <0d43bc3ef83540f8420a66741560e8ee817758c3.1260082252.git.wuzhangjin@gmail.com>
 References: <cover.1260082252.git.wuzhangjin@gmail.com>
  <d6bb11d33fe01abd6de945117ce647af73841f00.1260082252.git.wuzhangjin@gmail.com>
  <5a8742a71e96ba40bee34fb37478cc8339e76530.1260082252.git.wuzhangjin@gmail.com>
  <3c77f3891e73e189cceef7155dc9cb6503084a4b.1260082252.git.wuzhangjin@gmail.com>
-Return-path: <linux-laptop-owner@vger.kernel.org>
+ <57ed2090c7f1a1a9c0e31d457617c7473b9e29ad.1260082252.git.wuzhangjin@gmail.com>
+ <d8789fa7e97d8a170c4e2516d7ef2d2fbbe42cc6.1260082252.git.wuzhangjin@gmail.com>
+ <a9309478df85d80c970bfc1632c1cc0147596c1c.1260082252.git.wuzhangjin@gmail.com>
+Return-path: <linux-kernel-owner+glk-linux-kernel-3=40m.gmane.org-S1756111AbZLFHGJ@vger.kernel.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=gamma;
         h=domainkey-signature:received:received:from:to:cc:subject:date
          :message-id:x-mailer:in-reply-to:references:in-reply-to:references;
-        bh=iXdsk6nDQF2cuKR6mFuFayPQMRX+rg+n+fBSTHXgP7Q=;
-        b=reEVBQkCwz1arN6nWqhUCEb2wsqjkt22qX7yN+U2q4KVl3avqvKpRiacjGBooSdXUm
-         zgY1N01d3bB0W9dDHj2yKpS5KhUiJWqIY3xoN6m4hCzerGUCIaRTklYqPqkfTped8o6c
-         MLucUuSpJYL6OrWK7uwGdcUFZEoseUA9Msszg=
-In-Reply-To: <3c77f3891e73e189cceef7155dc9cb6503084a4b.1260082252.git.wuzhangjin@gmail.com>
+        bh=tf+AIlYly9A5EewRXOtutHTn7lIQmt28QkTrRj4pwRI=;
+        b=JcRjI8D+OMrbeiOIk/OarhbDIuoaPUwL/XTX+UzMso7vpBpj19tiHpv6kMuB4AI+nG
+         pkKy25xwpnI1ETWCHIs7+fLfd7BM+TOm6NgSMlq/Zv5rwrvJZ4uQ6WNzn4lWiCT9W3QM
+         gH0O83S6VyQxbaK4gNkIdXKamVpvWWese5rkg=
+In-Reply-To: <a9309478df85d80c970bfc1632c1cc0147596c1c.1260082252.git.wuzhangjin@gmail.com>
 In-Reply-To: <cover.1260082252.git.wuzhangjin@gmail.com>
 References: <cover.1260082252.git.wuzhangjin@gmail.com>
-Sender: linux-laptop-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 List-ID: <linux-laptop.vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -28,180 +31,75 @@ Cc: Wu Zhangjin <wuzhangjin@gmail.com>, linux-mips@linux-mips.org, linux-kernel@
 
 From: Wu Zhangjin <wuzhangjin@gmail.com>
 
-This patch adds APM emulated Battery Driver, it provides standard
-interface(/proc/apm) for user-space applications(e.g. kpowersave,
-gnome-power-manager) to manage the battery.
+This patch add support to suspend the yeeloong platform specific
+devices(LCD, CRT, USB...).
 
+Acked-by: Rafael J. Wysocki <rjw@sisk.pl>
+Acked-by: Pavel Machek <pavel@ucw.cz>
 Signed-off-by: Wu Zhangjin <wuzhangjin@gmail.com>
 ---
- drivers/platform/mips/Kconfig           |    2 +
- drivers/platform/mips/yeeloong_laptop.c |  108 ++++++++++++++++++++++++++++++-
- 2 files changed, 108 insertions(+), 2 deletions(-)
+ drivers/platform/mips/yeeloong_laptop.c |   42 ++++++++++++++++++++++++++++--
+ 1 files changed, 39 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/mips/Kconfig b/drivers/platform/mips/Kconfig
-index c1ba03d..965933b 100644
---- a/drivers/platform/mips/Kconfig
-+++ b/drivers/platform/mips/Kconfig
-@@ -18,6 +18,8 @@ config LEMOTE_YEELOONG2F
- 	tristate "Lemote YeeLoong Laptop"
- 	depends on LEMOTE_MACH2F
- 	select BACKLIGHT_CLASS_DEVICE
-+	select SYS_SUPPORTS_APM_EMULATION
-+	select APM_EMULATION
- 	help
- 	  YeeLoong netbook is a mini laptop made by Lemote, which is basically
- 	  compatible to FuLoong2F mini PC, but it has an extra Embedded
 diff --git a/drivers/platform/mips/yeeloong_laptop.c b/drivers/platform/mips/yeeloong_laptop.c
-index f04a7e2..0d9f2a6 100644
+index 180dbb1..5e83788 100644
 --- a/drivers/platform/mips/yeeloong_laptop.c
 +++ b/drivers/platform/mips/yeeloong_laptop.c
-@@ -2,7 +2,7 @@
-  * Driver for YeeLoong laptop extras
-  *
-  *  Copyright (C) 2009 Lemote Inc.
-- *  Author: Wu Zhangjin <wuzj@lemote.com>
-+ *  Author: Wu Zhangjin <wuzj@lemote.com>, Liu Junliang <liujl@lemote.com>
-  *
-  *  This program is free software; you can redistribute it and/or modify
-  *  it under the terms of the GNU General Public License version 2 as
-@@ -13,6 +13,7 @@
- #include <linux/platform_device.h>
- #include <linux/backlight.h>	/* for backlight subdriver */
- #include <linux/fb.h>
-+#include <linux/apm-emulation.h>/* for battery subdriver */
- 
- #include <ec_kb3310b.h>
- 
-@@ -85,6 +86,106 @@ static void yeeloong_backlight_exit(void)
+@@ -515,6 +515,39 @@ static void yeeloong_vo_exit(void)
  	}
  }
  
-+/* battery subdriver */
-+
-+static void get_fixed_battery_info(void)
++#ifdef CONFIG_PM
++static void usb_ports_set(int status)
 +{
-+	int design_cap, full_charged_cap, design_vol, vendor, cell_count;
++	status = !!status;
 +
-+	design_cap = (ec_read(REG_BAT_DESIGN_CAP_HIGH) << 8)
-+	    | ec_read(REG_BAT_DESIGN_CAP_LOW);
-+	full_charged_cap = (ec_read(REG_BAT_FULLCHG_CAP_HIGH) << 8)
-+	    | ec_read(REG_BAT_FULLCHG_CAP_LOW);
-+	design_vol = (ec_read(REG_BAT_DESIGN_VOL_HIGH) << 8)
-+	    | ec_read(REG_BAT_DESIGN_VOL_LOW);
-+	vendor = ec_read(REG_BAT_VENDOR);
-+	cell_count = ec_read(REG_BAT_CELL_COUNT);
-+
-+	if (vendor != 0) {
-+		pr_info("battery vendor(%s), cells count(%d), "
-+		       "with designed capacity(%d),designed voltage(%d),"
-+		       " full charged capacity(%d)\n",
-+		       (vendor ==
-+			FLAG_BAT_VENDOR_SANYO) ? "SANYO" : "SIMPLO",
-+		       (cell_count == FLAG_BAT_CELL_3S1P) ? 3 : 6,
-+		       design_cap, design_vol,
-+		       full_charged_cap);
-+	}
++	ec_write(REG_USB0_FLAG, status);
++	ec_write(REG_USB1_FLAG, status);
++	ec_write(REG_USB2_FLAG, status);
 +}
 +
-+#define APM_CRITICAL		5
++static int yeeloong_suspend(struct device *dev)
 +
-+static void get_power_status(struct apm_power_info *info)
 +{
-+	unsigned char bat_status;
-+
-+	info->battery_status = APM_BATTERY_STATUS_UNKNOWN;
-+	info->battery_flag = APM_BATTERY_FLAG_UNKNOWN;
-+	info->units = APM_UNITS_MINS;
-+
-+	info->battery_life = (ec_read(REG_BAT_RELATIVE_CAP_HIGH) << 8) |
-+		(ec_read(REG_BAT_RELATIVE_CAP_LOW));
-+
-+	info->ac_line_status = (ec_read(REG_BAT_POWER) & BIT_BAT_POWER_ACIN) ?
-+		APM_AC_ONLINE : APM_AC_OFFLINE;
-+
-+	bat_status = ec_read(REG_BAT_STATUS);
-+
-+	if (!(bat_status & BIT_BAT_STATUS_IN)) {
-+		/* no battery inserted */
-+		info->battery_status = APM_BATTERY_STATUS_NOT_PRESENT;
-+		info->battery_flag = APM_BATTERY_FLAG_NOT_PRESENT;
-+		info->time = 0x00;
-+		return;
-+	}
-+
-+	/* adapter inserted */
-+	if (info->ac_line_status == APM_AC_ONLINE) {
-+		if (!(bat_status & BIT_BAT_STATUS_FULL)) {
-+			/* battery is not fully charged */
-+			info->battery_status = APM_BATTERY_STATUS_CHARGING;
-+			info->battery_flag = APM_BATTERY_FLAG_CHARGING;
-+		} else {
-+			/* battery is fully charged */
-+			info->battery_status = APM_BATTERY_STATUS_HIGH;
-+			info->battery_flag = APM_BATTERY_FLAG_HIGH;
-+			info->battery_life = 100;
-+		}
-+	} else {
-+		/* battery is too low */
-+		if (bat_status & BIT_BAT_STATUS_LOW) {
-+			info->battery_status = APM_BATTERY_STATUS_LOW;
-+			info->battery_flag = APM_BATTERY_FLAG_LOW;
-+			if (info->battery_life <= APM_CRITICAL) {
-+				/* we should power off the system now */
-+				info->battery_status =
-+					APM_BATTERY_STATUS_CRITICAL;
-+				info->battery_flag = APM_BATTERY_FLAG_CRITICAL;
-+			}
-+		} else {
-+			/* assume the battery is high enough. */
-+			info->battery_status = APM_BATTERY_STATUS_HIGH;
-+			info->battery_flag = APM_BATTERY_FLAG_HIGH;
-+		}
-+	}
-+	info->time = ((info->battery_life - 3) * 54 + 142) / 60;
-+}
-+
-+static int yeeloong_battery_init(void)
-+{
-+	get_fixed_battery_info();
-+
-+	apm_get_power_status = get_power_status;
++	yeeloong_lcd_vo_set(BIT_DISPLAY_LCD_OFF);
++	yeeloong_crt_vo_set(BIT_CRT_DETECT_UNPLUG);
++	usb_ports_set(BIT_USB_FLAG_OFF);
 +
 +	return 0;
 +}
 +
-+static void yeeloong_battery_exit(void)
++static int yeeloong_resume(struct device *dev)
 +{
-+	if (apm_get_power_status == get_power_status)
-+		apm_get_power_status = NULL;
++	yeeloong_lcd_vo_set(BIT_DISPLAY_LCD_ON);
++	yeeloong_crt_vo_set(BIT_CRT_DETECT_PLUG);
++	usb_ports_set(BIT_USB_FLAG_ON);
++
++	return 0;
 +}
++
++static const SIMPLE_DEV_PM_OPS(yeeloong_pm_ops, yeeloong_suspend,
++	yeeloong_resume);
++#endif
 +
  static struct platform_device_id platform_device_ids[] = {
  	{
  		.name = "yeeloong_laptop",
-@@ -122,11 +223,14 @@ static int __init yeeloong_init(void)
- 		return ret;
- 	}
+@@ -526,9 +559,12 @@ MODULE_DEVICE_TABLE(platform, platform_device_ids);
  
-+	yeeloong_battery_init();
-+
- 	return 0;
- }
+ static struct platform_driver platform_driver = {
+ 	.driver = {
+-		   .name = "yeeloong_laptop",
+-		   .owner = THIS_MODULE,
+-		   },
++		.name = "yeeloong_laptop",
++		.owner = THIS_MODULE,
++#ifdef CONFIG_PM
++		.pm = &yeeloong_pm_ops,
++#endif
++	},
+ 	.id_table = platform_device_ids,
+ };
  
- static void __exit yeeloong_exit(void)
- {
-+	yeeloong_battery_exit();
- 	yeeloong_backlight_exit();
- 	platform_driver_unregister(&platform_driver);
- 
-@@ -136,6 +240,6 @@ static void __exit yeeloong_exit(void)
- module_init(yeeloong_init);
- module_exit(yeeloong_exit);
- 
--MODULE_AUTHOR("Wu Zhangjin <wuzj@lemote.com>");
-+MODULE_AUTHOR("Wu Zhangjin <wuzj@lemote.com>; Liu Junliang <liujl@lemote.com>");
- MODULE_DESCRIPTION("YeeLoong laptop driver");
- MODULE_LICENSE("GPL");
 -- 
 1.6.2.1
-
