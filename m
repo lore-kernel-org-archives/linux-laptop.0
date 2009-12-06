@@ -1,26 +1,24 @@
 From: Wu Zhangjin <wuzhangjin@gmail.com>
-Subject: [PATCH v8 6/8] Loongson: YeeLoong: add video output driver
-Date: Sun,  6 Dec 2009 15:01:46 +0800
-Message-ID: <a9309478df85d80c970bfc1632c1cc0147596c1c.1260082252.git.wuzhangjin@gmail.com>
+Subject: [PATCH v8 4/8] Loongson: YeeLoong: add battery driver
+Date: Sun,  6 Dec 2009 15:01:44 +0800
+Message-ID: <57ed2090c7f1a1a9c0e31d457617c7473b9e29ad.1260082252.git.wuzhangjin@gmail.com>
 References: <cover.1260082252.git.wuzhangjin@gmail.com>
  <d6bb11d33fe01abd6de945117ce647af73841f00.1260082252.git.wuzhangjin@gmail.com>
  <5a8742a71e96ba40bee34fb37478cc8339e76530.1260082252.git.wuzhangjin@gmail.com>
  <3c77f3891e73e189cceef7155dc9cb6503084a4b.1260082252.git.wuzhangjin@gmail.com>
- <57ed2090c7f1a1a9c0e31d457617c7473b9e29ad.1260082252.git.wuzhangjin@gmail.com>
- <d8789fa7e97d8a170c4e2516d7ef2d2fbbe42cc6.1260082252.git.wuzhangjin@gmail.com>
-Return-path: <linux-kernel-owner+glk-linux-kernel-3=40m.gmane.org-S1755845AbZLFHF5@vger.kernel.org>
+Return-path: <linux-laptop-owner@vger.kernel.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=gamma;
         h=domainkey-signature:received:received:from:to:cc:subject:date
          :message-id:x-mailer:in-reply-to:references:in-reply-to:references;
-        bh=82CXq8jmLCVoDOkS96QDaJ2mshjn/0z00WIYBjYskO4=;
-        b=uvkQogPl0iFVv+PNQx+ITQl5724w9v+DNGi2W4s56nof2xWr36WD1I8eQyOTivIVb5
-         jBcVMJXf7zNZ6kOmA0t3UmIQgFPOj3ipLIZRxCTyHBq2vyDOHRuvBpmecg/bR026MNhh
-         qq8vB5nqr2zQIcP/pMAJcSdkHLVh2AA972VU4=
-In-Reply-To: <d8789fa7e97d8a170c4e2516d7ef2d2fbbe42cc6.1260082252.git.wuzhangjin@gmail.com>
+        bh=iXdsk6nDQF2cuKR6mFuFayPQMRX+rg+n+fBSTHXgP7Q=;
+        b=reEVBQkCwz1arN6nWqhUCEb2wsqjkt22qX7yN+U2q4KVl3avqvKpRiacjGBooSdXUm
+         zgY1N01d3bB0W9dDHj2yKpS5KhUiJWqIY3xoN6m4hCzerGUCIaRTklYqPqkfTped8o6c
+         MLucUuSpJYL6OrWK7uwGdcUFZEoseUA9Msszg=
+In-Reply-To: <3c77f3891e73e189cceef7155dc9cb6503084a4b.1260082252.git.wuzhangjin@gmail.com>
 In-Reply-To: <cover.1260082252.git.wuzhangjin@gmail.com>
 References: <cover.1260082252.git.wuzhangjin@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-laptop-owner@vger.kernel.org
 List-ID: <linux-laptop.vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -30,196 +28,180 @@ Cc: Wu Zhangjin <wuzhangjin@gmail.com>, linux-mips@linux-mips.org, linux-kernel@
 
 From: Wu Zhangjin <wuzhangjin@gmail.com>
 
-This patch adds Video Output Driver, it provides standard
-interface(/sys/class/video_output) to turn on/off the video output of
-LCD, CRT.
+This patch adds APM emulated Battery Driver, it provides standard
+interface(/proc/apm) for user-space applications(e.g. kpowersave,
+gnome-power-manager) to manage the battery.
 
 Signed-off-by: Wu Zhangjin <wuzhangjin@gmail.com>
 ---
- drivers/platform/mips/Kconfig           |    1 +
- drivers/platform/mips/yeeloong_laptop.c |  139 +++++++++++++++++++++++++++++++
- 2 files changed, 140 insertions(+), 0 deletions(-)
+ drivers/platform/mips/Kconfig           |    2 +
+ drivers/platform/mips/yeeloong_laptop.c |  108 ++++++++++++++++++++++++++++++-
+ 2 files changed, 108 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/platform/mips/Kconfig b/drivers/platform/mips/Kconfig
-index 352594c..e2dbe28 100644
+index c1ba03d..965933b 100644
 --- a/drivers/platform/mips/Kconfig
 +++ b/drivers/platform/mips/Kconfig
-@@ -21,6 +21,7 @@ config LEMOTE_YEELOONG2F
- 	select SYS_SUPPORTS_APM_EMULATION
- 	select APM_EMULATION
- 	select HWMON
-+	select VIDEO_OUTPUT_CONTROL
+@@ -18,6 +18,8 @@ config LEMOTE_YEELOONG2F
+ 	tristate "Lemote YeeLoong Laptop"
+ 	depends on LEMOTE_MACH2F
+ 	select BACKLIGHT_CLASS_DEVICE
++	select SYS_SUPPORTS_APM_EMULATION
++	select APM_EMULATION
  	help
  	  YeeLoong netbook is a mini laptop made by Lemote, which is basically
  	  compatible to FuLoong2F mini PC, but it has an extra Embedded
 diff --git a/drivers/platform/mips/yeeloong_laptop.c b/drivers/platform/mips/yeeloong_laptop.c
-index 78ddfad..180dbb1 100644
+index f04a7e2..0d9f2a6 100644
 --- a/drivers/platform/mips/yeeloong_laptop.c
 +++ b/drivers/platform/mips/yeeloong_laptop.c
-@@ -16,6 +16,7 @@
- #include <linux/apm-emulation.h>/* for battery subdriver */
- #include <linux/hwmon.h>	/* for hwmon subdriver */
- #include <linux/hwmon-sysfs.h>
-+#include <linux/video_output.h>	/* for video output subdriver */
+@@ -2,7 +2,7 @@
+  * Driver for YeeLoong laptop extras
+  *
+  *  Copyright (C) 2009 Lemote Inc.
+- *  Author: Wu Zhangjin <wuzj@lemote.com>
++ *  Author: Wu Zhangjin <wuzj@lemote.com>, Liu Junliang <liujl@lemote.com>
+  *
+  *  This program is free software; you can redistribute it and/or modify
+  *  it under the terms of the GNU General Public License version 2 as
+@@ -13,6 +13,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/backlight.h>	/* for backlight subdriver */
+ #include <linux/fb.h>
++#include <linux/apm-emulation.h>/* for battery subdriver */
  
  #include <ec_kb3310b.h>
  
-@@ -384,6 +385,136 @@ static void yeeloong_hwmon_exit(void)
+@@ -85,6 +86,106 @@ static void yeeloong_backlight_exit(void)
  	}
  }
  
-+/* video output subdriver */
++/* battery subdriver */
 +
-+static int lcd_video_output_get(struct output_device *od)
++static void get_fixed_battery_info(void)
 +{
-+	return ec_read(REG_DISPLAY_LCD);
++	int design_cap, full_charged_cap, design_vol, vendor, cell_count;
++
++	design_cap = (ec_read(REG_BAT_DESIGN_CAP_HIGH) << 8)
++	    | ec_read(REG_BAT_DESIGN_CAP_LOW);
++	full_charged_cap = (ec_read(REG_BAT_FULLCHG_CAP_HIGH) << 8)
++	    | ec_read(REG_BAT_FULLCHG_CAP_LOW);
++	design_vol = (ec_read(REG_BAT_DESIGN_VOL_HIGH) << 8)
++	    | ec_read(REG_BAT_DESIGN_VOL_LOW);
++	vendor = ec_read(REG_BAT_VENDOR);
++	cell_count = ec_read(REG_BAT_CELL_COUNT);
++
++	if (vendor != 0) {
++		pr_info("battery vendor(%s), cells count(%d), "
++		       "with designed capacity(%d),designed voltage(%d),"
++		       " full charged capacity(%d)\n",
++		       (vendor ==
++			FLAG_BAT_VENDOR_SANYO) ? "SANYO" : "SIMPLO",
++		       (cell_count == FLAG_BAT_CELL_3S1P) ? 3 : 6,
++		       design_cap, design_vol,
++		       full_charged_cap);
++	}
 +}
 +
-+#define LCD	0
-+#define CRT	1
++#define APM_CRITICAL		5
 +
-+static void display_vo_set(int display, int on)
++static void get_power_status(struct apm_power_info *info)
 +{
-+	int addr;
-+	unsigned long value;
++	unsigned char bat_status;
 +
-+	addr = (display == LCD) ? 0x31 : 0x21;
++	info->battery_status = APM_BATTERY_STATUS_UNKNOWN;
++	info->battery_flag = APM_BATTERY_FLAG_UNKNOWN;
++	info->units = APM_UNITS_MINS;
 +
-+	outb(addr, 0x3c4);
-+	value = inb(0x3c5);
++	info->battery_life = (ec_read(REG_BAT_RELATIVE_CAP_HIGH) << 8) |
++		(ec_read(REG_BAT_RELATIVE_CAP_LOW));
 +
-+	if (display == LCD)
-+		value |= (on ? 0x03 : 0x02);
-+	else {
-+		if (on)
-+			clear_bit(7, &value);
-+		else
-+			set_bit(7, &value);
++	info->ac_line_status = (ec_read(REG_BAT_POWER) & BIT_BAT_POWER_ACIN) ?
++		APM_AC_ONLINE : APM_AC_OFFLINE;
++
++	bat_status = ec_read(REG_BAT_STATUS);
++
++	if (!(bat_status & BIT_BAT_STATUS_IN)) {
++		/* no battery inserted */
++		info->battery_status = APM_BATTERY_STATUS_NOT_PRESENT;
++		info->battery_flag = APM_BATTERY_FLAG_NOT_PRESENT;
++		info->time = 0x00;
++		return;
 +	}
 +
-+	outb(addr, 0x3c4);
-+	outb(value, 0x3c5);
++	/* adapter inserted */
++	if (info->ac_line_status == APM_AC_ONLINE) {
++		if (!(bat_status & BIT_BAT_STATUS_FULL)) {
++			/* battery is not fully charged */
++			info->battery_status = APM_BATTERY_STATUS_CHARGING;
++			info->battery_flag = APM_BATTERY_FLAG_CHARGING;
++		} else {
++			/* battery is fully charged */
++			info->battery_status = APM_BATTERY_STATUS_HIGH;
++			info->battery_flag = APM_BATTERY_FLAG_HIGH;
++			info->battery_life = 100;
++		}
++	} else {
++		/* battery is too low */
++		if (bat_status & BIT_BAT_STATUS_LOW) {
++			info->battery_status = APM_BATTERY_STATUS_LOW;
++			info->battery_flag = APM_BATTERY_FLAG_LOW;
++			if (info->battery_life <= APM_CRITICAL) {
++				/* we should power off the system now */
++				info->battery_status =
++					APM_BATTERY_STATUS_CRITICAL;
++				info->battery_flag = APM_BATTERY_FLAG_CRITICAL;
++			}
++		} else {
++			/* assume the battery is high enough. */
++			info->battery_status = APM_BATTERY_STATUS_HIGH;
++			info->battery_flag = APM_BATTERY_FLAG_HIGH;
++		}
++	}
++	info->time = ((info->battery_life - 3) * 54 + 142) / 60;
 +}
 +
-+static int lcd_video_output_set(struct output_device *od)
++static int yeeloong_battery_init(void)
 +{
-+	unsigned long status;
++	get_fixed_battery_info();
 +
-+	status = !!od->request_state;
-+
-+	display_vo_set(LCD, status);
-+	ec_write(REG_BACKLIGHT_CTRL, status);
++	apm_get_power_status = get_power_status;
 +
 +	return 0;
 +}
 +
-+static struct output_properties lcd_output_properties = {
-+	.set_state = lcd_video_output_set,
-+	.get_status = lcd_video_output_get,
-+};
-+
-+static int crt_video_output_get(struct output_device *od)
++static void yeeloong_battery_exit(void)
 +{
-+	return ec_read(REG_CRT_DETECT);
-+}
-+
-+static int crt_video_output_set(struct output_device *od)
-+{
-+	unsigned long status;
-+
-+	status = !!od->request_state;
-+
-+	if (ec_read(REG_CRT_DETECT) == BIT_CRT_DETECT_PLUG)
-+		display_vo_set(CRT, status);
-+
-+	return 0;
-+}
-+
-+static struct output_properties crt_output_properties = {
-+	.set_state = crt_video_output_set,
-+	.get_status = crt_video_output_get,
-+};
-+
-+static struct output_device *lcd_output_dev, *crt_output_dev;
-+
-+static void yeeloong_lcd_vo_set(int status)
-+{
-+	lcd_output_dev->request_state = status;
-+	lcd_video_output_set(lcd_output_dev);
-+}
-+
-+static void yeeloong_crt_vo_set(int status)
-+{
-+	crt_output_dev->request_state = status;
-+	crt_video_output_set(crt_output_dev);
-+}
-+
-+static int yeeloong_vo_init(void)
-+{
-+	int ret;
-+
-+	/* Register video output device: lcd, crt */
-+	lcd_output_dev = video_output_register("LCD", NULL, NULL,
-+			&lcd_output_properties);
-+
-+	if (IS_ERR(lcd_output_dev)) {
-+		ret = PTR_ERR(lcd_output_dev);
-+		lcd_output_dev = NULL;
-+		return ret;
-+	}
-+	/* Ensure LCD is on by default */
-+	yeeloong_lcd_vo_set(BIT_DISPLAY_LCD_ON);
-+
-+	crt_output_dev = video_output_register("CRT", NULL, NULL,
-+			&crt_output_properties);
-+
-+	if (IS_ERR(crt_output_dev)) {
-+		ret = PTR_ERR(crt_output_dev);
-+		crt_output_dev = NULL;
-+		return ret;
-+	}
-+
-+	/* Turn off CRT by default, and will be enabled when the CRT
-+	 * connectting event reported by SCI */
-+	yeeloong_crt_vo_set(BIT_CRT_DETECT_UNPLUG);
-+
-+	return 0;
-+}
-+
-+static void yeeloong_vo_exit(void)
-+{
-+	if (lcd_output_dev) {
-+		video_output_unregister(lcd_output_dev);
-+		lcd_output_dev = NULL;
-+	}
-+	if (crt_output_dev) {
-+		video_output_unregister(crt_output_dev);
-+		crt_output_dev = NULL;
-+	}
++	if (apm_get_power_status == get_power_status)
++		apm_get_power_status = NULL;
 +}
 +
  static struct platform_device_id platform_device_ids[] = {
  	{
  		.name = "yeeloong_laptop",
-@@ -430,11 +561,19 @@ static int __init yeeloong_init(void)
+@@ -122,11 +223,14 @@ static int __init yeeloong_init(void)
  		return ret;
  	}
  
-+	ret = yeeloong_vo_init();
-+	if (ret) {
-+		pr_err("Fail to register yeeloong video output driver.\n");
-+		yeeloong_vo_exit();
-+		return ret;
-+	}
++	yeeloong_battery_init();
 +
  	return 0;
  }
  
  static void __exit yeeloong_exit(void)
  {
-+	yeeloong_vo_exit();
- 	yeeloong_hwmon_exit();
- 	yeeloong_battery_exit();
++	yeeloong_battery_exit();
  	yeeloong_backlight_exit();
+ 	platform_driver_unregister(&platform_driver);
+ 
+@@ -136,6 +240,6 @@ static void __exit yeeloong_exit(void)
+ module_init(yeeloong_init);
+ module_exit(yeeloong_exit);
+ 
+-MODULE_AUTHOR("Wu Zhangjin <wuzj@lemote.com>");
++MODULE_AUTHOR("Wu Zhangjin <wuzj@lemote.com>; Liu Junliang <liujl@lemote.com>");
+ MODULE_DESCRIPTION("YeeLoong laptop driver");
+ MODULE_LICENSE("GPL");
 -- 
 1.6.2.1
+
