@@ -1,61 +1,93 @@
 From: Wu Zhangjin <wuzhangjin@gmail.com>
-Subject: Re: [PATCH v8 8/8] Loongson: YeeLoong: add input/hotkey driver
-Date: Tue, 08 Dec 2009 15:34:18 +0800
-Message-ID: <1260257658.3315.74.camel@falcon.domain.org>
+Subject: Re: [PATCH v8 1/8] MIPS: add subdirectory for platform extension
+ drivers
+Date: Tue, 08 Dec 2009 15:37:45 +0800
+Message-ID: <1260257865.3315.79.camel@falcon.domain.org>
 References: <cover.1260082252.git.wuzhangjin@gmail.com>
-         <b164d5bb79963a57621d024c22e5664de0ff8662.1260082252.git.wuzhangjin@gmail.com>
-         <20091207064857.GG21451@core.coreip.homeip.net>
-         <1260255131.3315.25.camel@falcon.domain.org>
-         <20091208072347.GH11147@core.coreip.homeip.net>
+	 <d6bb11d33fe01abd6de945117ce647af73841f00.1260082252.git.wuzhangjin@gmail.com>
 Reply-To: wuzhangjin@gmail.com
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mips-bounce@linux-mips.org>
+Return-path: <linux-laptop-owner@vger.kernel.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=gamma;
         h=domainkey-signature:received:received:subject:from:reply-to:to:cc
          :in-reply-to:references:content-type:organization:date:message-id
          :mime-version:x-mailer:content-transfer-encoding;
-        bh=ZeryFTn0xkSrOBJezzPmXau2gbPboPYJS9ddbaxqXfs=;
-        b=pvSibhdrl/0JVUSO9iK+dEEaK9pfdy1X5n/0dGhROiNOcIKYte4zCCizoi2+WTjt9a
-         sPjUpvAz08kQ4TSZmRw53vW+M09prJ8rmvE5m0VeD3ktqWbDHXA6hn4zzHY/DPSJXuTT
-         KeKGqRTi4NjiMBNrlOvtNNNeIQkaYdY1zbBMs=
-In-Reply-To: <20091208072347.GH11147@core.coreip.homeip.net>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-Id: <linux-laptop.vger.kernel.org>
+        bh=zTQnfOkxKLvLw/fgTG23uX1WjT7TuwX2YfPtEY/ywsE=;
+        b=Sqz0fcMSFFcDIgfozQy/+UtcbOuhzryIjN9aWPwmWof0pbnEO0PCWvm2KSJiFg6tYU
+         MciRmTwigL+Y3TARDjPEtKvy0XhRN1rok0ot3dU6fQCOCn7bwMtbAK5rKBi0PzbuWYvK
+         KK2kfPX3rIWowxIqEk64dNkbAWTZXunD80occ=
+In-Reply-To: <d6bb11d33fe01abd6de945117ce647af73841f00.1260082252.git.wuzhangjin@gmail.com>
+Sender: linux-laptop-owner@vger.kernel.org
+List-ID: <linux-laptop.vger.kernel.org>
 Content-Type: text/plain; charset="us-ascii"
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>, akpm@linux-foundation.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, "Rafael J . Wysocki" <rjw@sisk.pl>, zhangfx@lemote.com, linux-laptop@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>, Pavel Machek <pavel@ucw.cz>
+To: Ralf Baechle <ralf@linux-mips.org>
+Cc: akpm@linux-foundation.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "Rafael J . Wysocki" <rjw@sisk.pl>, zhangfx@lemote.com, linux-laptop@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>, Pavel Machek <pavel@ucw.cz>
 
-On Mon, 2009-12-07 at 23:23 -0800, Dmitry Torokhov wrote:
-> On Tue, Dec 08, 2009 at 02:52:11PM +0800, Wu Zhangjin wrote:
-> > Hi, Dmitry Torokhov
-> > 
-> > I plan to send another revision of this patchset, Can I get your
-> > Acked-by: for this patch?
-> > 
-> 
-> Yes, as far as the input code goes:
-> 
-> 	Acked-by: Dmitry Torokhov <dtor@mail.ru>
+Hi, Ralf
 
-Added, thanks!
-
-To Ralf:
-
-This patch is based on the sparse keymap library in:
-
-git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input next
-
-from Dmitry Torokhov. that sparse keymap support is also queued for
-2.6.33.
-
-Before that support going into mainline, this patch can not be compiled,
-so, Ralf, this patch is not appliable before Dmitry's next branch is
-pulled by linus.
+I plan to send a new revision of this patchset, Can I get your Acked-by:
+for patch 1-3/8?
 
 Thanks!
 	Wu Zhangjin
+
+On Sun, 2009-12-06 at 15:01 +0800, Wu Zhangjin wrote:
+> From: Wu Zhangjin <wuzhangjin@gmail.com>
+> 
+> It is really hard to split the platform specific subdrivers into
+> different subsystems, which will generate lots of duplicated source
+> code, break the whole support into several pieces and also will make the
+> users be difficult to choose the suitable subdrivers in different
+> places.
+> 
+> So, I did like the forks have done under drivers/platform/x86, created
+> the drivers/platform/mips/ for putting the future MIPS netbook/laptop/pc
+> extension drivers in.
+> 
+> Signed-off-by: Wu Zhangjin <wuzhangjin@gmail.com>
+> ---
+>  drivers/platform/Kconfig      |    4 ++++
+>  drivers/platform/mips/Kconfig |   18 ++++++++++++++++++
+>  2 files changed, 22 insertions(+), 0 deletions(-)
+>  create mode 100644 drivers/platform/mips/Kconfig
+> 
+> diff --git a/drivers/platform/Kconfig b/drivers/platform/Kconfig
+> index 9652c3f..2319c0b 100644
+> --- a/drivers/platform/Kconfig
+> +++ b/drivers/platform/Kconfig
+> @@ -3,3 +3,7 @@
+>  if X86
+>  source "drivers/platform/x86/Kconfig"
+>  endif
+> +
+> +if MIPS
+> +source "drivers/platform/mips/Kconfig"
+> +endif
+> diff --git a/drivers/platform/mips/Kconfig b/drivers/platform/mips/Kconfig
+> new file mode 100644
+> index 0000000..2f77693
+> --- /dev/null
+> +++ b/drivers/platform/mips/Kconfig
+> @@ -0,0 +1,18 @@
+> +#
+> +# MIPS Platform Specific Drivers
+> +#
+> +
+> +menuconfig MIPS_PLATFORM_DEVICES
+> +	bool "MIPS Platform Specific Device Drivers"
+> +	default y
+> +	help
+> +	  Say Y here to get to see options for device drivers of various
+> +	  MIPS platforms, including vendor-specific netbook/laptop/pc extension
+> +	  drivers.  This option alone does not add any kernel code.
+> +
+> +	  If you say N, all options in this submenu will be skipped and disabled.
+> +
+> +if MIPS_PLATFORM_DEVICES
+> +
+> +
+> +endif # MIPS_PLATFORM_DEVICES
 
 
