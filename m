@@ -1,14 +1,10 @@
 From: Wu Zhangjin <wuzhangjin@gmail.com>
-Subject: Re: [PATCH v8 5/8] Loongson: YeeLoong: add hardware monitoring
- driver
-Date: Tue, 08 Dec 2009 14:50:56 +0800
-Message-ID: <1260255056.3315.23.camel@falcon.domain.org>
+Subject: Re: [PATCH v8 8/8] Loongson: YeeLoong: add input/hotkey driver
+Date: Tue, 08 Dec 2009 14:52:11 +0800
+Message-ID: <1260255131.3315.25.camel@falcon.domain.org>
 References: <cover.1260082252.git.wuzhangjin@gmail.com>
-	 <d8789fa7e97d8a170c4e2516d7ef2d2fbbe42cc6.1260082252.git.wuzhangjin@gmail.com>
-	 <20091206084717.GD2766@ucw.cz> <1260147298.3126.2.camel@falcon.domain.org>
-	 <20091207080446.GB23088@elf.ucw.cz>
-	 <1260178870.9092.34.camel@falcon.domain.org>
-	 <20091207094909.GD23088@elf.ucw.cz>
+	 <b164d5bb79963a57621d024c22e5664de0ff8662.1260082252.git.wuzhangjin@gmail.com>
+	 <20091207064857.GG21451@core.coreip.homeip.net>
 Reply-To: wuzhangjin@gmail.com
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -18,61 +14,59 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         h=domainkey-signature:received:received:subject:from:reply-to:to:cc
          :in-reply-to:references:content-type:organization:date:message-id
          :mime-version:x-mailer:content-transfer-encoding;
-        bh=EtAEBQV8n0GY8JzHypYEVZXP+R2oo7mma7FaJgup1L4=;
-        b=EOAb0iN07i/YeORR6XuxZFy9SAsb2dh6h1Sum9p0ns1ABAo8cPQsgoITS+C/VoodbN
-         ryKrA7JSvVaZg2+ZzeatmfZY88kIBmk2IT7ZWJAoTiANrZlW7f/wWfz8ZTRZX/7HBhnI
-         p14xiBLZXfE7A7zVzOZM4G4RST3dVI9cbFx20=
-In-Reply-To: <20091207094909.GD23088@elf.ucw.cz>
+        bh=4DMXwcnf5DHuVLR0NDW43emnVxj4TE+CnE7lEzomZBo=;
+        b=kuIx6krXo8y3FaouxSmR9NVGSmM1KSL/z12ldLkMlVG0lf56+KoXGADlirYGZ2cW1l
+         VsB/gj1FsTY/L1OGKOaPT9SO5ewOzMDnSGx9QQy2BuwLFEte5tIZ6HiAaKEOvnFtSWED
+         K87U0be3KGeStsyJZUw0kZBO25NYb5G4AMyxs=
+In-Reply-To: <20091207064857.GG21451@core.coreip.homeip.net>
 Sender: linux-laptop-owner@vger.kernel.org
 List-ID: <linux-laptop.vger.kernel.org>
 Content-Type: text/plain; charset="us-ascii"
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Ralf Baechle <ralf@linux-mips.org>, akpm@linux-foundation.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "Rafael J . Wysocki" <rjw@sisk.pl>, zhangfx@lemote.com, linux-laptop@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>, akpm@linux-foundation.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, "Rafael J . Wysocki" <rjw@sisk.pl>, zhangfx@lemote.com, linux-laptop@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>, Pavel Machek <pavel@ucw.cz>
 
-Hi, Pavel Machek
+Hi, Dmitry Torokhov
 
-After fixing the get_battery_current(), can I get your Acked-by: for the
-next revision of this patch?
+I plan to send another revision of this patchset, Can I get your
+Acked-by: for this patch?
 
 Thanks!
 	Wu Zhangjin
 
-On Mon, 2009-12-07 at 10:49 +0100, Pavel Machek wrote:
-> On Mon 2009-12-07 17:41:10, Wu Zhangjin wrote:
-> > On Mon, 2009-12-07 at 09:04 +0100, Pavel Machek wrote:
-> > > > > What is going on here? I thought the value is already in two's
-> > > > > complement... Is the above equivalent of
-> > > > > 
-> > > > > 	      if (value < 0)
-> > > > > 	      	 value = -value; 
-> > > > > 
-> > > > > ? If so, why? If not, can you add a comment?
-> > > > 
-> > > > Right, then, will use this instead:
-> > > > 
-> > > > static int get_battery_current(void)
-> > > > { 
-> > > > 	s16 value;
-> > > > 
-> > > > 	value = (ec_read(REG_BAT_CURRENT_HIGH) << 8) |
-> > > > 		(ec_read(REG_BAT_CURRENT_LOW));
-> > > > 
-> > > > 	return abs(value);
-> > > > }
-> > > 
-> > > That's certainly better. But... why not return signed value? Current
-> > > flowing from the battery is certainly very different from current
-> > > flowing into it...
-> > 
-> > You are totally right ;)
-> > 
-> > Just test it, when flowing from the battery, the value is negative, and
-> > when flowing into the battery, the value is positive, so, no abs()
-> > needed. thanks!
+On Sun, 2009-12-06 at 22:48 -0800, Dmitry Torokhov wrote:
+> Hi Wu,
 > 
-> Make it return -value, then. I believe other code uses >0 values for
-> discharge.
-> 									Pavel
+> On Sun, Dec 06, 2009 at 03:01:48PM +0800, Wu Zhangjin wrote:
+> > +
+> > +#define EC_VER_LEN 64
+> > +
+> > +static int black_screen_handler(int status)
+> > +{
+> > +	char *p, ec_ver[EC_VER_LEN];
+> > +
+> > +	p = strstr(loongson_cmdline, "EC_VER=");
+> > +	if (!p)
+> > +		memset(ec_ver, 0, EC_VER_LEN);
+> > +	else {
+> > +		strncpy(ec_ver, p, EC_VER_LEN);
+> > +		p = strstr(ec_ver, " ");
+> > +		if (p)
+> > +			*p = '\0';
+> > +	}
+> > +
+> 
+> Hmm, why do you copy and parse command lineinstead of using module
+> param and also doing it just once?
+> 
+> > +	/* Seems EC(>=PQ1D26) does this job for us, we can not do it again,
+> > +	 * otherwise, the brightness will not resume to the normal level! */
+> > +	if (strncasecmp(ec_ver, "EC_VER=PQ1D26", 64) < 0)
+> > +		yeeloong_lcd_vo_set(status);
+> > +
+> > +	return status;
+> > +}
+> 
+> Thanks.
 > 
 
 
