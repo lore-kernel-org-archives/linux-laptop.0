@@ -1,8 +1,8 @@
 From: Pavel Machek <pavel@ucw.cz>
 Subject: Re: [PATCH v8 5/8] Loongson: YeeLoong: add hardware monitoring
  driver
-Date: Tue, 8 Dec 2009 08:06:44 +0100
-Message-ID: <20091208070643.GB12264@elf.ucw.cz>
+Date: Tue, 8 Dec 2009 08:09:15 +0100
+Message-ID: <20091208070915.GC12264@elf.ucw.cz>
 References: <cover.1260082252.git.wuzhangjin@gmail.com>
  <d8789fa7e97d8a170c4e2516d7ef2d2fbbe42cc6.1260082252.git.wuzhangjin@gmail.com>
  <20091206084717.GD2766@ucw.cz>
@@ -10,11 +10,11 @@ References: <cover.1260082252.git.wuzhangjin@gmail.com>
  <20091207080446.GB23088@elf.ucw.cz>
  <1260178870.9092.34.camel@falcon.domain.org>
  <20091207094909.GD23088@elf.ucw.cz>
- <1260255056.3315.23.camel@falcon.domain.org>
+ <1260183663.9092.51.camel@falcon.domain.org>
 Mime-Version: 1.0
 Return-path: <linux-laptop-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1260255056.3315.23.camel@falcon.domain.org>
+In-Reply-To: <1260183663.9092.51.camel@falcon.domain.org>
 Sender: linux-laptop-owner@vger.kernel.org
 List-ID: <linux-laptop.vger.kernel.org>
 Content-Type: text/plain; charset="us-ascii"
@@ -22,15 +22,23 @@ Content-Transfer-Encoding: 7bit
 To: Wu Zhangjin <wuzhangjin@gmail.com>
 Cc: Ralf Baechle <ralf@linux-mips.org>, akpm@linux-foundation.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "Rafael J . Wysocki" <rjw@sisk.pl>, zhangfx@lemote.com, linux-laptop@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>
 
-On Tue 2009-12-08 14:50:56, Wu Zhangjin wrote:
-> Hi, Pavel Machek
+> > > > That's certainly better. But... why not return signed value? Current
+> > > > flowing from the battery is certainly very different from current
+> > > > flowing into it...
+> > > 
+> > > You are totally right ;)
+> > > 
+> > > Just test it, when flowing from the battery, the value is negative, and
+> > > when flowing into the battery, the value is positive, so, no abs()
+> > > needed. thanks!
+> > 
+> > Make it return -value, then. I believe other code uses >0 values for
+> > discharge.
 > 
-> After fixing the get_battery_current(), can I get your Acked-by: for the
-> next revision of this patch?
+> Done, but any document/standard about it?
 
-Yes... you can add my ack for 4-6/8.
-								Pavel
-
+Not sure, feel free to patch the documentation, too :-).
+									Pavel
 -- 
 (english) http://www.livejournal.com/~pavelmachek
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
