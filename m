@@ -1,553 +1,370 @@
 From: Wu Zhangjin <wuzhangjin@gmail.com>
-Subject: [PATCH v10 8/8] Loongson: YeeLoong: add input/hotkey driver
-Date: Fri, 11 Dec 2009 11:32:16 +0800
-Message-ID: <ff3ecb65fc73cd8b813a009605b58c0d3fb976c7.1260502163.git.wuzhangjin@gmail.com>
+Subject: [PATCH v10 5/8] Loongson: YeeLoong: add hardware monitoring driver
+Date: Tue, 15 Dec 2009 17:24:42 +0800
+Message-ID: <d74dbb0ff251bc26556e27c21be3ce7c752776be.1260868626.git.wuzhangjin@gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-laptop-owner@vger.kernel.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=gamma;
         h=domainkey-signature:received:received:from:to:cc:subject:date
          :message-id:x-mailer;
-        bh=H3EF29TeL3ORd9YdU6SvdOuxzCOCcfjcla6tm7/ZL+M=;
-        b=wQivLh8LrtK97alnuHYMG1kY4x32loHL36ykdlNaNbcflB9a/N2A2szv1ikFyw9lfd
-         CtXAIWN4qgCrYhSRGBtkM69ykwymq4H2cTc/0aJg+T6Tn+C0ESzj8C4un9lxxbLz78jk
-         ann0H09APfn34Dej9LZu5/f3iRAT1gVw2X/Zg=
+        bh=hj61Y9B8S5IAiCi2Y4JgjBxxllRhFS/vECCobFWiW6k=;
+        b=iUCclKbeQ+NehAQCRU91aip4ETTbdXKURWVKJCpnmaX/mqq6cVyBdxPvsm9e1eycp/
+         MBI1dfAqQT6vw8TKwY19oin0Hc6GwOqeJn8o6dxhylCrMUcj8snkhuYdxcuIfHAxte8F
+         NUMN03T4LyqruDd/0tfuQ+vUvEILX86E/hG4A=
 Sender: linux-laptop-owner@vger.kernel.org
 List-ID: <linux-laptop.vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Ralf Baechle <ralf@linux-mips.org>
-Cc: linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "Rafael J . Wysocki" <rjw@sisk.pl>, zhangfx@lemote.com, linux-laptop@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>, Pavel Machek <pavel@ucw.cz>, akpm@linux-foundation.org, Wu Zhangjin <wuzhangjin@gmail.com>
+Content-Type: TEXT/PLAIN; charset="windows-1252"
+To: Ralf Baechle <ralf@linux-mips.org>, akpm@linux-foundation.org
+Cc: linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "Rafael J . Wysocki" <rjw@sisk.pl>, zhangfx@lemote.com, linux-laptop@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>, Pavel Machek <pavel@ucw.cz>, Wu Zhangjin <wuzhangjin@gmail.com>
 
-From: Wu Zhangjin <wuzhangjin@gmail.com>
+=46rom: Wu Zhangjin <wuzhangjin@gmail.com>
 
-Changes from v9 8/8:
+This can be applied between v9 4/8 and v9 6/8.
 
-  o Remove the wifi related actions
+Changes from v9 5/8:
 
-  With the standard rfkill support(/sys/class/rfkill/) in the wifi
-  driver, there is no need to handle the wifi related actions except
-  reporting the KEY_WLAN event to user-space. the related applications
-  will response this event and do corresponding actions(access the
-  rfkill interfaces).
+	o ensure the fan controlling interface is compatible with the
+	one described in Documentation/hwmon/sysfs-interface
 
-------------------
+	o add the max temperature limit of cpu to hwmon subdriver
+	60 =E2=84=83  is the max temp limit to ensure the processor work norma=
+lly.
 
-This patch adds Hotkey Driver, which will do related actions for The
-hotkey event(/sys/class/input) and report the corresponding input keys
-to the user-space applications.
+----------------
 
-(This patch is based on the sparse keymap library in:
+This patch adds hardware monitoring driver, it provides standard
+interface(/sys/class/hwmon/) for lm-sensors/sensors-applet to monitor
+the temperatures of CPU and battery, the PWM of fan, the current,
+voltage of battery.
 
-git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input next
+Please refer to Documentation/hwmon/userspace-tools and
+Documentation/hwmon/sysfs-interface to get more information about the
+hwmon.
 
-of Dmitry Torokhov. that sparse keymap support is also queued for
-2.6.33. Before the above branch is pulled by linus, this patch is not
-appliable.)
-
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Acked-by: Pavel Machek <pavel@ucw.cz>
 Signed-off-by: Wu Zhangjin <wuzhangjin@gmail.com>
 ---
- arch/mips/include/asm/mach-loongson/loongson.h |    6 +
- arch/mips/loongson/common/cmdline.c            |    8 +
- drivers/platform/mips/Kconfig                  |    2 +
- drivers/platform/mips/yeeloong_laptop.c        |  402 ++++++++++++++++++++++++
- 4 files changed, 418 insertions(+), 0 deletions(-)
+ drivers/platform/mips/Kconfig           |    1 +
+ drivers/platform/mips/yeeloong_laptop.c |  252 +++++++++++++++++++++++=
++++++++-
+ 2 files changed, 249 insertions(+), 4 deletions(-)
 
-diff --git a/arch/mips/include/asm/mach-loongson/loongson.h b/arch/mips/include/asm/mach-loongson/loongson.h
-index ee8bc83..13e208e 100644
---- a/arch/mips/include/asm/mach-loongson/loongson.h
-+++ b/arch/mips/include/asm/mach-loongson/loongson.h
-@@ -43,6 +43,12 @@ static inline void prom_init_uart_base(void)
- #endif
- }
- 
-+/*
-+ * Copy kernel command line from arcs_cmdline
-+ */
-+#include <asm/setup.h>
-+extern char loongson_cmdline[COMMAND_LINE_SIZE];
-+
- /* irq operation functions */
- extern void bonito_irqdispatch(void);
- extern void __init bonito_irq_init(void);
-diff --git a/arch/mips/loongson/common/cmdline.c b/arch/mips/loongson/common/cmdline.c
-index 7ad47f2..617faee 100644
---- a/arch/mips/loongson/common/cmdline.c
-+++ b/arch/mips/loongson/common/cmdline.c
-@@ -17,6 +17,7 @@
-  * Free Software Foundation;  either version 2 of the  License, or (at your
-  * option) any later version.
-  */
-+#include <linux/module.h>
- #include <asm/bootinfo.h>
- 
- #include <loongson.h>
-@@ -25,6 +26,10 @@ int prom_argc;
- /* pmon passes arguments in 32bit pointers */
- int *_prom_argv;
- 
-+/* the kernel command line copied from arcs_cmdline */
-+char loongson_cmdline[COMMAND_LINE_SIZE];
-+EXPORT_SYMBOL(loongson_cmdline);
-+
- void __init prom_init_cmdline(void)
- {
- 	int i;
-@@ -51,4 +56,7 @@ void __init prom_init_cmdline(void)
- 		strcat(arcs_cmdline, " root=/dev/hda1");
- 
- 	prom_init_machtype();
-+
-+	/* copy arcs_cmdline into loongson_cmdline */
-+	strncpy(loongson_cmdline, arcs_cmdline, COMMAND_LINE_SIZE);
- }
-diff --git a/drivers/platform/mips/Kconfig b/drivers/platform/mips/Kconfig
-index e2dbe28..8262dff 100644
+diff --git a/drivers/platform/mips/Kconfig b/drivers/platform/mips/Kcon=
+fig
+index 965933b..352594c 100644
 --- a/drivers/platform/mips/Kconfig
 +++ b/drivers/platform/mips/Kconfig
-@@ -22,6 +22,8 @@ config LEMOTE_YEELOONG2F
+@@ -20,6 +20,7 @@ config LEMOTE_YEELOONG2F
+ 	select BACKLIGHT_CLASS_DEVICE
+ 	select SYS_SUPPORTS_APM_EMULATION
  	select APM_EMULATION
- 	select HWMON
- 	select VIDEO_OUTPUT_CONTROL
-+	select INPUT_SPARSEKMAP
-+	depends on INPUT
++	select HWMON
  	help
- 	  YeeLoong netbook is a mini laptop made by Lemote, which is basically
+ 	  YeeLoong netbook is a mini laptop made by Lemote, which is basicall=
+y
  	  compatible to FuLoong2F mini PC, but it has an extra Embedded
-diff --git a/drivers/platform/mips/yeeloong_laptop.c b/drivers/platform/mips/yeeloong_laptop.c
-index baf3e81..ba34344 100644
+diff --git a/drivers/platform/mips/yeeloong_laptop.c b/drivers/platform=
+/mips/yeeloong_laptop.c
+index b265674..e09ddac 100644
 --- a/drivers/platform/mips/yeeloong_laptop.c
 +++ b/drivers/platform/mips/yeeloong_laptop.c
-@@ -17,7 +17,14 @@
- #include <linux/hwmon.h>	/* for hwmon subdriver */
- #include <linux/hwmon-sysfs.h>
- #include <linux/video_output.h>	/* for video output subdriver */
-+#include <linux/input.h>	/* for hotkey subdriver */
-+#include <linux/input/sparse-keymap.h>
-+#include <linux/interrupt.h>
-+#include <linux/delay.h>
- 
-+#include <cs5536/cs5536.h>
-+
-+#include <loongson.h>		/* for loongson_cmdline */
+@@ -14,6 +14,8 @@
+ #include <linux/backlight.h>	/* for backlight subdriver */
+ #include <linux/fb.h>
+ #include <linux/apm-emulation.h>/* for battery subdriver */
++#include <linux/hwmon.h>	/* for hwmon subdriver */
++#include <linux/hwmon-sysfs.h>
+=20
  #include <ec_kb3310b.h>
- 
- /* backlight subdriver */
-@@ -512,6 +519,393 @@ static void yeeloong_vo_exit(void)
- 	}
+=20
+@@ -29,10 +31,7 @@ static int yeeloong_set_brightness(struct backlight_=
+device *bd)
+ 		 bd->props.power =3D=3D FB_BLANK_UNBLANK) ?
+ 	    bd->props.brightness : 0;
+=20
+-	if (level > MAX_BRIGHTNESS)
+-		level =3D MAX_BRIGHTNESS;
+-	else if (level < 0)
+-		level =3D 0;
++	level =3D SENSORS_LIMIT(level, 0, MAX_BRIGHTNESS);
+=20
+ 	/* Avoid to modify the brightness when EC is tuning it */
+ 	if (old_level !=3D level) {
+@@ -186,6 +185,243 @@ static void yeeloong_battery_exit(void)
+ 		apm_get_power_status =3D NULL;
  }
- 
-+/* hotkey subdriver */
+=20
++/* hwmon subdriver */
 +
-+static struct input_dev *yeeloong_hotkey_dev;
++#define MIN_FAN_SPEED 0
++#define MAX_FAN_SPEED 3
 +
-+static const struct key_entry yeeloong_keymap[] = {
-+	{KE_SW, EVENT_LID, { SW_LID } },
-+	{KE_KEY, EVENT_CAMERA, { KEY_CAMERA } }, /* Fn + ESC */
-+	{KE_KEY, EVENT_SLEEP, { KEY_SLEEP } }, /* Fn + F1 */
-+	{KE_KEY, EVENT_DISPLAY_TOGGLE, { KEY_SWITCHVIDEOMODE } }, /* Fn + F3 */
-+	{KE_KEY, EVENT_AUDIO_MUTE, { KEY_MUTE } }, /* Fn + F4 */
-+	{KE_KEY, EVENT_WLAN, { KEY_WLAN } }, /* Fn + F5 */
-+	{KE_KEY, EVENT_DISPLAY_BRIGHTNESS, { KEY_BRIGHTNESSUP } }, /* Fn + up */
-+	{KE_KEY, EVENT_DISPLAY_BRIGHTNESS, { KEY_BRIGHTNESSDOWN } }, /* Fn + down */
-+	{KE_KEY, EVENT_AUDIO_VOLUME, { KEY_VOLUMEUP } }, /* Fn + right */
-+	{KE_KEY, EVENT_AUDIO_VOLUME, { KEY_VOLUMEDOWN } }, /* Fn + left */
-+	{KE_END, 0}
-+};
-+
-+static struct key_entry *get_event_key_entry(int event, int status)
++static int get_fan_pwm_enable(void)
 +{
-+	struct key_entry *ke;
-+	static int old_brightness_status = -1;
-+	static int old_volume_status = -1;
++	int level, mode;
 +
-+	ke = sparse_keymap_entry_from_scancode(yeeloong_hotkey_dev, event);
-+	if (!ke)
-+		return NULL;
++	level =3D ec_read(REG_FAN_SPEED_LEVEL);
++	mode =3D ec_read(REG_FAN_AUTO_MAN_SWITCH);
 +
-+	switch (event) {
-+	case EVENT_DISPLAY_BRIGHTNESS:
-+		/* current status > old one, means up */
-+		if ((status < old_brightness_status) || (0 == status))
-+			ke++;
-+		old_brightness_status = status;
++	if (level =3D=3D MAX_FAN_SPEED && mode =3D=3D BIT_FAN_MANUAL)
++		mode =3D 0;
++	else if (mode =3D=3D BIT_FAN_MANUAL)
++		mode =3D 1;
++	else
++		mode =3D 2;
++
++	return mode;
++}
++
++static void set_fan_pwm_enable(int mode)
++{
++	switch (mode) {
++	case 0:
++		/* fullspeed */
++		ec_write(REG_FAN_AUTO_MAN_SWITCH, BIT_FAN_MANUAL);
++		ec_write(REG_FAN_SPEED_LEVEL, MAX_FAN_SPEED);
 +		break;
-+	case EVENT_AUDIO_VOLUME:
-+		if ((status < old_volume_status) || (0 == status))
-+			ke++;
-+		old_volume_status = status;
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return ke;
-+}
-+
-+static int report_lid_switch(int status)
-+{
-+	input_report_switch(yeeloong_hotkey_dev, SW_LID, !status);
-+	input_sync(yeeloong_hotkey_dev);
-+
-+	return status;
-+}
-+
-+static int crt_detect_handler(int status)
-+{
-+	if (status) {
-+		yeeloong_crt_vo_set(BIT_CRT_DETECT_PLUG);
-+		yeeloong_lcd_vo_set(BIT_DISPLAY_LCD_OFF);
-+	} else {
-+		yeeloong_lcd_vo_set(BIT_DISPLAY_LCD_ON);
-+		yeeloong_crt_vo_set(BIT_CRT_DETECT_UNPLUG);
-+	}
-+	return status;
-+}
-+
-+#define EC_VER_LEN 64
-+
-+static int black_screen_handler(int status)
-+{
-+	char *p, ec_ver[EC_VER_LEN];
-+
-+	p = strstr(loongson_cmdline, "EC_VER=");
-+	if (!p)
-+		memset(ec_ver, 0, EC_VER_LEN);
-+	else {
-+		strncpy(ec_ver, p, EC_VER_LEN);
-+		p = strstr(ec_ver, " ");
-+		if (p)
-+			*p = '\0';
-+	}
-+
-+	/* Seems EC(>=PQ1D26) does this job for us, we can not do it again,
-+	 * otherwise, the brightness will not resume to the normal level! */
-+	if (strncasecmp(ec_ver, "EC_VER=PQ1D26", 64) < 0)
-+		yeeloong_lcd_vo_set(status);
-+
-+	return status;
-+}
-+
-+static int display_toggle_handler(int status)
-+{
-+	static int video_output_status;
-+
-+	/* Only enable switch video output button
-+	 * when CRT is connected */
-+	if (ec_read(REG_CRT_DETECT) == BIT_CRT_DETECT_UNPLUG)
-+		return 0;
-+	/* 0. no CRT connected: LCD on, CRT off
-+	 * 1. BOTH on
-+	 * 2. LCD off, CRT on
-+	 * 3. BOTH off
-+	 * 4. LCD on, CRT off
-+	 */
-+	video_output_status++;
-+	if (video_output_status > 4)
-+		video_output_status = 1;
-+
-+	switch (video_output_status) {
 +	case 1:
-+		yeeloong_lcd_vo_set(BIT_DISPLAY_LCD_ON);
-+		yeeloong_crt_vo_set(BIT_CRT_DETECT_PLUG);
++		ec_write(REG_FAN_AUTO_MAN_SWITCH, BIT_FAN_MANUAL);
 +		break;
 +	case 2:
-+		yeeloong_lcd_vo_set(BIT_DISPLAY_LCD_OFF);
-+		yeeloong_crt_vo_set(BIT_CRT_DETECT_PLUG);
-+		break;
-+	case 3:
-+		yeeloong_lcd_vo_set(BIT_DISPLAY_LCD_OFF);
-+		yeeloong_crt_vo_set(BIT_CRT_DETECT_UNPLUG);
-+		break;
-+	case 4:
-+		yeeloong_lcd_vo_set(BIT_DISPLAY_LCD_ON);
-+		yeeloong_crt_vo_set(BIT_CRT_DETECT_UNPLUG);
++		ec_write(REG_FAN_AUTO_MAN_SWITCH, BIT_FAN_AUTO);
 +		break;
 +	default:
-+		/* Ensure LCD is on */
-+		yeeloong_lcd_vo_set(BIT_DISPLAY_LCD_ON);
 +		break;
 +	}
-+	return video_output_status;
 +}
 +
-+static int camera_handler(int status)
++static int get_fan_pwm(void)
++{
++	return ec_read(REG_FAN_SPEED_LEVEL);
++}
++
++static void set_fan_pwm(int value)
++{
++	int mode;
++
++	mode =3D ec_read(REG_FAN_AUTO_MAN_SWITCH);
++	if (mode !=3D BIT_FAN_MANUAL)
++		return;
++
++	value =3D SENSORS_LIMIT(value, 0, 3);
++
++	/* We must ensure the fan is on */
++	if (value > 0)
++		ec_write(REG_FAN_CONTROL, BIT_FAN_CONTROL_ON);
++
++	ec_write(REG_FAN_SPEED_LEVEL, value);
++}
++
++static int get_fan_rpm(void)
 +{
 +	int value;
 +
-+	value = ec_read(REG_CAMERA_CONTROL);
-+	ec_write(REG_CAMERA_CONTROL, value | (1 << 1));
++	value =3D FAN_SPEED_DIVIDER /
++	    (((ec_read(REG_FAN_SPEED_HIGH) & 0x0f) << 8) |
++	     ec_read(REG_FAN_SPEED_LOW));
 +
-+	return status;
++	return value;
 +}
 +
-+static int usb2_handler(int status)
++static int get_cpu_temp(void)
 +{
-+	pr_emerg("USB2 Over Current occurred\n");
++	s8 value;
 +
-+	return status;
++	value =3D ec_read(REG_TEMPERATURE_VALUE);
++
++	return value * 1000;
 +}
 +
-+static int usb0_handler(int status)
++static int get_cpu_temp_max(void)
 +{
-+	pr_emerg("USB0 Over Current occurred\n");
-+
-+	return status;
++	return 60 * 1000;
 +}
 +
-+static void do_event_action(int event)
++static int get_battery_temp(void)
 +{
-+	sci_handler handler;
-+	int reg, status;
-+	struct key_entry *ke;
++	int value;
 +
-+	reg = 0;
-+	handler = NULL;
++	value =3D (ec_read(REG_BAT_TEMPERATURE_HIGH) << 8) |
++		(ec_read(REG_BAT_TEMPERATURE_LOW));
 +
-+	switch (event) {
-+	case EVENT_LID:
-+		reg = REG_LID_DETECT;
-+		break;
-+	case EVENT_DISPLAY_TOGGLE:
-+		handler = display_toggle_handler;
-+		break;
-+	case EVENT_CRT_DETECT:
-+		reg = REG_CRT_DETECT;
-+		handler = crt_detect_handler;
-+		break;
-+	case EVENT_CAMERA:
-+		reg = REG_CAMERA_STATUS;
-+		handler = camera_handler;
-+		break;
-+	case EVENT_USB_OC2:
-+		reg = REG_USB2_FLAG;
-+		handler = usb2_handler;
-+		break;
-+	case EVENT_USB_OC0:
-+		reg = REG_USB0_FLAG;
-+		handler = usb0_handler;
-+		break;
-+	case EVENT_BLACK_SCREEN:
-+		reg = REG_DISPLAY_LCD;
-+		handler = black_screen_handler;
-+		break;
-+	case EVENT_AUDIO_MUTE:
-+		reg = REG_AUDIO_MUTE;
-+		break;
-+	case EVENT_DISPLAY_BRIGHTNESS:
-+		reg = REG_DISPLAY_BRIGHTNESS;
-+		break;
-+	case EVENT_AUDIO_VOLUME:
-+		reg = REG_AUDIO_VOLUME;
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	if (reg != 0)
-+		status = ec_read(reg);
-+
-+	if (handler != NULL)
-+		status = handler(status);
-+
-+	pr_info("%s: event: %d status: %d\n", __func__, event, status);
-+
-+	/* Report current key to user-space */
-+	ke = get_event_key_entry(event, status);
-+	if (ke) {
-+		if (ke->keycode == SW_LID)
-+			report_lid_switch(status);
-+		else
-+			sparse_keymap_report_entry(yeeloong_hotkey_dev, ke, 1,
-+					true);
-+	}
++	return value * 1000;
 +}
 +
-+/*
-+ * SCI(system control interrupt) main interrupt routine
-+ *
-+ * We will do the query and get event number together so the interrupt routine
-+ * should be longer than 120us now at least 3ms elpase for it.
-+ */
-+static irqreturn_t sci_irq_handler(int irq, void *dev_id)
++static int get_battery_temp_alarm(void)
 +{
-+	int ret, event;
++	int status;
 +
-+	if (SCI_IRQ_NUM != irq)
-+		return IRQ_NONE;
++	status =3D (ec_read(REG_BAT_CHARGE_STATUS) &
++			BIT_BAT_CHARGE_STATUS_OVERTEMP);
 +
-+	/* Query the event number */
-+	ret = ec_query_event_num();
-+	if (ret < 0)
-+		return IRQ_NONE;
-+
-+	event = ec_get_event_num();
-+	if (event < EVENT_START || event > EVENT_END)
-+		return IRQ_NONE;
-+
-+	/* Execute corresponding actions */
-+	do_event_action(event);
-+
-+	return IRQ_HANDLED;
++	return !!status;
 +}
 +
-+/*
-+ * Config and init some msr and gpio register properly.
-+ */
-+static int sci_irq_init(void)
++static int get_battery_current(void)
 +{
-+	u32 hi, lo;
-+	u32 gpio_base;
-+	unsigned long flags;
++	s16 value;
++
++	value =3D (ec_read(REG_BAT_CURRENT_HIGH) << 8) |
++		(ec_read(REG_BAT_CURRENT_LOW));
++
++	return -value;
++}
++
++static int get_battery_voltage(void)
++{
++	int value;
++
++	value =3D (ec_read(REG_BAT_VOLTAGE_HIGH) << 8) |
++		(ec_read(REG_BAT_VOLTAGE_LOW));
++
++	return value;
++}
++
++static ssize_t store_sys_hwmon(void (*set) (int), const char *buf, siz=
+e_t count)
++{
 +	int ret;
++	unsigned long value;
 +
-+	/* Get gpio base */
-+	_rdmsr(DIVIL_MSR_REG(DIVIL_LBAR_GPIO), &hi, &lo);
-+	gpio_base = lo & 0xff00;
++	if (!count)
++		return 0;
 +
-+	/* Filter the former kb3310 interrupt for security */
-+	ret = ec_query_event_num();
++	ret =3D strict_strtoul(buf, 10, &value);
 +	if (ret)
 +		return ret;
 +
-+	/* For filtering next number interrupt */
-+	udelay(10000);
++	set(value);
 +
-+	/* Set gpio native registers and msrs for GPIO27 SCI EVENT PIN
-+	 * gpio :
-+	 *      input, pull-up, no-invert, event-count and value 0,
-+	 *      no-filter, no edge mode
-+	 *      gpio27 map to Virtual gpio0
-+	 * msr :
-+	 *      no primary and lpc
-+	 *      Unrestricted Z input to IG10 from Virtual gpio 0.
-+	 */
-+	local_irq_save(flags);
-+	_rdmsr(0x80000024, &hi, &lo);
-+	lo &= ~(1 << 10);
-+	_wrmsr(0x80000024, hi, lo);
-+	_rdmsr(0x80000025, &hi, &lo);
-+	lo &= ~(1 << 10);
-+	_wrmsr(0x80000025, hi, lo);
-+	_rdmsr(0x80000023, &hi, &lo);
-+	lo |= (0x0a << 0);
-+	_wrmsr(0x80000023, hi, lo);
-+	local_irq_restore(flags);
-+
-+	/* Set gpio27 as sci interrupt
-+	 *
-+	 * input, pull-up, no-fliter, no-negedge, invert
-+	 * the sci event is just about 120us
-+	 */
-+	asm(".set noreorder\n");
-+	/*  input enable */
-+	outl(0x00000800, (gpio_base | 0xA0));
-+	/*  revert the input */
-+	outl(0x00000800, (gpio_base | 0xA4));
-+	/*  event-int enable */
-+	outl(0x00000800, (gpio_base | 0xB8));
-+	asm(".set reorder\n");
-+
-+	return 0;
++	return count;
 +}
 +
-+static struct irqaction sci_irqaction = {
-+	.handler = sci_irq_handler,
-+	.name = "sci",
-+	.flags = IRQF_SHARED,
++static ssize_t show_sys_hwmon(int (*get) (void), char *buf)
++{
++	return sprintf(buf, "%d\n", get());
++}
++
++#define CREATE_SENSOR_ATTR(_name, _mode, _set, _get)		\
++	static ssize_t show_##_name(struct device *dev,			\
++				    struct device_attribute *attr,	\
++				    char *buf)				\
++	{								\
++		return show_sys_hwmon(_set, buf);			\
++	}								\
++	static ssize_t store_##_name(struct device *dev,		\
++				     struct device_attribute *attr,	\
++				     const char *buf, size_t count)	\
++	{								\
++		return store_sys_hwmon(_get, buf, count);		\
++	}								\
++	static SENSOR_DEVICE_ATTR(_name, _mode, show_##_name, store_##_name, =
+0);
++
++CREATE_SENSOR_ATTR(fan1_input, S_IRUGO, get_fan_rpm, NULL);
++CREATE_SENSOR_ATTR(pwm1, S_IRUGO | S_IWUSR, get_fan_pwm, set_fan_pwm);
++CREATE_SENSOR_ATTR(pwm1_enable, S_IRUGO | S_IWUSR, get_fan_pwm_enable,
++		set_fan_pwm_enable);
++CREATE_SENSOR_ATTR(temp1_input, S_IRUGO, get_cpu_temp, NULL);
++CREATE_SENSOR_ATTR(temp1_max, S_IRUGO, get_cpu_temp_max, NULL);
++CREATE_SENSOR_ATTR(temp2_input, S_IRUGO, get_battery_temp, NULL);
++CREATE_SENSOR_ATTR(temp2_max_alarm, S_IRUGO, get_battery_temp_alarm, N=
+ULL);
++CREATE_SENSOR_ATTR(curr1_input, S_IRUGO, get_battery_current, NULL);
++CREATE_SENSOR_ATTR(in1_input, S_IRUGO, get_battery_voltage, NULL);
++
++static ssize_t
++show_name(struct device *dev, struct device_attribute *attr, char *buf=
+)
++{
++	return sprintf(buf, "yeeloong\n");
++}
++
++static SENSOR_DEVICE_ATTR(name, S_IRUGO, show_name, NULL, 0);
++
++static struct attribute *hwmon_attributes[] =3D {
++	&sensor_dev_attr_pwm1.dev_attr.attr,
++	&sensor_dev_attr_pwm1_enable.dev_attr.attr,
++	&sensor_dev_attr_fan1_input.dev_attr.attr,
++	&sensor_dev_attr_temp1_input.dev_attr.attr,
++	&sensor_dev_attr_temp1_max.dev_attr.attr,
++	&sensor_dev_attr_temp2_input.dev_attr.attr,
++	&sensor_dev_attr_temp2_max_alarm.dev_attr.attr,
++	&sensor_dev_attr_curr1_input.dev_attr.attr,
++	&sensor_dev_attr_in1_input.dev_attr.attr,
++	&sensor_dev_attr_name.dev_attr.attr,
++	NULL
 +};
 +
-+static int yeeloong_hotkey_init(void)
++static struct attribute_group hwmon_attribute_group =3D {
++	.attrs =3D hwmon_attributes
++};
++
++static struct device *yeeloong_hwmon_dev;
++
++static int yeeloong_hwmon_init(void)
 +{
 +	int ret;
 +
-+	ret = sci_irq_init();
-+	if (ret)
-+		return -EFAULT;
-+
-+	ret = setup_irq(SCI_IRQ_NUM, &sci_irqaction);
-+	if (ret)
-+		return -EFAULT;
-+
-+	yeeloong_hotkey_dev = input_allocate_device();
-+
-+	if (!yeeloong_hotkey_dev) {
-+		remove_irq(SCI_IRQ_NUM, &sci_irqaction);
-+		return -ENOMEM;
++	yeeloong_hwmon_dev =3D hwmon_device_register(NULL);
++	if (IS_ERR(yeeloong_hwmon_dev)) {
++		pr_err("Fail to register yeeloong hwmon device\n");
++		yeeloong_hwmon_dev =3D NULL;
++		return PTR_ERR(yeeloong_hwmon_dev);
 +	}
-+
-+	yeeloong_hotkey_dev->name = "HotKeys";
-+	yeeloong_hotkey_dev->phys = "button/input0";
-+	yeeloong_hotkey_dev->id.bustype = BUS_HOST;
-+	yeeloong_hotkey_dev->dev.parent = NULL;
-+
-+	ret = sparse_keymap_setup(yeeloong_hotkey_dev, yeeloong_keymap, NULL);
++	ret =3D sysfs_create_group(&yeeloong_hwmon_dev->kobj,
++				 &hwmon_attribute_group);
 +	if (ret) {
-+		pr_err("Fail to setup input device keymap\n");
-+		input_free_device(yeeloong_hotkey_dev);
++		hwmon_device_unregister(yeeloong_hwmon_dev);
++		yeeloong_hwmon_dev =3D NULL;
 +		return ret;
 +	}
-+
-+	ret = input_register_device(yeeloong_hotkey_dev);
-+	if (ret) {
-+		sparse_keymap_free(yeeloong_hotkey_dev);
-+		input_free_device(yeeloong_hotkey_dev);
-+		return ret;
-+	}
-+
-+	/* Update the current status of LID */
-+	report_lid_switch(BIT_LID_DETECT_ON);
-+
-+#ifdef CONFIG_LOONGSON_SUSPEND
-+	/* Install the real yeeloong_report_lid_status for pm.c */
-+	yeeloong_report_lid_status = report_lid_switch;
-+#endif
++	/* ensure fan is set to auto mode */
++	set_fan_pwm_enable(BIT_FAN_AUTO);
 +
 +	return 0;
 +}
 +
-+static void yeeloong_hotkey_exit(void)
++static void yeeloong_hwmon_exit(void)
 +{
-+	/* Free irq */
-+	remove_irq(SCI_IRQ_NUM, &sci_irqaction);
-+
-+#ifdef CONFIG_LOONGSON_SUSPEND
-+	/* Uninstall yeeloong_report_lid_status for pm.c */
-+	if (yeeloong_report_lid_status == report_lid_switch)
-+		yeeloong_report_lid_status = NULL;
-+#endif
-+
-+	if (yeeloong_hotkey_dev) {
-+		sparse_keymap_free(yeeloong_hotkey_dev);
-+		input_unregister_device(yeeloong_hotkey_dev);
-+		yeeloong_hotkey_dev = NULL;
++	if (yeeloong_hwmon_dev) {
++		sysfs_remove_group(&yeeloong_hwmon_dev->kobj,
++				   &hwmon_attribute_group);
++		hwmon_device_unregister(yeeloong_hwmon_dev);
++		yeeloong_hwmon_dev =3D NULL;
 +	}
 +}
 +
- #ifdef CONFIG_PM
- static void usb_ports_set(int status)
- {
-@@ -601,11 +995,19 @@ static int __init yeeloong_init(void)
- 		return ret;
- 	}
- 
-+	ret = yeeloong_hotkey_init();
+ static struct platform_device_id platform_device_ids[] =3D {
+ 	{
+ 		.name =3D "yeeloong_laptop",
+@@ -225,11 +461,19 @@ static int __init yeeloong_init(void)
+=20
+ 	yeeloong_battery_init();
+=20
++	ret =3D yeeloong_hwmon_init();
 +	if (ret) {
-+		pr_err("Fail to register yeeloong hotkey driver.\n");
-+		yeeloong_hotkey_exit();
++		pr_err("Fail to register yeeloong hwmon driver.\n");
++		yeeloong_hwmon_exit();
 +		return ret;
 +	}
 +
  	return 0;
  }
- 
+=20
  static void __exit yeeloong_exit(void)
  {
-+	yeeloong_hotkey_exit();
- 	yeeloong_vo_exit();
- 	yeeloong_hwmon_exit();
++	yeeloong_hwmon_exit();
  	yeeloong_battery_exit();
--- 
+ 	yeeloong_backlight_exit();
+ 	platform_driver_unregister(&platform_driver);
+--=20
 1.6.2.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-laptop"=
+ in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
