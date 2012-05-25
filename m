@@ -1,46 +1,57 @@
-From: Jeremy Kerr <jk@ozlabs.org>
-Subject: Re: [PATCH 1/2 v3]Update broken web addresses.
-Date: Wed, 22 Sep 2010 21:06:45 +0800
-Message-ID: <1285160805.2796.0.camel@pororo>
-References: <1285118957-24965-1-git-send-email-justinmattock@gmail.com>
-	 <20100922105852.GC4710@linux-mips.org>
+From: <danniel@gmail.com>
+Subject: Friend,Could you "build-up" your own energy? Recommends Advanced Sports to you
+Date: Fri, 25 May 2012 11:35:59 -0400
+Message-ID: <172C11B00EF843239473457A1F5EE4E8@g19.win.smewh.net>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-laptop-owner@vger.kernel.org>
-In-Reply-To: <20100922105852.GC4710@linux-mips.org>
+Content-Class: urn:content-classes:message
 Sender: linux-laptop-owner@vger.kernel.org
 List-ID: <linux-laptop.vger.kernel.org>
 Content-Type: text/plain; charset="us-ascii"
-To: Ralf Baechle <ralf@linux-mips.org>
-Cc: patchwork@lists.ozlabs.org, linux-mips@linux-mips.org, Randy Dunlap <rdunlap@xenotime.net>, linux-m32r@ml.linux-m32r.org, trivial@kernel.org, "Maciej W. Rozycki" <macro@linux-mips.org>, linux-laptop@vger.kernel.org, linux-kernel@vger.kernel.org, Finn Thain <fthain@telegraphics.com.au>, linux-m68k@lists.linux-m68k.org, "Justin P. Mattock" <justinmattock@gmail.com>, linux-omap@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+To: linux-laptop@vger.kernel.org
 
-Hi Ralf,
-
-> On Tue, Sep 21, 2010 at 06:29:16PM -0700, Justin P. Mattock wrote:
-> > Date:   Tue, 21 Sep 2010 18:29:16 -0700
-> > From: "Justin P. Mattock" <justinmattock@gmail.com>
-> > To: trivial@kernel.org
-> > Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-> >  linux-omap@vger.kernel.org, linux-m32r@ml.linux-m32r.org,
-> >  linux-m68k@lists.linux-m68k.org, linux-mips@linux-mips.org,
-> >  linuxppc-dev@lists.ozlabs.org, linux-laptop@vger.kernel.org, "Justin P.
-> >  Mattock" <justinmattock@gmail.com>, "Maciej W. Rozycki"
-> >  <macro@linux-mips.org>, Finn Thain <fthain@telegraphics.com.au>, Randy
-> >  Dunlap <rdunlap@xenotime.net>
-> > Subject: [PATCH 1/2 v3]Update broken web addresses.
-> > Content-Type: text/plain; charset=UTF-8
-> 
-> Patchwork MIME butchers the subject of this patch, see
-> 
-> https://patchwork.linux-mips.org/patch/1587/
-> https://patchwork.kernel.org/patch/198382/
-> 
-
-Thanks for the heads-up - I'll see what's happening with the header
-decoding here.
-
-Cheers,
+From         :Friend,Could you "build-up" your own energy?
+Email        :danniel@gmail.com
+Friend Name  :Friend
+Friend Email :linux-laptop@vger.kernel.org
+comment      :
 
 
-Jeremy
+Hi Friend,
+
+I'm sure you already found out the rumours that some
+people make their own energy.
+Some of them slash the energy bill by half.
+Some of them cut the bill completely.
+Some even make the electric company pay them(!).
+That's why I was ecstatic when I found this website:
+
+http://www.greenhomemade.com/?code=4fbd5d3bbfcd4 
+
+I read every single word, and boy... this stuff really
+got me all curious. It seems it's actually very easy 
+and cheap to build and use a renewable energy system.
+
+Anyway, I went ahead and bought their package.
+I couldn't resisted... It sounds too good to be true,
+yet if this turns out to be "real", then this is BIG.
+
+I'm so enthusiasted about this, that I thought to just
+send you a link so you get to see it for yourself:
+
+http://www.greenhomemade.com/?code=4fbd5d3bbfcd4 
+
+To a better life,
+
+Danniel Guedotte
+
+PS: Friend, they give a 60-day guarantee. 
+You risk nothing. 
+But if you snooze, you lose...
+
+http://www.greenhomemade.com/?code=4fbd5d3bbfcd4 
+
+
+
 
