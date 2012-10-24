@@ -1,18 +1,20 @@
 From: Sebastian Riemer <sebastian.riemer@profitbricks.com>
 Subject: samsung-laptop: Samsung 530U3C major ACPI issues
-Date: Wed, 24 Oct 2012 15:59:37 +0200
-Message-ID: <5087F449.6040906@profitbricks.com>
+Date: Wed, 24 Oct 2012 16:11:26 +0200
+Message-ID: <5087F70E.3010406@profitbricks.com>
+References: <5087F449.6040906@profitbricks.com>
 Mime-Version: 1.0
 Content-Type: multipart/mixed;
- boundary="------------050909090402080701060207"
+ boundary="------------050705010306050502060501"
 Return-path: <linux-laptop-owner@vger.kernel.org>
+In-Reply-To: <5087F449.6040906@profitbricks.com>
 Sender: linux-laptop-owner@vger.kernel.org
 List-ID: <linux-laptop.vger.kernel.org>
-To: gregkh@suse.de, linux-laptop@vger.kernel.org
-Cc: Adrian Maertins <adrian.maertins@profitbricks.com>
+To: gregkh@linuxfoundation.org
+Cc: linux-laptop@vger.kernel.org, Adrian Maertins <adrian.maertins@profitbricks.com>
 
 This is a multi-part message in MIME format.
---------------050909090402080701060207
+--------------050705010306050502060501
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: quoted-printable
 
@@ -36,6 +38,9 @@ samsung-laptop driver?
 Cheers,
 Sebastian
 
+P.S. Sorry for sending this email twice to the list. This time with the cor=
+rect email address.=20
+
 --=20
 Sebastian Riemer
 Linux Kernel Developer - Storage
@@ -50,7 +55,7 @@ Registergericht: Amtsgericht Charlottenburg, HRB 125506 B
 Gesch=E4ftsf=FChrer: Andreas Gauger, Achim Weiss
 
 
---------------050909090402080701060207
+--------------050705010306050502060501
 Content-Type: application/x-gzip;
  name="debug.tar.gz"
 Content-Transfer-Encoding: base64
@@ -434,4 +439,4 @@ VzDWl1J+zbvSV2pDOA6cLN8XeRF0SP4pEZ1M4tHzZIM1O50hnqCc9bsPne6T+zg4L0hKT+ro
 3U86nl3X5B6Dfmvp2lF7A0SRowQ/HqEFGbyO1s38KH8JMfx4lkOEpyOgJtnEcuu4TcTET0by
 durFx+CsumFxhexS0WYwvbhHExMffcGKhZRN18s5Uy1FM3UOszmn+Il//cspndIpndIpndIp
 ndIpndIpndIpndIfkf4HfslXXQBAAQA=
---------------050909090402080701060207--
+--------------050705010306050502060501--
